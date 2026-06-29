@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f6f0e5">
+  <meta name="description" content="狗运当骰桌游技能卡控制台">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23fff8e9'/%3E%3Cg fill='%23171614'%3E%3Cellipse cx='32' cy='39' rx='14' ry='12'/%3E%3Cellipse cx='17' cy='24' rx='6' ry='9' transform='rotate(-24 17 24)'/%3E%3Cellipse cx='29' cy='17' rx='6' ry='10'/%3E%3Cellipse cx='43' cy='21' rx='6' ry='9' transform='rotate(20 43 21)'/%3E%3Cellipse cx='50' cy='32' rx='5' ry='8' transform='rotate(38 50 32)'/%3E%3C/g%3E%3C/svg%3E">
+  <title>狗运当骰 · 技能卡控制台</title>
+  <style>
+    :root {
+      --ink:#171614; --paper:#fbf3e6; --card:#fffdf6; --orange:#ff6438;
+      --pink:#ffb9b1; --mint:#c7ead8; --butter:#ffe29a; --cyan:#83d2df;
+      --gap:clamp(22px,1.9vw,36px); --radius:clamp(18px,1.45vw,26px);
+      --font-rounded:"Arial Rounded MT Bold","Yuanti SC","STYuanti-SC-Regular","YouYuan","Microsoft YaHei",system-ui,sans-serif;
+      font-family:var(--font-rounded);
+      color:var(--ink); background:var(--paper);
+    }
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden}
+    body{
+      -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+      background-color:var(--paper);
+      background-image:
+        radial-gradient(rgba(23,22,20,.055) 1.3px,transparent 1.3px),
+        radial-gradient(circle at 14% 18%,rgba(255,185,177,.2) 0 52px,transparent 53px),
+        radial-gradient(circle at 84% 82%,rgba(199,234,216,.24) 0 64px,transparent 65px);
+      background-size:32px 32px,100% 100%,100% 100%; user-select:none; -webkit-user-select:none;
+    }
+    body::before{
+      content:"";position:fixed;z-index:-2;width:min(60vw,1050px);aspect-ratio:1;
+      right:-28vw;top:-38vw;border-radius:50%;background:var(--orange);opacity:.92;
+    }
+    .app{
+      height:100dvh;min-height:560px;padding:clamp(30px,3vw,60px);
+      display:grid;grid-template-rows:clamp(58px,7.8vh,88px) minmax(0,1fr);gap:var(--gap);
+      isolation:isolate;position:relative;
+    }
+    .app::before,.app::after{
+      content:"";position:fixed;z-index:0;pointer-events:none;opacity:.18;
+      background-repeat:no-repeat;background-size:contain;filter:drop-shadow(3px 4px 0 rgba(23,22,20,.08));
+    }
+    .app::before{
+      width:clamp(95px,8vw,145px);height:clamp(72px,6vw,110px);left:clamp(22px,3vw,58px);bottom:clamp(18px,3vh,42px);
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 150 110' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23171614' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M42 45c-13-18-37-8-34 13 1 12 10 18 21 18-9 8-9 23 1 31 17 13 35-2 36-21h18c3 20 24 29 39 14 8-9 6-23-4-29 10-2 17-10 17-21 0-21-24-28-36-9L89 56H52z' fill='%23fffdf6'/%3E%3C/g%3E%3C/svg%3E");
+      transform:rotate(-12deg);
+    }
+    .app::after{
+      width:clamp(92px,7vw,132px);height:clamp(92px,7vw,132px);right:clamp(18px,2.5vw,46px);top:clamp(102px,11vh,145px);
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fffdf6' stroke='%23171614' stroke-width='7'%3E%3Cellipse cx='59' cy='70' rx='24' ry='20'/%3E%3Cellipse cx='35' cy='42' rx='10' ry='16' transform='rotate(-24 35 42)'/%3E%3Cellipse cx='56' cy='31' rx='10' ry='17'/%3E%3Cellipse cx='78' cy='39' rx='10' ry='16' transform='rotate(20 78 39)'/%3E%3Cellipse cx='91' cy='58' rx='9' ry='14' transform='rotate(38 91 58)'/%3E%3C/g%3E%3C/svg%3E");
+      transform:rotate(14deg);
+    }
+    .topbar,.grid{position:relative;z-index:2}
+
+    .topbar{display:flex;align-items:center;gap:14px;min-width:0;border-bottom:3px solid var(--ink);padding:0 2px clamp(9px,1vh,14px)}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .brand-mark{width:clamp(66px,5.7vw,94px);aspect-ratio:1.12;display:grid;place-items:center;border:3px solid var(--ink);border-radius:22px;background:#fff8e9;box-shadow:4px 4px 0 rgba(255,100,56,.34),7px 7px 0 rgba(23,22,20,.1);overflow:hidden;transform:rotate(-2deg)}
+    .brand-dog{width:124%;height:124%;transform:translateY(9%)}
+    .brand-dog .peek-face{fill:#fff8e9;stroke:var(--ink);stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+    .brand-dog .peek-ear,.brand-dog .peek-dot,.brand-dog .peek-nose{fill:var(--ink)}
+    .brand-dog .peek-mouth{fill:none;stroke:var(--ink);stroke-width:5;stroke-linecap:round}
+    .brand-dog .peek-paw{fill:#fff8e9;stroke:var(--ink);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+    h1{margin:0;font-family:var(--font-rounded);font-size:clamp(26px,2.6vw,47px);font-weight:900;line-height:1;letter-spacing:.025em;white-space:nowrap}
+    .toolbar{margin-left:auto;display:flex;align-items:center;gap:clamp(8px,.85vw,14px)}
+    button{font:inherit;color:inherit}
+    .status,.control{min-height:clamp(46px,5.5vh,62px);border:3px solid var(--ink);border-radius:18px;background:rgba(255,253,246,.96);display:flex;align-items:center;justify-content:center;gap:9px;font-size:clamp(14px,1.15vw,20px);font-weight:900;white-space:nowrap}
+    .status{padding:0 clamp(14px,1.2vw,22px)} .status strong{font-size:1.7em;line-height:1}
+    .control{padding:0 clamp(13px,1.35vw,24px);box-shadow:4px 4px 0 rgba(23,22,20,.17);cursor:pointer;transition:transform .14s,box-shadow .14s}
+    .control:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 rgba(23,22,20,.17)}
+    .control:active{transform:translate(3px,3px);box-shadow:1px 1px 0 rgba(23,22,20,.17)}
+    .control.primary{background:linear-gradient(180deg,#ff7551 0%,var(--orange) 100%);color:white;min-width:clamp(164px,15vw,250px)}
+    .control.ready{background:var(--cyan);color:var(--ink);animation:ready 1.3s ease-in-out infinite}
+    .control.icon{width:clamp(46px,5.5vh,62px);padding:0}
+    .bone-tray{height:clamp(46px,5.5vh,62px);min-width:clamp(118px,9.5vw,172px);border:3px dashed var(--ink);border-radius:18px;background:rgba(255,253,246,.9);display:flex;align-items:center;justify-content:center;padding:3px 8px;position:relative;transition:background .15s,outline .15s}
+    .bone-tray.empty::after{content:"骨头放置区";font-size:clamp(12px,.9vw,16px);font-weight:850;opacity:.5;letter-spacing:.04em}
+    .bone-tray.drop-target{outline:6px solid var(--orange);outline-offset:2px;background:#fff4e7}
+
+    .grid{min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:var(--gap);perspective:1500px}
+    .skill-card{position:relative;min-width:0;min-height:0;cursor:pointer;border-radius:var(--radius);outline:none;touch-action:manipulation}
+    .skill-card:focus-visible{outline:6px solid #1878ff;outline-offset:4px}
+    .card-shell{
+      position:absolute;inset:0;overflow:hidden;border:3px solid var(--ink);border-radius:var(--radius);
+      background:
+        radial-gradient(circle at 92% 10%,rgba(255,226,154,.22) 0 36px,transparent 37px),
+        radial-gradient(circle at 8% 92%,rgba(199,234,216,.18) 0 34px,transparent 35px),
+        var(--card);
+      box-shadow:7px 7px 0 rgba(23,22,20,.18),10px 10px 0 rgba(255,185,177,.18);
+      transition:filter .22s ease,opacity .22s ease,box-shadow .22s ease;
+      transform-style:preserve-3d;
+    }
+    .skill-card.used .card-shell{filter:grayscale(1) saturate(0);opacity:1;box-shadow:4px 4px 0 rgba(23,22,20,.2)}
+    .skill-card.flipping .card-shell{animation:turn-card .62s cubic-bezier(.2,.76,.18,1)}
+    .skill-card::after{
+      content:"";position:absolute;z-index:6;inset:3px;border-radius:calc(var(--radius) - 2px);
+      background:linear-gradient(105deg,transparent 34%,rgba(255,255,255,.8) 49%,rgba(255,100,56,.26) 54%,transparent 67%);
+      transform:translateX(-140%);opacity:0;pointer-events:none;
+    }
+    .skill-card.flipping::after{animation:sweep .62s cubic-bezier(.2,.8,.2,1)}
+
+    .paw{position:absolute;z-index:1;color:#9d9a95;font-size:clamp(21px,1.65vw,31px);line-height:1;opacity:.62;filter:drop-shadow(1px 1px 0 #fffdf6)}
+    .paw.tl{left:12px;top:11px}.paw.bl{left:12px;bottom:10px}.paw.br{right:12px;bottom:10px}
+    .card-content{position:absolute;inset:0;padding:clamp(22px,2vw,38px) clamp(142px,11.5vw,210px) clamp(24px,2.1vw,40px) clamp(30px,2.6vw,50px);display:flex;flex-direction:column;justify-content:center;gap:clamp(8px,1vh,14px)}
+    .step{font-size:clamp(19px,1.43vw,27px);font-weight:900;line-height:1.32;letter-spacing:0;text-wrap:balance;word-break:normal;overflow-wrap:normal}
+    .divider{font-family:var(--font-rounded);font-size:clamp(24px,1.95vw,37px);font-weight:950;text-align:center;line-height:1;margin:-1px 0;letter-spacing:.06em}
+    .symbol{display:inline-grid;place-items:center;vertical-align:-.12em;margin:0 .12em;font-size:1.08em}
+    .nowrap{white-space:nowrap}
+    .count-chip,.dice-count{
+      --dice-tint:var(--butter);display:inline-flex;align-items:center;justify-content:center;
+      min-width:clamp(42px,3.2vw,58px);min-height:1.42em;margin:0 .12em;padding:.02em .34em .05em;
+      border:2px solid var(--ink);border-radius:999px;background:linear-gradient(180deg,#fffdf6 0%,var(--dice-tint) 100%);
+      box-shadow:2px 2px 0 rgba(23,22,20,.18);font-weight:950;line-height:1;white-space:nowrap;
+      transform:rotate(-1.5deg);vertical-align:.02em;
+    }
+    .count-chip:nth-of-type(even),.dice-count:nth-of-type(even){transform:rotate(1.5deg)}
+    .dice-1{--dice-tint:#ffe29a}.dice-2{--dice-tint:#c7ead8}.dice-3{--dice-tint:#ffb9b1}.dice-8{--dice-tint:#b9ddff}
+    .count-bone{--dice-tint:#ffd5bd}.count-paw{--dice-tint:#d8f0de}.count-card{--dice-tint:#d9e7ff}
+    .repeat{font-weight:950;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:4px}
+
+    .rosette{position:absolute;right:clamp(16px,1.45vw,28px);top:50%;transform:translateY(-52%) rotate(2deg);width:clamp(118px,9.6vw,174px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 34% 24%,rgba(255,255,255,.22) 0 19%,transparent 20%),var(--accent);border:6px solid color-mix(in srgb,var(--accent) 62%,white);display:grid;place-items:center;color:white;text-align:center;z-index:2;filter:drop-shadow(3px 4px 0 rgba(23,22,20,.17))}
+    .rosette::before{content:none}
+    .rosette::after{content:"";position:absolute;z-index:-2;inset:-10%;background:var(--accent);clip-path:polygon(50% 0,58% 6%,67% 3%,73% 11%,82% 10%,86% 19%,95% 23%,92% 32%,100% 39%,95% 48%,100% 57%,93% 64%,96% 74%,87% 79%,85% 89%,75% 89%,68% 98%,59% 94%,50% 100%,41% 94%,32% 98%,25% 89%,15% 89%,13% 79%,4% 74%,7% 64%,0 57%,5% 48%,0 39%,8% 32%,5% 23%,14% 19%,18% 10%,27% 11%,33% 3%,42% 6%)}
+    .ribbon{position:absolute;z-index:-1;left:27%;right:27%;top:82%;height:44%;background:var(--accent);clip-path:polygon(0 0,100% 0,100% 100%,70% 79%,50% 100%,30% 79%,0 100%)}
+    .badge-copy{position:relative;z-index:1;display:grid;grid-template-rows:min-content min-content minmax(0,1fr);justify-items:center;align-content:center;gap:2px;width:80%;height:82%;transform:translateY(4%)}
+    .badge-cn{font-family:var(--font-rounded);font-size:clamp(17px,1.12vw,22px);font-weight:950;letter-spacing:.025em;line-height:.95;text-shadow:1px 1px 0 rgba(23,22,20,.16);white-space:nowrap}
+    .badge-en{font-size:clamp(9px,.62vw,12px);font-weight:900;letter-spacing:.015em;line-height:1;opacity:.96;white-space:nowrap}
+    .dog-glyph{width:clamp(66px,5vw,94px);height:clamp(66px,5vw,94px);display:grid;place-items:center;align-self:end;border:0;border-radius:50%;background:transparent;box-shadow:none;overflow:hidden}
+    .dog-glyph img{width:100%;height:100%;object-fit:contain;display:block;filter:contrast(1.08);opacity:1}
+    .dog-body{fill:#fff8e9;stroke:#171614;stroke-width:4.8;stroke-linecap:round;stroke-linejoin:round}
+    .dog-spot,.dog-ear,.dog-nose{fill:#171614}
+    .dog-line{fill:none;stroke:#171614;stroke-width:4.8;stroke-linecap:round;stroke-linejoin:round}
+    .motion-line{fill:none;stroke:#fff8e9;stroke-width:4.2;stroke-linecap:round;opacity:.95}
+
+    .bone-zone{position:absolute;z-index:12;top:10px;right:10px;pointer-events:none}
+    .bone{
+      width:clamp(92px,7vw,134px);height:clamp(56px,4.4vw,82px);display:grid;place-items:center;
+      border:0;border-radius:999px;background:transparent;color:#fffdf3;
+      filter:drop-shadow(5px 6px 0 rgba(255,100,56,.62)) drop-shadow(7px 8px 0 rgba(23,22,20,.18));
+      cursor:grab;pointer-events:auto;touch-action:none;animation:bone-pop .4s cubic-bezier(.17,1.55,.3,1);
+    }
+    .bone svg{width:100%;height:100%;overflow:visible;pointer-events:none}
+    .bone.dragging{position:fixed;z-index:999;margin:0;pointer-events:none;transform:rotate(-8deg) scale(1.1);animation:none;opacity:.96}
+    .skill-card.drop-target .card-shell{outline:8px solid var(--orange);outline-offset:-9px}
+
+    .toast{position:fixed;z-index:1000;left:50%;bottom:clamp(18px,3vh,38px);max-width:min(90vw,680px);transform:translate(-50%,22px);opacity:0;background:var(--ink);color:#fff8e9;border:3px solid #fff8e9;border-radius:16px;padding:14px 22px;font-size:clamp(15px,1.2vw,21px);font-weight:850;box-shadow:6px 6px 0 rgba(255,100,56,.7);pointer-events:none;transition:opacity .2s,transform .2s}
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    @keyframes turn-card{0%{transform:translateY(0) rotateZ(0) scale(1)}38%{transform:translateY(-11px) rotateZ(-.7deg) scale(1.018);filter:drop-shadow(0 18px 13px rgba(23,22,20,.26))}62%{transform:translateY(-8px) rotateZ(.45deg) scale(1.012)}100%{transform:translateY(0) rotateZ(0) scale(1)}}
+    @keyframes sweep{0%{transform:translateX(-140%);opacity:0}30%{opacity:.95}100%{transform:translateX(140%);opacity:0}}
+    @keyframes bone-pop{from{transform:scale(.3) rotate(-18deg);opacity:0}}
+    @keyframes ready{50%{box-shadow:0 0 0 8px rgba(131,210,223,.3),4px 4px 0 rgba(23,22,20,.17)}}
+
+    @media(max-width:1350px){.app{padding:30px}.status .label{display:none}.brand-mark{width:64px}.card-content{padding-left:24px}.step{font-size:clamp(18px,1.45vw,20px);line-height:1.31}.rosette{width:clamp(116px,10vw,140px);right:16px}.card-content{padding-right:clamp(128px,11.2vw,150px);gap:7px}.bone-tray{min-width:112px}.control.primary{min-width:150px}}
+    @media(max-width:900px){#fullscreenBtn{display:none}h1{font-size:25px}.control.primary{min-width:145px}.rosette{width:145px}.card-content{padding-right:154px}}
+    @media(max-width:760px),(orientation:portrait){
+      html,body{overflow:auto}
+      .app{height:auto;min-height:100dvh;padding:20px;gap:18px;grid-template-rows:auto auto}
+      .topbar{flex-wrap:wrap}.toolbar{width:100%;margin-left:0}.status{margin-left:auto}
+      .grid{grid-template-columns:minmax(0,1fr);grid-template-rows:none;grid-auto-rows:minmax(300px,36vh);gap:18px}
+      .card-content{padding:22px 132px 22px 24px;gap:7px}
+      .step{font-size:17px;line-height:1.32}.divider{font-size:25px}
+      .rosette{width:122px;right:12px}
+      .badge-copy{height:86%}
+      .dog-glyph{width:62px;height:62px}
+      .control.primary{flex:1}
+    }
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark" aria-hidden="true">
+        <svg class="brand-dog" viewBox="0 0 310 255">
+          <path class="peek-ear" d="M49 58c-45 20-54 90-23 120 28 27 70-2 74-45 4-42-11-70-51-75z"/>
+          <path class="peek-ear" d="M225 43c46 2 91 40 86 78-4 33-46 44-83 22-33-20-34-63-3-100z"/>
+          <path class="peek-face" d="M79 72c34-45 116-57 171-14 53 41 55 124 6 165-48 40-142 36-185-9-38-40-32-98 8-142z"/>
+          <path class="peek-ear" d="M44 69c36-4 58 18 56 64-1 41-33 61-62 42-29-19-25-89 6-106z"/>
+          <path class="peek-ear" d="M225 45c31 1 77 32 81 62 4 31-31 46-68 29-38-18-47-67-13-91z"/>
+          <ellipse class="peek-dot" cx="123" cy="131" rx="10" ry="15"/>
+          <ellipse class="peek-dot" cx="203" cy="119" rx="10" ry="15"/>
+          <ellipse class="peek-nose" cx="166" cy="158" rx="22" ry="16"/>
+          <path class="peek-mouth" d="M151 181c17 16 43 11 58-8"/>
+          <path class="peek-paw" d="M92 230c11-22 39-26 53-7 6 9 2 23-10 26H99c-9-1-12-10-7-19z"/>
+          <path class="peek-paw" d="M202 226c17-17 43-12 52 10 4 10-3 18-14 18h-35c-12-3-12-18-3-28z"/>
+        </svg>
+      </div><h1>技能卡控制台</h1></div>
+      <div class="toolbar">
+        <div class="status" aria-live="polite"><span aria-hidden="true">🐾</span><strong id="availableCount">6</strong><span class="label">张可用</span></div>
+        <div class="bone-tray" id="boneTray" data-drop-zone="tray" aria-label="骨头放置区"></div>
+        <button class="control icon" id="fullscreenBtn" type="button" aria-label="全屏投影" title="全屏投影（F）">⛶</button>
+        <button class="control primary" id="resetBtn" type="button">↻ 全部翻回</button>
+      </div>
+    </header>
+    <section class="grid" id="cardGrid" aria-label="六张技能卡"></section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    const die = '<span class="symbol" aria-label="骰子">🎲</span>';
+    const paw = '<span class="symbol" aria-label="爪印">🐾</span>';
+    const boneWord = '<span class="symbol" aria-label="骨头">🦴</span>';
+    const keep = text => `<span class="nowrap">${text}</span>`;
+    const diceUse = n => `<span class="nowrap"><span class="dice-count dice-${n}" aria-label="投掷 ${n} 颗骰子">${n} 颗</span>${die}骰子</span>`;
+    const allDice = `<span class="nowrap"><span class="dice-count dice-1" aria-label="所有骰子">所有</span>${keep('骰子')}</span>`;
+    const countUse = (n, unit, type) => `<span class="count-chip count-${type}" aria-label="${n} ${unit}">${n} ${unit}</span>`;
+    const cards = [
+      {id:'roll',name:'翻滚',en:'ROLL OVER',color:'#eb6b59',pose:'roll',steps:[`投掷你后院的${allDice}，放置或重新将这些${keep('骰子')}埋藏。`,`你（可以）选择继续投掷 ${diceUse(1)}，然后选择将该${keep('骰子')}放置或埋藏。`]},
+      {id:'howl',name:'咆哮',en:'HOWL',color:'#d76150',pose:'howl',steps:[`当你的${keep('狗狗卡')}少于 ${countUse(6,'张','card')}，抽取一张新的${keep('狗狗卡')}。`,`投掷 ${diceUse(1)}，然后选择将该${keep('骰子')}放置或埋藏。`]},
+      {id:'walk',name:'散步',en:'WALK',color:'#eea13b',pose:'walk',steps:[`投掷 ${diceUse(2)}。`,`你（可以）选择继续投掷 ${diceUse(1)}，然后选择将该${keep('骰子')}放置或埋藏。`]},
+      {id:'beg',name:'乞讨',en:'BEG',color:'#2fa3a8',pose:'beg',steps:[`拿取 ${countUse(1,'个','bone')}${boneWord}${keep('骨头标记物')}。`,`你每有 ${countUse(1,'个','paw')}${paw}${keep('符号')}便可以多拿取 ${countUse(1,'个','bone')}${boneWord}${keep('骨头')}。`]},
+      {id:'fetch',name:'寻回',en:'FETCH',color:'#2868bd',pose:'fetch',steps:[`投掷 ${diceUse(8)}。`,`选择一个投出的点数，放置或者埋藏所有该点数的${keep('骰子')}，然后移除其余的${keep('骰子')}。`]},
+      {id:'run',name:'奔跑',en:'RUN',color:'#b93b96',pose:'run',steps:[`投掷 ${diceUse(3)}，选择将该${keep('骰子')}放置或埋藏。`,`你（可以）选择继续投掷 ${diceUse(1)}，你可以<span class="repeat">重复进行这次行动，不限次数</span>。`]}
+    ];
+    const KEY='spots-skill-console-v4';
+    let state={used:[],boneLocation:'tray'};
+    let toastTimer=null;
+    try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&Array.isArray(saved.used)&&(saved.boneLocation==='tray'||cards.some(c=>c.id===saved.boneLocation)))state=saved}catch(_){}
+    const boneSvg=()=>`<svg viewBox="0 0 122 72" aria-hidden="true">
+      <defs>
+        <linearGradient id="boneFill" x1="20" y1="8" x2="98" y2="65" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#fffef8"/>
+          <stop offset=".55" stop-color="#fff1cf"/>
+          <stop offset="1" stop-color="#f3c98f"/>
+        </linearGradient>
+        <radialGradient id="boneShine" cx="35%" cy="25%" r="55%">
+          <stop offset="0" stop-color="#ffffff" stop-opacity=".9"/>
+          <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <path d="M31 17C21 4 4 9 4 24c0 8 5 13 13 15-8 4-12 11-9 20 5 16 25 15 33 2l5-8h30l5 8c8 13 28 14 33-2 3-9-1-16-9-20 8-2 13-7 13-15 0-15-17-20-27-7l-8 10H39z" fill="#171614" opacity=".22" transform="translate(3 5)"/>
+      <path d="M31 17C21 4 4 9 4 24c0 8 5 13 13 15-8 4-12 11-9 20 5 16 25 15 33 2l5-8h30l5 8c8 13 28 14 33-2 3-9-1-16-9-20 8-2 13-7 13-15 0-15-17-20-27-7l-8 10H39z" fill="url(#boneFill)" stroke="#171614" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M20 20c7-7 15-5 19 2M16 51c5 6 13 5 18-2M87 22c7-9 17-8 21 1M88 54c7 7 17 5 20-3" fill="none" stroke="url(#boneShine)" stroke-width="5" stroke-linecap="round"/>
+      <path d="M42 34h40" fill="none" stroke="#fff9e8" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+    </svg>`;
+    const dogArt=pose=>`<img src="assets/action-${pose}-badge-v2.png" alt="" aria-hidden="true">`;
+    function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+    function cardMarkup(c){
+      const used=state.used.includes(c.id),hasBone=state.boneLocation===c.id;
+      return `<article class="skill-card ${used?'used':''}" data-id="${c.id}" role="button" tabindex="0" aria-pressed="${used}" aria-label="${c.name}，${used?'已翻灰':'正面可用'}，点击切换">
+        <div class="card-shell" style="--accent:${c.color}">
+          <span class="paw tl">🐾</span><span class="paw bl">🐾</span><span class="paw br">🐾</span>
+          <div class="card-content"><div class="step">${c.steps[0]}</div><div class="divider">— 然后 —</div><div class="step">${c.steps[1]}</div></div>
+          <div class="rosette"><div class="ribbon"></div><div class="badge-copy"><div class="badge-cn">${c.name}</div><div class="badge-en">${c.en}</div><div class="dog-glyph">${dogArt(c.pose)}</div></div></div>
+        </div>
+        <div class="bone-zone">${hasBone?`<span class="bone" role="button" tabindex="0" aria-label="唯一的可拖动骨头，拖到其他卡片或顶部放置区">${boneSvg()}</span>`:''}</div>
+      </article>`
+    }
+    function render(){
+      const grid=document.getElementById('cardGrid');grid.innerHTML=cards.map(cardMarkup).join('');
+      const tray=document.getElementById('boneTray');
+      tray.classList.toggle('empty',state.boneLocation!=='tray');
+      tray.innerHTML=state.boneLocation==='tray'?`<span class="bone" role="button" tabindex="0" aria-label="唯一的可拖动骨头，拖到需要的卡片">${boneSvg()}</span>`:'';
+      grid.querySelectorAll('.skill-card').forEach(el=>{el.addEventListener('click',toggleCard);el.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.target.closest('.bone')){e.preventDefault();el.click()}})});
+      document.querySelector('.bone')?.addEventListener('pointerdown',startBoneDrag);
+      document.querySelector('.bone')?.addEventListener('click',e=>e.stopPropagation());
+      updateHeader();
+    }
+    function toggleCard(e){
+      if(e.target.closest('.bone'))return;
+      const el=e.currentTarget,id=el.dataset.id,isUsed=state.used.includes(id);
+      el.classList.add('flipping');
+      window.setTimeout(()=>{if(isUsed){state.used=state.used.filter(x=>x!==id);el.classList.remove('used')}else{state.used.push(id);el.classList.add('used')}el.setAttribute('aria-pressed',String(!isUsed));save();updateHeader()},285);
+      window.setTimeout(()=>el.classList.remove('flipping'),640);
+    }
+    function updateHeader(){
+      const n=cards.length-state.used.length;document.getElementById('availableCount').textContent=n;
+      const btn=document.getElementById('resetBtn');btn.classList.toggle('ready',n===1);btn.textContent=n===1?'↻ 刷新技能板':'↻ 全部翻回';
+      btn.title=n===1?'骨头移到最后一张正面卡，再把六张翻回正面':'把六张卡全部翻回正面';
+    }
+    function resetBoard(){
+      const available=cards.filter(c=>!state.used.includes(c.id));
+      if(available.length===1){state.boneLocation=available[0].id;showToast(`骨头已放到「${available[0].name}」，六张卡已翻回正面`)}else showToast('六张技能卡已全部翻回正面');
+      state.used=[];save();render();
+    }
+    function startBoneDrag(e){
+      e.preventDefault();e.stopPropagation();const source=e.currentTarget,r=source.getBoundingClientRect(),ghost=source.cloneNode(true);
+      ghost.classList.add('dragging');ghost.style.width=`${r.width}px`;ghost.style.height=`${r.height}px`;document.body.appendChild(ghost);source.style.opacity='0';
+      const ox=e.clientX-r.left,oy=e.clientY-r.top;
+      const clearTargets=()=>document.querySelectorAll('.skill-card,.bone-tray').forEach(x=>x.classList.remove('drop-target'));
+      const move=ev=>{ghost.style.left=`${ev.clientX-ox}px`;ghost.style.top=`${ev.clientY-oy}px`;clearTargets();document.elementFromPoint(ev.clientX,ev.clientY)?.closest('.skill-card,.bone-tray')?.classList.add('drop-target')};
+      const end=ev=>{window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',end);const target=document.elementFromPoint(ev.clientX,ev.clientY)?.closest('.skill-card,.bone-tray');ghost.remove();clearTargets();if(target){state.boneLocation=target.dataset.dropZone==='tray'?'tray':target.dataset.id;save();render();showToast(state.boneLocation==='tray'?'骨头已收回顶部放置区':`骨头已放到「${cards.find(c=>c.id===state.boneLocation).name}」`)}else source.style.opacity=''};
+      move(e);window.addEventListener('pointermove',move,{passive:false});window.addEventListener('pointerup',end,{once:true});
+    }
+    function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2300)}
+    document.getElementById('resetBtn').addEventListener('click',resetBoard);
+    document.getElementById('fullscreenBtn').addEventListener('click',()=>document.fullscreenElement?document.exitFullscreen?.():document.documentElement.requestFullscreen?.());
+    window.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='f')document.getElementById('fullscreenBtn').click();if(e.key.toLowerCase()==='r')resetBoard();const n=Number(e.key);if(n>=1&&n<=6)document.querySelectorAll('.skill-card')[n-1]?.click()});
+    render();
+  </script>
+</body>
+</html>
