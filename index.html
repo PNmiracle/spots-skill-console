@@ -100,20 +100,21 @@
     .paw{position:absolute;z-index:1;color:#9d9a95;font-size:clamp(21px,1.65vw,31px);line-height:1;opacity:.62;filter:drop-shadow(1px 1px 0 #fffdf6)}
     .paw.tl{left:12px;top:11px}.paw.bl{left:12px;bottom:10px}.paw.br{right:12px;bottom:10px}
     .card-content{position:absolute;inset:0;padding:clamp(22px,2vw,38px) clamp(142px,11.5vw,210px) clamp(24px,2.1vw,40px) clamp(30px,2.6vw,50px);display:flex;flex-direction:column;justify-content:center;gap:clamp(8px,1vh,14px)}
-    .step{font-size:clamp(19px,1.43vw,27px);font-weight:900;line-height:1.32;letter-spacing:0;text-wrap:balance;word-break:normal;overflow-wrap:normal}
+    .step{font-size:clamp(19px,1.43vw,27px);font-weight:900;line-height:1.32;letter-spacing:0;text-wrap:pretty;word-break:auto-phrase;line-break:strict;overflow-wrap:normal}
     .divider{font-family:var(--font-rounded);font-size:clamp(24px,1.95vw,37px);font-weight:950;text-align:center;line-height:1;margin:-1px 0;letter-spacing:.06em}
     .symbol{display:inline-grid;place-items:center;vertical-align:-.12em;margin:0 .12em;font-size:1.08em}
     .nowrap{white-space:nowrap}
-    .count-chip,.dice-count{
+    .count-chip,.dice-count,.term-chip{
       --dice-tint:var(--butter);display:inline-flex;align-items:center;justify-content:center;
       min-width:clamp(42px,3.2vw,58px);min-height:1.42em;margin:0 .12em;padding:.02em .34em .05em;
       border:2px solid var(--ink);border-radius:999px;background:linear-gradient(180deg,#fffdf6 0%,var(--dice-tint) 100%);
       box-shadow:2px 2px 0 rgba(23,22,20,.18);font-weight:950;line-height:1;white-space:nowrap;
       transform:rotate(-1.5deg);vertical-align:.02em;
     }
-    .count-chip:nth-of-type(even),.dice-count:nth-of-type(even){transform:rotate(1.5deg)}
+    .count-chip:nth-of-type(even),.dice-count:nth-of-type(even),.term-chip:nth-of-type(even){transform:rotate(1.5deg)}
     .dice-1{--dice-tint:#ffe29a}.dice-2{--dice-tint:#c7ead8}.dice-3{--dice-tint:#ffb9b1}.dice-8{--dice-tint:#b9ddff}
-    .count-bone{--dice-tint:#ffd5bd}.count-paw{--dice-tint:#d8f0de}.count-card{--dice-tint:#d9e7ff}
+    .count-bone{--dice-tint:#ffd5bd}.count-paw{--dice-tint:#d8f0de}.count-card{--dice-tint:#d9e7ff}.count-choice{--dice-tint:#ffe29a}
+    .term-yard{--dice-tint:#ffd5bd}
     .repeat{font-weight:950;text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:4px}
 
     .rosette{position:absolute;right:clamp(16px,1.45vw,28px);top:50%;transform:translateY(-52%) rotate(2deg);width:clamp(118px,9.6vw,174px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 34% 24%,rgba(255,255,255,.22) 0 19%,transparent 20%),var(--accent);border:6px solid color-mix(in srgb,var(--accent) 62%,white);display:grid;place-items:center;color:white;text-align:center;z-index:2;filter:drop-shadow(3px 4px 0 rgba(23,22,20,.17))}
@@ -198,16 +199,17 @@
     const paw = '<span class="symbol" aria-label="爪印">🐾</span>';
     const boneWord = '<span class="symbol" aria-label="骨头">🦴</span>';
     const keep = text => `<span class="nowrap">${text}</span>`;
-    const diceUse = n => `<span class="nowrap"><span class="dice-count dice-${n}" aria-label="投掷 ${n} 颗骰子">${n} 颗</span>${die}骰子</span>`;
+    const diceUse = n => `<span class="nowrap"><span class="dice-count dice-${n}" aria-label="投掷 ${n} 颗骰子">${n}颗</span>${die}骰子</span>`;
     const allDice = `<span class="nowrap"><span class="dice-count dice-1" aria-label="所有骰子">所有</span>${keep('骰子')}</span>`;
-    const countUse = (n, unit, type) => `<span class="count-chip count-${type}" aria-label="${n} ${unit}">${n} ${unit}</span>`;
+    const countUse = (n, unit, type) => `<span class="count-chip count-${type}" aria-label="${n} ${unit}">${n}${unit}</span>`;
+    const termUse = (text, type) => `<span class="term-chip term-${type}">${text}</span>`;
     const cards = [
-      {id:'roll',name:'翻滚',en:'ROLL OVER',color:'#eb6b59',pose:'roll',steps:[`投掷你后院的${allDice}，放置或重新将这些${keep('骰子')}埋藏。`,`你（可以）选择继续投掷 ${diceUse(1)}，然后选择将该${keep('骰子')}放置或埋藏。`]},
-      {id:'howl',name:'咆哮',en:'HOWL',color:'#d76150',pose:'howl',steps:[`当你的${keep('狗狗卡')}少于 ${countUse(6,'张','card')}，抽取一张新的${keep('狗狗卡')}。`,`投掷 ${diceUse(1)}，然后选择将该${keep('骰子')}放置或埋藏。`]},
-      {id:'walk',name:'散步',en:'WALK',color:'#eea13b',pose:'walk',steps:[`投掷 ${diceUse(2)}。`,`你（可以）选择继续投掷 ${diceUse(1)}，然后选择将该${keep('骰子')}放置或埋藏。`]},
+      {id:'roll',name:'翻滚',en:'ROLL OVER',color:'#eb6b59',pose:'roll',steps:[`投掷你${termUse('后院','yard')}的${allDice}，${keep('放置')}或重新将这些${keep('骰子')}${keep('埋藏')}。`,`你（可以）选择${keep('继续投掷')} ${diceUse(1)}，然后选择将该${keep('骰子')}${keep('放置')}或${keep('埋藏')}。`]},
+      {id:'howl',name:'咆哮',en:'HOWL',color:'#d76150',pose:'howl',steps:[`当你的${keep('狗狗卡')}${keep('少于')} ${countUse(6,'张','card')}，抽取 ${countUse(1,'张','card')}新的${keep('狗狗卡')}。`,`投掷 ${diceUse(1)}，然后选择将该${keep('骰子')}${keep('放置')}或${keep('埋藏')}。`]},
+      {id:'walk',name:'散步',en:'WALK',color:'#eea13b',pose:'walk',steps:[`投掷 ${diceUse(2)}。`,`你（可以）选择${keep('继续投掷')} ${diceUse(1)}，然后选择将该${keep('骰子')}${keep('放置')}或${keep('埋藏')}。`]},
       {id:'beg',name:'乞讨',en:'BEG',color:'#2fa3a8',pose:'beg',steps:[`拿取 ${countUse(1,'个','bone')}${boneWord}${keep('骨头标记物')}。`,`你每有 ${countUse(1,'个','paw')}${paw}${keep('符号')}便可以多拿取 ${countUse(1,'个','bone')}${boneWord}${keep('骨头')}。`]},
-      {id:'fetch',name:'寻回',en:'FETCH',color:'#2868bd',pose:'fetch',steps:[`投掷 ${diceUse(8)}。`,`选择一个投出的点数，放置或者埋藏所有该点数的${keep('骰子')}，然后移除其余的${keep('骰子')}。`]},
-      {id:'run',name:'奔跑',en:'RUN',color:'#b93b96',pose:'run',steps:[`投掷 ${diceUse(3)}，选择将该${keep('骰子')}放置或埋藏。`,`你（可以）选择继续投掷 ${diceUse(1)}，你可以<span class="repeat">重复进行这次行动，不限次数</span>。`]}
+      {id:'fetch',name:'寻回',en:'FETCH',color:'#2868bd',pose:'fetch',steps:[`投掷 ${diceUse(8)}。`,`选择 ${countUse(1,'个','choice')}${keep('投出的点数')}，${keep('放置')}或者${keep('埋藏')}所有该${keep('点数')}的${keep('骰子')}，然后${keep('移除')}其余的${keep('骰子')}。`]},
+      {id:'run',name:'奔跑',en:'RUN',color:'#b93b96',pose:'run',steps:[`投掷 ${diceUse(3)}，选择将该${keep('骰子')}${keep('放置')}或${keep('埋藏')}。`,`你（可以）选择${keep('继续投掷')} ${diceUse(1)}，你可以<span class="repeat">重复进行这次行动，不限次数</span>。`]}
     ];
     const KEY='spots-skill-console-v4';
     let state={used:[],boneLocation:'tray'};
