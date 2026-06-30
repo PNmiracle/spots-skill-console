@@ -34,8 +34,10 @@
     .app{
       height:100dvh;min-height:560px;padding:clamp(30px,3vw,60px);
       display:grid;grid-template-rows:clamp(58px,7.8vh,88px) minmax(0,1fr);gap:var(--gap);
-      isolation:isolate;position:relative;
+      isolation:isolate;position:relative;transition:filter .36s ease,transform .45s cubic-bezier(.2,.8,.2,1);
     }
+    body.rules-open{overflow:hidden}
+    body.rules-open .app{filter:blur(7px) grayscale(.46) brightness(.78);transform:scale(.985);pointer-events:none}
     .app::before,.app::after{
       content:"";position:fixed;z-index:0;pointer-events:none;opacity:.18;
       background-repeat:no-repeat;background-size:contain;filter:drop-shadow(3px 4px 0 rgba(23,22,20,.08));
@@ -61,6 +63,10 @@
     .brand-dog .peek-mouth{fill:none;stroke:var(--ink);stroke-width:5;stroke-linecap:round}
     .brand-dog .peek-paw{fill:#fff8e9;stroke:var(--ink);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
     h1{margin:0;font-family:var(--font-rounded);font-size:clamp(26px,2.6vw,47px);font-weight:900;line-height:1;letter-spacing:.025em;white-space:nowrap}
+    .rules-trigger{min-height:clamp(42px,4.8vh,56px);padding:0 clamp(12px,1vw,18px);display:flex;align-items:center;gap:7px;border:3px solid var(--ink);border-radius:999px;background:linear-gradient(180deg,#fffdf6,#ffe29a);font-size:clamp(13px,.95vw,17px);font-weight:950;white-space:nowrap;box-shadow:3px 3px 0 rgba(23,22,20,.18);cursor:pointer;transform:rotate(-1deg);transition:transform .16s,box-shadow .16s}
+    .rules-trigger:hover{transform:translateY(-2px) rotate(1deg);box-shadow:5px 6px 0 rgba(23,22,20,.16)}
+    .rules-trigger:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(23,22,20,.18)}
+    .rules-question{width:1.55em;aspect-ratio:1;display:grid;place-items:center;border:2px solid var(--ink);border-radius:50%;background:var(--orange);color:white;font-size:1.05em;line-height:1}
     .toolbar{margin-left:auto;display:flex;align-items:center;gap:clamp(8px,.85vw,14px)}
     button{font:inherit;color:inherit}
     .status,.control{min-height:clamp(46px,5.5vh,62px);border:3px solid var(--ink);border-radius:18px;background:rgba(255,253,246,.96);display:flex;align-items:center;justify-content:center;gap:9px;font-size:clamp(14px,1.15vw,20px);font-weight:900;white-space:nowrap}
@@ -142,12 +148,35 @@
     .bone.dragging{position:fixed;z-index:999;margin:0;pointer-events:none;transform:rotate(-8deg) scale(1.1);animation:none;opacity:.96}
     .skill-card.drop-target .card-shell{outline:8px solid var(--orange);outline-offset:-9px}
 
+    .rules-modal{position:fixed;inset:0;z-index:2000;display:grid;place-items:center;padding:clamp(18px,4vw,56px);background:rgba(20,17,14,.48);backdrop-filter:blur(9px) saturate(.58);-webkit-backdrop-filter:blur(9px) saturate(.58);opacity:0;visibility:hidden;pointer-events:none;transition:opacity .28s ease,visibility 0s linear .3s}
+    .rules-modal.open{opacity:1;visibility:visible;pointer-events:auto;transition-delay:0s}
+    .rules-dialog{position:relative;width:min(780px,94vw);max-height:min(86dvh,780px);overflow:auto;padding:clamp(25px,3vw,42px);border:4px solid var(--ink);border-radius:clamp(24px,2.2vw,36px);background:linear-gradient(145deg,#fffdf7 0%,#fff4df 100%);box-shadow:0 28px 70px rgba(0,0,0,.38),10px 12px 0 rgba(255,100,56,.48);opacity:0;transform:translateY(42px) scale(.84) rotate(-1.4deg);transition:opacity .24s ease,transform .46s cubic-bezier(.18,1.35,.28,1);scrollbar-width:thin;scrollbar-color:var(--orange) transparent}
+    .rules-modal.open .rules-dialog{opacity:1;transform:translateY(0) scale(1) rotate(0)}
+    .rules-dialog::before{content:"";position:absolute;width:150px;aspect-ratio:1;right:-48px;top:-55px;border-radius:50%;background:var(--orange);opacity:.13}
+    .rules-close{position:absolute;z-index:2;right:clamp(14px,2vw,24px);top:clamp(14px,2vw,24px);width:clamp(42px,4vw,54px);aspect-ratio:1;border:3px solid var(--ink);border-radius:50%;background:#fffdf6;font-size:clamp(23px,2vw,30px);font-weight:950;line-height:1;box-shadow:3px 3px 0 rgba(23,22,20,.18);cursor:pointer;transition:transform .16s,background .16s}
+    .rules-close:hover{background:var(--pink);transform:rotate(8deg) scale(1.06)}
+    .rules-kicker{display:inline-flex;align-items:center;gap:6px;margin:0 62px 8px 0;padding:7px 12px;border:2px solid var(--ink);border-radius:999px;background:var(--mint);font-size:clamp(12px,1vw,15px);font-weight:900;letter-spacing:.04em}
+    .rules-title{margin:0 60px 5px 0;font-size:clamp(30px,3.2vw,48px);font-weight:950;line-height:1.05;letter-spacing:.02em}
+    .rules-intro{margin:0 0 clamp(16px,2vh,24px);font-size:clamp(15px,1.25vw,20px);font-weight:800;color:#5d5148}
+    .rules-list{display:grid;gap:clamp(10px,1.4vh,16px)}
+    .rule-item{display:grid;grid-template-columns:clamp(42px,4.3vw,58px) minmax(0,1fr);gap:clamp(12px,1.4vw,20px);align-items:start;padding:clamp(14px,1.5vw,20px);border:3px solid var(--ink);border-radius:22px;background:var(--rule-bg,#fff);box-shadow:4px 5px 0 rgba(23,22,20,.13);transform:translateY(12px);opacity:0}
+    .rules-modal.open .rule-item{animation:rule-rise .46s cubic-bezier(.18,1.2,.28,1) forwards}
+    .rules-modal.open .rule-item:nth-child(2){animation-delay:.07s}.rules-modal.open .rule-item:nth-child(3){animation-delay:.14s}
+    .rule-item:nth-child(1){--rule-bg:#fff3c9}.rule-item:nth-child(2){--rule-bg:#dff4e8}.rule-item:nth-child(3){--rule-bg:#ffe0d7}
+    .rule-number{width:100%;aspect-ratio:1;display:grid;place-items:center;border:3px solid var(--ink);border-radius:50%;background:var(--orange);color:white;font-size:clamp(21px,2vw,29px);font-weight:950;box-shadow:3px 3px 0 rgba(23,22,20,.16);transform:rotate(-5deg)}
+    .rule-item:nth-child(2) .rule-number{background:#2fa3a8;transform:rotate(4deg)}.rule-item:nth-child(3) .rule-number{background:#2868bd}
+    .rule-copy h3{margin:1px 0 7px;font-size:clamp(18px,1.65vw,25px);font-weight:950;line-height:1.15}
+    .rule-copy p{margin:0;font-size:clamp(15px,1.23vw,19px);font-weight:760;line-height:1.48;text-wrap:pretty;word-break:auto-phrase;line-break:strict}
+    .rule-copy strong{font-weight:950;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px}
+    .rule-chip{display:inline-flex;align-items:center;justify-content:center;min-height:1.42em;padding:.02em .38em .05em;border:2px solid var(--ink);border-radius:999px;background:linear-gradient(180deg,#fffdf6,#ffe29a);box-shadow:2px 2px 0 rgba(23,22,20,.15);font-weight:950;line-height:1;white-space:nowrap}
+
     .toast{position:fixed;z-index:1000;left:50%;bottom:clamp(18px,3vh,38px);max-width:min(90vw,680px);transform:translate(-50%,22px);opacity:0;background:var(--ink);color:#fff8e9;border:3px solid #fff8e9;border-radius:16px;padding:14px 22px;font-size:clamp(15px,1.2vw,21px);font-weight:850;box-shadow:6px 6px 0 rgba(255,100,56,.7);pointer-events:none;transition:opacity .2s,transform .2s}
     .toast.show{opacity:1;transform:translate(-50%,0)}
     @keyframes turn-card{0%{transform:translateY(0) rotateZ(0) scale(1)}38%{transform:translateY(-11px) rotateZ(-.7deg) scale(1.018);filter:drop-shadow(0 18px 13px rgba(23,22,20,.26))}62%{transform:translateY(-8px) rotateZ(.45deg) scale(1.012)}100%{transform:translateY(0) rotateZ(0) scale(1)}}
     @keyframes sweep{0%{transform:translateX(-140%);opacity:0}30%{opacity:.95}100%{transform:translateX(140%);opacity:0}}
     @keyframes bone-pop{from{transform:scale(.3) rotate(-18deg);opacity:0}}
     @keyframes ready{50%{box-shadow:0 0 0 8px rgba(131,210,223,.3),4px 4px 0 rgba(23,22,20,.17)}}
+    @keyframes rule-rise{to{transform:translateY(0);opacity:1}}
 
     @media(min-width:761px) and (min-aspect-ratio:16/9){
       :root{--gap:clamp(16px,min(1.9vw,3.1vh),36px)}
@@ -178,7 +207,7 @@
       .dog-glyph{width:clamp(54px,min(4.7vw,8vh),74px);height:clamp(54px,min(4.7vw,8vh),74px)}
       .bone-tray{min-width:112px}.control.primary{min-width:150px}
     }
-    @media(max-width:900px){#fullscreenBtn{display:none}h1{font-size:25px}.control.primary{min-width:145px}.rosette{width:98px}.card-content{padding-right:106px}}
+    @media(max-width:900px){#fullscreenBtn{display:none}h1{font-size:25px}.rules-trigger{padding:0 10px}.rules-label{display:none}.control.primary{min-width:145px}.rosette{width:98px}.card-content{padding-right:106px}}
     @media(max-width:760px),(orientation:portrait){
       html,body{overflow:auto}
       .app{height:auto;min-height:100dvh;padding:20px;gap:18px;grid-template-rows:auto auto}
@@ -190,12 +219,13 @@
       .badge-copy{height:86%}
       .dog-glyph{width:62px;height:62px}
       .control.primary{flex:1}
+      .rules-dialog{width:min(94vw,620px);max-height:88dvh;padding:24px 18px 22px}.rules-title{font-size:31px}.rules-intro{padding-right:44px}.rule-item{grid-template-columns:40px minmax(0,1fr);padding:13px 12px;gap:11px}.rule-copy p{font-size:15px;line-height:1.42}
     }
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
   </style>
 </head>
 <body>
-  <main class="app">
+  <main class="app" id="appRoot">
     <header class="topbar">
       <div class="brand"><div class="brand-mark" aria-hidden="true">
         <svg class="brand-dog" viewBox="0 0 310 255">
@@ -211,7 +241,7 @@
           <path class="peek-paw" d="M92 230c11-22 39-26 53-7 6 9 2 23-10 26H99c-9-1-12-10-7-19z"/>
           <path class="peek-paw" d="M202 226c17-17 43-12 52 10 4 10-3 18-14 18h-35c-12-3-12-18-3-28z"/>
         </svg>
-      </div><h1>技能卡控制台</h1></div>
+      </div><h1>技能卡控制台</h1><button class="rules-trigger" id="rulesBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="rulesModal"><span class="rules-question" aria-hidden="true">?</span><span class="rules-label">规则</span></button></div>
       <div class="toolbar">
         <div class="status" aria-live="polite"><span aria-hidden="true">🐾</span><strong id="availableCount">6</strong><span class="label">张可用</span></div>
         <div class="bone-tray" id="boneTray" data-drop-zone="tray" aria-label="骨头放置区"></div>
@@ -221,6 +251,28 @@
     </header>
     <section class="grid" id="cardGrid" aria-label="六张技能卡"></section>
   </main>
+  <div class="rules-modal" id="rulesModal" aria-hidden="true">
+    <section class="rules-dialog" role="dialog" aria-modal="true" aria-labelledby="rulesTitle" aria-describedby="rulesIntro">
+      <button class="rules-close" id="rulesClose" type="button" aria-label="关闭规则说明">×</button>
+      <div class="rules-kicker"><span aria-hidden="true">🐾</span> 回合规则速览</div>
+      <h2 class="rules-title" id="rulesTitle">技能板怎么用？</h2>
+      <p class="rules-intro" id="rulesIntro">记住三个动作：选择、翻面、放骨头。</p>
+      <div class="rules-list">
+        <article class="rule-item">
+          <span class="rule-number" aria-hidden="true">1</span>
+          <div class="rule-copy"><h3>每回合，选择一种行动</h3><p>选择 <span class="rule-chip">1 块</span>仍为正面的技能板，执行技能后将它翻至灰面；或者不使用技能，改为<strong>给狗狗积分</strong>。</p></div>
+        </article>
+        <article class="rule-item">
+          <span class="rule-number" aria-hidden="true">2</span>
+          <div class="rule-copy"><h3>只剩最后一块时，刷新技能板</h3><p>回合开始时，若场上只剩 <span class="rule-chip">1 块</span>正面技能板：先在这块技能板上放 <span class="rule-chip">1 根</span>骨头，再将 <span class="rule-chip">6 块</span>技能板全部翻回正面。</p></div>
+        </article>
+        <article class="rule-item">
+          <span class="rule-number" aria-hidden="true">3</span>
+          <div class="rule-copy"><h3>选中带骨头的技能</h3><p>之后，只要有玩家选中带骨头的技能，就先把骨头拿走，再照常执行该技能。</p></div>
+        </article>
+      </div>
+    </section>
+  </div>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
   <script>
     const die = '<span class="symbol" aria-label="骰子">🎲</span>';
@@ -242,6 +294,7 @@
     const KEY='spots-skill-console-v4';
     let state={used:[],boneLocation:'tray'};
     let toastTimer=null;
+    let rulesReturnFocus=null;
     try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&Array.isArray(saved.used)&&(saved.boneLocation==='tray'||cards.some(c=>c.id===saved.boneLocation)))state=saved}catch(_){}
     const boneSvg=()=>`<svg viewBox="0 0 122 72" aria-hidden="true">
       <defs>
@@ -310,9 +363,25 @@
       move(e);window.addEventListener('pointermove',move,{passive:false});window.addEventListener('pointerup',end,{once:true});
     }
     function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2300)}
+    function openRules(){
+      const modal=document.getElementById('rulesModal');rulesReturnFocus=document.activeElement;
+      document.getElementById('appRoot').inert=true;
+      document.body.classList.add('rules-open');modal.classList.add('open');modal.setAttribute('aria-hidden','false');
+      document.getElementById('rulesBtn').setAttribute('aria-expanded','true');
+      window.setTimeout(()=>document.getElementById('rulesClose').focus(),80);
+    }
+    function closeRules(){
+      const modal=document.getElementById('rulesModal');if(!modal.classList.contains('open'))return;
+      document.getElementById('appRoot').inert=false;
+      document.body.classList.remove('rules-open');modal.classList.remove('open');modal.setAttribute('aria-hidden','true');
+      document.getElementById('rulesBtn').setAttribute('aria-expanded','false');rulesReturnFocus?.focus?.();
+    }
     document.getElementById('resetBtn').addEventListener('click',resetBoard);
+    document.getElementById('rulesBtn').addEventListener('click',openRules);
+    document.getElementById('rulesClose').addEventListener('click',closeRules);
+    document.getElementById('rulesModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeRules()});
     document.getElementById('fullscreenBtn').addEventListener('click',()=>document.fullscreenElement?document.exitFullscreen?.():document.documentElement.requestFullscreen?.());
-    window.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='f')document.getElementById('fullscreenBtn').click();if(e.key.toLowerCase()==='r')resetBoard();const n=Number(e.key);if(n>=1&&n<=6)document.querySelectorAll('.skill-card')[n-1]?.click()});
+    window.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('rulesModal').classList.contains('open')){closeRules();return}if(document.body.classList.contains('rules-open'))return;if(e.key.toLowerCase()==='f')document.getElementById('fullscreenBtn').click();if(e.key.toLowerCase()==='r')resetBoard();const n=Number(e.key);if(n>=1&&n<=6)document.querySelectorAll('.skill-card')[n-1]?.click()});
     render();
   </script>
 </body>
