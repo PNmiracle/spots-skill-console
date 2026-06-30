@@ -293,7 +293,7 @@
       {id:'fetch',name:'寻回',en:'FETCH',color:'#2868bd',pose:'fetch',steps:[`投掷 ${diceUse(8)}。`,`选择 ${countUse(1,'个','choice')}${keep('投出的点数')}，${keep('放置')}或者${keep('埋藏')}所有该${keep('点数')}的${keep('骰子')}，然后${keep('移除')}其余的${keep('骰子')}。`]},
       {id:'run',name:'奔跑',en:'RUN',color:'#b93b96',pose:'run',steps:[`投掷 ${diceUse(3)}，选择将该${keep('骰子')}${keep('放置')}或${keep('埋藏')}。`,`你（可以）选择${keep('继续投掷')} ${diceUse(1)}，你可以<span class="repeat">重复进行这次行动，不限次数</span>。`]}
     ];
-    const KEY='spots-skill-console-v4';
+    const KEY='spots-skill-console-v5';
     let state={used:[],boneLocation:'tray'};
     let toastTimer=null;
     let rulesReturnFocus=null;
