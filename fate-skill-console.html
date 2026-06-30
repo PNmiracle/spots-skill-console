@@ -152,8 +152,8 @@
     .skill-card.flipping::after{animation:sweep .62s cubic-bezier(.2,.8,.2,1)}
     .skill-card.activated .card-shell{animation:activate-pulse .86s cubic-bezier(.16,.95,.22,1)}
     .sigil{
-      position:absolute;z-index:1;right:clamp(10px,.9vw,18px);top:clamp(11px,.95vw,19px);
-      width:clamp(60px,5.1vw,96px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;
+      position:absolute;z-index:1;right:clamp(12px,1vw,20px);top:clamp(12px,1vw,20px);
+      width:clamp(58px,4.85vw,92px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;
       background:
         radial-gradient(circle at 35% 25%,rgba(255,255,255,.42),transparent 32%),
         color-mix(in srgb,var(--accent) 82%,white);
@@ -169,7 +169,7 @@
       clip-path:polygon(50% 0,58% 8%,69% 4%,73% 16%,86% 15%,85% 29%,97% 35%,89% 46%,98% 58%,85% 64%,87% 78%,74% 80%,68% 92%,57% 88%,50% 100%,43% 88%,32% 92%,26% 80%,13% 78%,15% 64%,2% 58%,11% 46%,3% 35%,15% 29%,14% 15%,27% 16%,31% 4%,42% 8%);
     }
     .sigil-ring{position:absolute;inset:17%;border:3px solid rgba(255,255,255,.58);border-radius:50%;pointer-events:none}
-    .sigil-icon{position:relative;z-index:1;font-size:clamp(29px,2.48vw,47px);line-height:1;text-shadow:2px 2px 0 rgba(23,22,20,.18)}
+    .sigil-icon{position:relative;z-index:1;font-size:clamp(28px,2.36vw,45px);line-height:1;text-shadow:2px 2px 0 rgba(23,22,20,.18)}
     .energy{
       position:absolute;z-index:0;inset:auto auto -36% -30%;width:82%;aspect-ratio:1;border-radius:50%;
       background:radial-gradient(circle,color-mix(in srgb,var(--accent) 18%,transparent) 0 30%,transparent 70%);
@@ -181,17 +181,17 @@
     .corner{position:absolute;z-index:2;left:clamp(12px,1vw,18px);top:clamp(11px,.9vw,16px);display:flex;gap:6px}
     .pip{width:clamp(9px,.7vw,13px);aspect-ratio:1;border:2px solid var(--ink);border-radius:50%;background:var(--accent);box-shadow:1px 1px 0 rgba(23,22,20,.16)}
     .card-content{
-      position:absolute;z-index:3;inset:0;padding:clamp(62px,5.1vw,94px) clamp(24px,1.9vw,36px) clamp(18px,1.45vw,28px);
+      position:absolute;z-index:3;inset:0;padding:clamp(48px,4.1vw,76px) clamp(24px,1.9vw,36px) clamp(20px,1.55vw,30px);
       display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:clamp(8px,.72vh,11px);
     }
     .category{
       position:relative;
       justify-self:start;align-self:start;display:inline-flex;align-items:center;justify-content:flex-start;gap:clamp(7px,.55vw,10px);
-      width:calc(100% - clamp(96px,8.1vw,142px));max-width:none;
-      min-height:1.88em;padding:.08em .78em .15em;border:2.5px solid var(--ink);border-radius:999px;
+      width:calc(100% - clamp(112px,9vw,162px));max-width:none;
+      min-height:1.82em;padding:.08em .76em .15em;border:2.5px solid var(--ink);border-radius:999px;
       background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 18%,#fffef8),#fffef8 62%);
       box-shadow:2px 2px 0 rgba(23,22,20,.15);
-      font-size:clamp(15px,1.12vw,21px);font-weight:950;letter-spacing:.02em;white-space:nowrap;
+      font-size:clamp(14px,1.04vw,19px);font-weight:950;letter-spacing:.02em;white-space:nowrap;
     }
     .category::before{
       content:"";position:absolute;z-index:-1;inset:calc(-1 * clamp(6px,.52vw,10px)) calc(-1 * clamp(8px,.72vw,13px));
@@ -200,16 +200,17 @@
     }
     .category b{color:var(--accent);text-shadow:.7px .7px 0 rgba(23,22,20,.12)}
     .copy-main{
-      align-self:center;display:grid;gap:clamp(8px,.7vh,12px);padding-right:clamp(2px,.25vw,7px);
+      align-self:start;display:grid;gap:clamp(8px,.7vh,12px);padding-right:clamp(2px,.25vw,7px);
+      margin-top:clamp(26px,2vw,38px);
       min-height:0;overflow:hidden;
-      transform:translateY(clamp(-7px,-.52vw,-3px));
+      transform:none;
     }
     .name{
-      margin:0;font-size:clamp(35px,3vw,58px);font-weight:950;line-height:.98;letter-spacing:.005em;text-wrap:balance;
+      margin:0;font-size:clamp(32px,2.72vw,52px);font-weight:950;line-height:1;letter-spacing:.005em;text-wrap:balance;
       text-shadow:2px 2px 0 color-mix(in srgb,var(--accent) 22%,transparent);
     }
     .desc{
-      margin:0;font-size:clamp(20px,1.42vw,27px);font-weight:850;line-height:1.22;letter-spacing:.001em;
+      margin:0;font-size:clamp(18px,1.27vw,24px);font-weight:850;line-height:1.24;letter-spacing:.001em;
       color:#312820;text-wrap:pretty;word-break:auto-phrase;line-break:strict;
       display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;
     }
@@ -235,8 +236,8 @@
     }
     .skill-card.used .used-stamp{opacity:1;transform:rotate(-12deg) scale(1)}
 
-    .skill-card.tight .name{letter-spacing:0;font-size:clamp(34px,2.88vw,56px)}
-    .skill-card.tight .category{width:calc(100% - clamp(96px,8.1vw,142px));max-width:none}
+    .skill-card.tight .name{letter-spacing:0;font-size:clamp(31px,2.6vw,50px)}
+    .skill-card.tight .category{width:calc(100% - clamp(112px,9vw,162px));max-width:none}
     .toast{
       position:fixed;z-index:1000;left:50%;bottom:clamp(18px,3vh,38px);max-width:min(90vw,780px);
       transform:translate(-50%,22px);opacity:0;background:var(--ink);color:#fff8e9;border:3px solid #fff8e9;border-radius:16px;
