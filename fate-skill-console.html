@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#160f0c">
+  <meta name="description" content="逆天改命等十张技能卡控制台">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='15' fill='%23171614'/%3E%3Cpath d='M32 7 39 25l19 1-15 12 5 19-16-11-16 11 5-19L6 26l19-1z' fill='%23ffd45c'/%3E%3C/svg%3E">
+  <title>狗运当骰 · 逆转技能控制台</title>
+  <style>
+    :root{
+      --ink:#171614;
+      --paper:#f8efdf;
+      --paper-deep:#ead7bb;
+      --card:#fffaf0;
+      --orange:#ff6438;
+      --gold:#ffd45c;
+      --shadow:rgba(23,22,20,.2);
+      --gap:clamp(14px,1.3vw,24px);
+      --radius:clamp(18px,1.45vw,28px);
+      --font-rounded:"Arial Rounded MT Bold","Yuanti SC","STYuanti-SC-Regular","YouYuan","Microsoft YaHei",system-ui,sans-serif;
+      --deck-scale:1;
+      font-family:var(--font-rounded);
+      color:var(--ink);
+      background:var(--paper);
+    }
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden}
+    body{
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+      background:
+        radial-gradient(rgba(23,22,20,.06) 1.35px,transparent 1.35px) 0 0/32px 32px,
+        radial-gradient(circle at 10% 15%,rgba(255,49,63,.18) 0 75px,transparent 76px),
+        radial-gradient(circle at 87% 20%,rgba(255,190,69,.22) 0 92px,transparent 93px),
+        radial-gradient(circle at 72% 90%,rgba(44,184,111,.18) 0 100px,transparent 101px),
+        linear-gradient(145deg,#fff8e9 0%,#f2dfc3 100%);
+      user-select:none;
+      -webkit-user-select:none;
+    }
+    body::before{
+      content:"";position:fixed;z-index:-3;right:-26vw;top:-40vw;width:min(67vw,1120px);aspect-ratio:1;border-radius:50%;
+      background:conic-gradient(from 210deg,#ff3141,#ff8a24,#ffd45c,#36c16f,#37a8ff,#ff3141);
+      opacity:.88;filter:saturate(1.12);
+    }
+    body::after{
+      content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+      background:
+        linear-gradient(90deg,rgba(23,22,20,.04) 1px,transparent 1px) 0 0/96px 96px,
+        linear-gradient(rgba(23,22,20,.035) 1px,transparent 1px) 0 0/96px 96px;
+      mask-image:radial-gradient(circle at 62% 38%,black,transparent 68%);
+    }
+    button{font:inherit;color:inherit}
+    .app{
+      height:100dvh;min-height:650px;padding:clamp(22px,2.5vw,48px);
+      display:grid;grid-template-rows:clamp(76px,9vh,108px) minmax(0,1fr);gap:var(--gap);
+      isolation:isolate;position:relative;
+      transform:scale(var(--deck-scale));
+      transform-origin:center center;
+      will-change:transform;
+    }
+    .app::before,.app::after{
+      content:"";position:fixed;z-index:0;pointer-events:none;opacity:.16;filter:drop-shadow(4px 4px 0 rgba(23,22,20,.12));
+      background-repeat:no-repeat;background-size:contain;
+    }
+    .app::before{
+      width:clamp(120px,10vw,185px);height:clamp(120px,10vw,185px);left:clamp(18px,2.2vw,40px);bottom:clamp(12px,2vh,30px);
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fffaf0' stroke='%23171614' stroke-width='8' stroke-linejoin='round'%3E%3Cpath d='M80 12l15 40 43 2-34 27 11 41-35-24-35 24 11-41-34-27 43-2z'/%3E%3C/g%3E%3Cg fill='%23ff6438'%3E%3Ccircle cx='80' cy='76' r='8'/%3E%3Ccircle cx='57' cy='72' r='6'/%3E%3Ccircle cx='103' cy='72' r='6'/%3E%3C/g%3E%3C/svg%3E");
+      transform:rotate(-14deg);
+    }
+    .app::after{
+      width:clamp(140px,12vw,220px);height:clamp(100px,8vw,150px);right:clamp(10px,1.7vw,36px);bottom:clamp(18px,3vh,42px);
+      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 220 150' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23171614' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M31 106c42-62 78-81 151-77'/%3E%3Cpath d='M141 19l46 10-27 39'/%3E%3Cpath d='M39 111l31 19 2-36'/%3E%3C/g%3E%3C/svg%3E");
+      transform:rotate(8deg);
+    }
+    .topbar,.console{position:relative;z-index:2}
+    .topbar{
+      display:flex;align-items:center;gap:clamp(12px,1.1vw,18px);min-width:0;
+      border-bottom:3px solid var(--ink);padding:0 2px clamp(10px,1vh,15px);
+    }
+    .brand{display:flex;align-items:center;gap:13px;min-width:0}
+    .brand-mark{
+      width:clamp(66px,5.7vw,96px);aspect-ratio:1.12;display:grid;place-items:center;
+      border:3px solid var(--ink);border-radius:24px;background:#fff8e9;
+      box-shadow:4px 4px 0 rgba(255,100,56,.34),8px 8px 0 rgba(23,22,20,.1);
+      transform:rotate(-2deg);overflow:hidden;
+    }
+    .brand-mark svg{width:88%;height:88%;overflow:visible}
+    .brand-title{min-width:0}
+    h1{margin:0;font-size:clamp(26px,2.5vw,47px);font-weight:950;line-height:1;letter-spacing:.025em;white-space:nowrap}
+    .subtitle{
+      margin-top:clamp(5px,.55vh,8px);font-size:clamp(12px,.92vw,17px);font-weight:900;letter-spacing:.12em;
+      color:#5c5044;white-space:nowrap;
+    }
+    .toolbar{margin-left:auto;display:flex;align-items:center;gap:clamp(8px,.75vw,13px)}
+    .status,.control,.filter-chip{
+      min-height:clamp(44px,5.3vh,62px);border:3px solid var(--ink);border-radius:18px;background:rgba(255,250,240,.96);
+      display:flex;align-items:center;justify-content:center;gap:9px;font-size:clamp(13px,1.05vw,19px);font-weight:950;white-space:nowrap;
+      box-shadow:3px 3px 0 rgba(23,22,20,.14);
+    }
+    .status{padding:0 clamp(13px,1.1vw,20px)}
+    .status strong{font-size:1.75em;line-height:1;color:var(--orange);text-shadow:1px 1px 0 rgba(23,22,20,.12)}
+    .control,.filter-chip{cursor:pointer;transition:transform .15s,box-shadow .15s,background .15s}
+    .control{padding:0 clamp(13px,1.22vw,23px)}
+    .control:hover,.filter-chip:hover{transform:translate(-1px,-1px);box-shadow:6px 6px 0 rgba(23,22,20,.14)}
+    .control:active,.filter-chip:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(23,22,20,.16)}
+    .control.primary{background:linear-gradient(180deg,#ff7956 0%,var(--orange) 100%);color:white;min-width:clamp(150px,13vw,230px)}
+    .control.icon{width:clamp(44px,5.3vh,62px);padding:0;font-size:1.1em}
+    .console{
+      min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr);gap:var(--gap);
+    }
+    .filters{
+      min-height:clamp(54px,6.5vh,76px);display:flex;align-items:center;gap:clamp(8px,.8vw,14px);
+      overflow:hidden;padding:0 2px;
+    }
+    .filter-chip{
+      min-height:clamp(40px,4.8vh,56px);padding:0 clamp(11px,1vw,18px);
+      background:linear-gradient(180deg,#fffdf6,#f7ead4);
+    }
+    .filter-chip.active{background:linear-gradient(180deg,var(--chip),color-mix(in srgb,var(--chip) 72%,#171614));color:#fffaf0}
+    .filter-dot{width:.82em;aspect-ratio:1;border:2px solid var(--ink);border-radius:50%;background:var(--chip);box-shadow:1px 1px 0 rgba(23,22,20,.18)}
+    .grid{
+      min-height:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));
+      gap:var(--gap);perspective:1800px;
+    }
+    .skill-card{
+      --accent:#ff6438;--accent-2:#ffb9b1;position:relative;min-width:0;min-height:0;cursor:pointer;border-radius:var(--radius);
+      outline:none;touch-action:manipulation;transform-style:preserve-3d;
+    }
+    .skill-card:focus-visible{outline:6px solid #1878ff;outline-offset:4px}
+    .card-shell{
+      position:absolute;inset:0;overflow:hidden;border:3px solid var(--ink);border-radius:var(--radius);
+      background:
+        radial-gradient(circle at 88% 12%,color-mix(in srgb,var(--accent) 28%,transparent) 0 44px,transparent 45px),
+        radial-gradient(circle at 8% 92%,color-mix(in srgb,var(--accent-2) 22%,transparent) 0 48px,transparent 49px),
+        linear-gradient(150deg,#fffdf7 0%,#fff2da 100%);
+      box-shadow:7px 7px 0 rgba(23,22,20,.18),11px 11px 0 color-mix(in srgb,var(--accent) 18%,transparent);
+      transition:filter .22s ease,opacity .22s ease,box-shadow .22s ease,transform .22s ease;
+      transform-style:preserve-3d;
+    }
+    .skill-card:hover .card-shell{transform:translateY(-4px) rotateX(2deg);box-shadow:10px 12px 0 rgba(23,22,20,.16),16px 16px 0 color-mix(in srgb,var(--accent) 22%,transparent)}
+    .skill-card.used .card-shell{filter:grayscale(1) saturate(0);opacity:.64;box-shadow:4px 4px 0 rgba(23,22,20,.2);transform:none}
+    .skill-card.flipping .card-shell{animation:turn-card .62s cubic-bezier(.2,.76,.18,1)}
+    .skill-card::after{
+      content:"";position:absolute;z-index:8;inset:3px;border-radius:calc(var(--radius) - 2px);
+      background:linear-gradient(105deg,transparent 31%,rgba(255,255,255,.88) 46%,color-mix(in srgb,var(--accent) 36%,transparent) 56%,transparent 69%);
+      transform:translateX(-145%);opacity:0;pointer-events:none;
+    }
+    .skill-card.flipping::after{animation:sweep .62s cubic-bezier(.2,.8,.2,1)}
+    .skill-card.activated .card-shell{animation:activate-pulse .86s cubic-bezier(.16,.95,.22,1)}
+    .sigil{
+      position:absolute;z-index:1;right:clamp(10px,.9vw,18px);top:clamp(10px,.9vw,18px);
+      width:clamp(72px,6.1vw,116px);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;
+      background:
+        radial-gradient(circle at 35% 25%,rgba(255,255,255,.42),transparent 32%),
+        var(--accent);
+      border:5px solid color-mix(in srgb,var(--accent) 55%,white);
+      color:white;filter:drop-shadow(3px 4px 0 rgba(23,22,20,.18));transform:rotate(2deg);
+    }
+    .sigil::before{
+      content:"";position:absolute;inset:-10%;z-index:-1;background:var(--accent);
+      clip-path:polygon(50% 0,58% 8%,69% 4%,73% 16%,86% 15%,85% 29%,97% 35%,89% 46%,98% 58%,85% 64%,87% 78%,74% 80%,68% 92%,57% 88%,50% 100%,43% 88%,32% 92%,26% 80%,13% 78%,15% 64%,2% 58%,11% 46%,3% 35%,15% 29%,14% 15%,27% 16%,31% 4%,42% 8%);
+    }
+    .sigil::after{
+      content:"";position:absolute;inset:17%;border:3px solid rgba(255,255,255,.58);border-radius:50%;
+    }
+    .sigil-icon{position:relative;z-index:1;font-size:clamp(34px,3.05vw,58px);line-height:1;text-shadow:2px 2px 0 rgba(23,22,20,.18)}
+    .energy{
+      position:absolute;z-index:0;inset:auto auto -36% -30%;width:82%;aspect-ratio:1;border-radius:50%;
+      background:radial-gradient(circle,color-mix(in srgb,var(--accent) 34%,transparent) 0 28%,transparent 68%);
+      filter:blur(1px);opacity:.9;
+    }
+    .corner{position:absolute;z-index:2;left:clamp(12px,1vw,18px);top:clamp(11px,.9vw,16px);display:flex;gap:6px}
+    .pip{width:clamp(9px,.7vw,13px);aspect-ratio:1;border:2px solid var(--ink);border-radius:50%;background:var(--accent);box-shadow:1px 1px 0 rgba(23,22,20,.16)}
+    .card-content{
+      position:absolute;z-index:3;inset:0;padding:clamp(46px,4vw,72px) clamp(18px,1.45vw,28px) clamp(18px,1.45vw,28px);
+      display:flex;flex-direction:column;justify-content:flex-start;gap:clamp(8px,.82vh,13px);
+    }
+    .category{
+      align-self:flex-start;display:inline-flex;align-items:center;gap:7px;max-width:calc(100% - clamp(78px,6.8vw,124px));
+      min-height:1.75em;padding:.13em .62em .18em;border:2px solid var(--ink);border-radius:999px;
+      background:linear-gradient(180deg,#fffef8,color-mix(in srgb,var(--accent) 23%,#fffef8));
+      box-shadow:2px 2px 0 rgba(23,22,20,.15);
+      font-size:clamp(13px,.96vw,17px);font-weight:950;letter-spacing:.04em;white-space:nowrap;
+    }
+    .category b{color:var(--accent);text-shadow:.7px .7px 0 rgba(23,22,20,.12)}
+    .name{
+      margin:0;font-size:clamp(24px,2.15vw,41px);font-weight:950;line-height:1;letter-spacing:.03em;text-wrap:balance;
+      text-shadow:2px 2px 0 color-mix(in srgb,var(--accent) 22%,transparent);
+    }
+    .desc{
+      margin:0;font-size:clamp(15px,1.08vw,20px);font-weight:850;line-height:1.34;letter-spacing:.003em;
+      color:#312820;text-wrap:pretty;word-break:auto-phrase;line-break:strict;
+    }
+    .tagline{
+      display:flex;align-items:center;gap:7px;min-height:clamp(28px,2.5vh,34px);margin-top:2px;
+      font-size:clamp(12px,.88vw,16px);font-weight:950;letter-spacing:.075em;color:#6d5a48;text-transform:uppercase;
+      margin-top:auto;
+    }
+    .tagline::before{content:"";width:24px;height:3px;border-radius:999px;background:var(--accent);box-shadow:1px 1px 0 rgba(23,22,20,.2)}
+    .stage-chip{
+      position:absolute;z-index:4;right:clamp(12px,1vw,18px);bottom:clamp(12px,1vw,18px);
+      display:inline-flex;align-items:center;justify-content:center;min-height:clamp(30px,2.6vh,38px);padding:0 clamp(10px,.85vw,15px);
+      border:2px solid var(--ink);border-radius:999px;background:#fffaf0;box-shadow:2px 2px 0 rgba(23,22,20,.15);
+      font-size:clamp(12px,.86vw,15px);font-weight:950;letter-spacing:.05em;
+    }
+    .stage-chip.pre{background:linear-gradient(180deg,#fffaf0,#ffe0ba)}
+    .used-stamp{
+      position:absolute;z-index:7;left:50%;top:50%;translate:-50% -50%;padding:.16em .42em .22em;border:5px solid var(--ink);
+      border-radius:18px;background:rgba(255,250,240,.88);color:var(--ink);font-size:clamp(28px,2.7vw,52px);font-weight:950;letter-spacing:.16em;
+      transform:rotate(-12deg) scale(.82);opacity:0;transition:opacity .18s,transform .2s;box-shadow:5px 5px 0 rgba(23,22,20,.2);
+    }
+    .skill-card.used .used-stamp{opacity:1;transform:rotate(-12deg) scale(1)}
+
+    .skill-card.tight .name{letter-spacing:.01em;font-size:clamp(23px,2.05vw,40px)}
+    .skill-card.tight .category{max-width:calc(100% - clamp(72px,6.3vw,116px))}
+    .toast{
+      position:fixed;z-index:1000;left:50%;bottom:clamp(18px,3vh,38px);max-width:min(90vw,780px);
+      transform:translate(-50%,22px);opacity:0;background:var(--ink);color:#fff8e9;border:3px solid #fff8e9;border-radius:16px;
+      padding:14px 22px;font-size:clamp(15px,1.2vw,21px);font-weight:850;box-shadow:6px 6px 0 rgba(255,100,56,.7);
+      pointer-events:none;transition:opacity .2s,transform .2s;
+    }
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    @keyframes turn-card{
+      0%{transform:translateY(0) rotateZ(0) scale(1)}
+      38%{transform:translateY(-12px) rotateZ(-.8deg) scale(1.025);filter:drop-shadow(0 18px 13px rgba(23,22,20,.26))}
+      62%{transform:translateY(-8px) rotateZ(.5deg) scale(1.014)}
+      100%{transform:translateY(0) rotateZ(0) scale(1)}
+    }
+    @keyframes sweep{0%{transform:translateX(-145%);opacity:0}30%{opacity:.95}100%{transform:translateX(145%);opacity:0}}
+    @keyframes activate-pulse{
+      0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 62%,transparent),7px 7px 0 rgba(23,22,20,.18)}
+      45%{box-shadow:0 0 0 12px color-mix(in srgb,var(--accent) 25%,transparent),12px 12px 0 rgba(23,22,20,.14);transform:translateY(-8px) scale(1.02)}
+      100%{box-shadow:7px 7px 0 rgba(23,22,20,.18),11px 11px 0 color-mix(in srgb,var(--accent) 18%,transparent);transform:none}
+    }
+    @media(min-width:761px) and (min-aspect-ratio:16/9){
+      :root{--gap:clamp(12px,min(1.3vw,2.32vh),24px)}
+      .app{padding:clamp(18px,min(2.5vw,4.1vh),48px)}
+      .name{font-size:clamp(22px,min(2.05vw,3.5vh),41px)}
+      .desc{font-size:clamp(14px,min(1.06vw,1.82vh),20px);line-height:1.34}
+      .card-content{padding-top:clamp(44px,min(4vw,6.8vh),72px)}
+    }
+    @media(max-width:1500px){
+      .brand-mark{display:none}
+      .grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(3,minmax(210px,1fr))}
+      .filters{overflow:auto;scrollbar-width:none}.filters::-webkit-scrollbar{display:none}
+    }
+    @media(max-width:1100px){
+      html,body{overflow:auto}
+      .app{height:auto;min-height:100dvh;grid-template-rows:auto auto}
+      .topbar{flex-wrap:wrap}
+      .toolbar{width:100%;margin-left:0}
+      .status{margin-left:auto}
+      .console{min-height:auto}
+      .grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:none;grid-auto-rows:minmax(260px,34vh)}
+      .control.primary{flex:1}
+    }
+    @media(max-width:680px){
+      .app{padding:18px}
+      h1{font-size:25px;white-space:normal}
+      .subtitle{white-space:normal;letter-spacing:.06em}
+      #fullscreenBtn{display:none}
+      .status .label{display:none}
+      .grid{grid-template-columns:1fr;grid-auto-rows:minmax(252px,33vh)}
+      .card-content{padding-right:22px}
+      .sigil{width:82px}
+      .category{max-width:calc(100% - 90px)}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 120 120">
+            <path d="M60 8l12 31 33 2-26 20 9 32-28-19-28 19 9-32-26-20 33-2z" fill="#ffd45c" stroke="#171614" stroke-width="7" stroke-linejoin="round"/>
+            <path d="M33 78c16 14 36 18 57 0" fill="none" stroke="#171614" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="45" cy="50" r="6" fill="#171614"/><circle cx="75" cy="50" r="6" fill="#171614"/>
+            <path d="M60 13v20M18 41l17 10M102 41 85 51" fill="none" stroke="#ff6438" stroke-width="6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="brand-title">
+          <h1>逆转技能控制台</h1>
+          <div class="subtitle">10 张技能卡 · 点击激活 / 置灰 · 数字键 1–0 快速触发</div>
+        </div>
+      </div>
+      <div class="toolbar">
+        <div class="status" aria-live="polite"><span aria-hidden="true">⚡</span><strong id="availableCount">10</strong><span class="label">张待命</span></div>
+        <button class="control icon" id="fullscreenBtn" type="button" aria-label="全屏投影" title="全屏投影（F）">⛶</button>
+        <button class="control primary" id="resetBtn" type="button">↻ 全部充能</button>
+      </div>
+    </header>
+    <section class="console" aria-label="技能控制台">
+      <nav class="filters" id="filters" aria-label="技能类型筛选"></nav>
+      <section class="grid" id="cardGrid" aria-label="十张逆转技能卡"></section>
+    </section>
+  </main>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script>
+    const groups=[
+      {id:'all',name:'全部技能',color:'#171614'},
+      {id:'fate',name:'逆天改命',color:'#ff3141'},
+      {id:'shift',name:'斗转星移',color:'#ff8a24'},
+      {id:'aid',name:'雪中送炭',color:'#37a8ff'},
+      {id:'survive',name:'绝地逢生',color:'#36c16f'},
+      {id:'wealth',name:'聚财童子',color:'#ffd45c'}
+    ];
+    const skills=[
+      {id:'comeback',group:'fate',name:'反败为胜',icon:'↯',stage:'后一轮',tag:'Reverse the Gap',desc:'在后一轮游戏中，落后任意筹码，可直接逆转双方当前场上筹码差额。'},
+      {id:'split',group:'fate',name:'平分秋色',icon:'⚖',stage:'即时',tag:'Cut the Crush',desc:'强制将双方本局输赢筹码对半均分，打消单方面碾压局面。'},
+      {id:'seer',group:'shift',name:'先知一眼',icon:'◉',stage:'开局',tag:'Peek Before Play',desc:'开局偷看对手隐藏筹码数量，提前规划对局策略。'},
+      {id:'swap',group:'shift',name:'偷天换子',icon:'⇄',stage:'赛前使用',tag:'Secret Exchange',desc:'在后一轮游戏中，与对手换牌 1 次。',tight:true},
+      {id:'double',group:'aid',name:'筹码翻倍',icon:'×2',stage:'赢局生效',tag:'Double the Hit',desc:'本局你单次下注赢取的筹码直接 ×2 一次，输局不生效。'},
+      {id:'safe',group:'aid',name:'无损保底',icon:'▣',stage:'赛前使用',tag:'No-Loss Floor',desc:'本轮对局就算全输，也不会扣除自身原有筹码，仅输掉本局下注。'},
+      {id:'free',group:'survive',name:'绝境兜底',icon:'✦',stage:'危机触发',tag:'Last Stand Entry',desc:'当自身剩余筹码不足最低下注时，直接免费获得 1 次参与对局机会。'},
+      {id:'lock',group:'survive',name:'固步封局',icon:'⛔',stage:'危机触发',tag:'Skill Lockdown',desc:'在危机时刻，让本局对手无法使用任何技能。'},
+      {id:'borrow',group:'wealth',name:'借财周转',icon:'￥',stage:'临时借筹',tag:'Borrow the Crowd',desc:'临时向任何场外观众借筹码，对局结束返还。'},
+      {id:'harvest',group:'wealth',name:'全场通吃',icon:'✹',stage:'获胜后',tag:'Collect the Cheers',desc:'单局获胜后，额外找所有围观群众 1 次少量纪念筹码。'}
+    ];
+    const KEY='fate-skill-console-v1';
+    let state={used:[],filter:'all'};
+    let toastTimer=null;
+    try{
+      const saved=JSON.parse(localStorage.getItem(KEY));
+      if(saved&&Array.isArray(saved.used)&&typeof saved.filter==='string')state=saved;
+    }catch(_){}
+    const groupMap=Object.fromEntries(groups.map(g=>[g.id,g]));
+    const accent2=color=>`color-mix(in srgb, ${color} 42%, white)`;
+    function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+    function renderFilters(){
+      const nav=document.getElementById('filters');
+      nav.innerHTML=groups.map(g=>`<button class="filter-chip ${state.filter===g.id?'active':''}" type="button" data-filter="${g.id}" style="--chip:${g.color}"><span class="filter-dot" aria-hidden="true"></span>${g.name}</button>`).join('');
+      nav.querySelectorAll('.filter-chip').forEach(btn=>btn.addEventListener('click',()=>{
+        state.filter=btn.dataset.filter;save();render();showToast(state.filter==='all'?'已显示全部技能':`只看「${groupMap[state.filter].name}」`);
+      }));
+    }
+    function cardMarkup(skill,index){
+      const group=groupMap[skill.group],used=state.used.includes(skill.id);
+      return `<article class="skill-card ${used?'used':''} ${skill.tight?'tight':''}" data-id="${skill.id}" role="button" tabindex="0" aria-pressed="${used}" aria-label="${index+1===10?'0':index+1}号技能，${skill.name}，${used?'已使用':'待命'}，点击切换" style="--accent:${group.color};--accent-2:${accent2(group.color)}">
+        <div class="card-shell">
+          <div class="energy" aria-hidden="true"></div>
+          <div class="corner" aria-hidden="true"><span class="pip"></span><span class="pip"></span><span class="pip"></span></div>
+          <div class="sigil" aria-hidden="true"><span class="sigil-icon">${skill.icon}</span></div>
+          <div class="card-content">
+            <div class="category"><span>${group.name}</span><b>${String(index+1).padStart(2,'0')}</b></div>
+            <h2 class="name">${skill.name}</h2>
+            <p class="desc">${skill.desc}</p>
+            <div class="tagline">${skill.tag}</div>
+          </div>
+          <div class="stage-chip ${skill.stage.includes('赛前')?'pre':''}">${skill.stage}</div>
+          <div class="used-stamp" aria-hidden="true">已用</div>
+        </div>
+      </article>`;
+    }
+    function renderCards(){
+      const grid=document.getElementById('cardGrid');
+      const visible=skills.filter(s=>state.filter==='all'||s.group===state.filter);
+      grid.innerHTML=visible.map((skill)=>cardMarkup(skill,skills.findIndex(s=>s.id===skill.id))).join('');
+      grid.querySelectorAll('.skill-card').forEach(el=>{
+        el.addEventListener('click',toggleCard);
+        el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();el.click()}});
+      });
+      updateHeader();
+    }
+    function render(){renderFilters();renderCards()}
+    function toggleCard(e){
+      const el=e.currentTarget,id=el.dataset.id,isUsed=state.used.includes(id),skill=skills.find(s=>s.id===id);
+      el.classList.add('flipping');
+      window.setTimeout(()=>{
+        if(isUsed){
+          state.used=state.used.filter(x=>x!==id);
+          el.classList.remove('used');
+          showToast(`「${skill.name}」已重新充能`);
+        }else{
+          state.used.push(id);
+          el.classList.add('used','activated');
+          showToast(`已激活「${skill.name}」`);
+        }
+        el.setAttribute('aria-pressed',String(!isUsed));save();updateHeader();
+      },260);
+      window.setTimeout(()=>el.classList.remove('flipping','activated'),760);
+    }
+    function updateHeader(){
+      const n=skills.length-state.used.length;
+      document.getElementById('availableCount').textContent=n;
+      const btn=document.getElementById('resetBtn');
+      btn.textContent=n===10?'↻ 全部已充能':'↻ 全部充能';
+      btn.classList.toggle('ready',n<3);
+    }
+    function resetBoard(){
+      state.used=[];save();render();showToast('10 张技能卡已全部重新充能');
+    }
+    function showToast(msg){
+      const t=document.getElementById('toast');
+      t.textContent=msg;t.classList.add('show');
+      clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2200);
+    }
+    function fitViewport(){
+      const scale=Math.min(window.innerWidth/1920,window.innerHeight/1080,1);
+      document.documentElement.style.setProperty('--deck-scale',String(scale));
+    }
+    document.getElementById('resetBtn').addEventListener('click',resetBoard);
+    document.getElementById('fullscreenBtn').addEventListener('click',()=>document.fullscreenElement?document.exitFullscreen?.():document.documentElement.requestFullscreen?.());
+    window.addEventListener('keydown',e=>{
+      if(e.key.toLowerCase()==='f')document.getElementById('fullscreenBtn').click();
+      if(e.key.toLowerCase()==='r')resetBoard();
+      const key=e.key==='0'?10:Number(e.key);
+      if(key>=1&&key<=10){
+        const skill=skills[key-1];
+        if(state.filter!=='all'&&state.filter!==skill.group){state.filter='all';save();render()}
+        document.querySelector(`.skill-card[data-id="${skill.id}"]`)?.click();
+      }
+    });
+    window.addEventListener('resize',fitViewport,{passive:true});
+    fitViewport();
+    render();
+  </script>
+</body>
+</html>
