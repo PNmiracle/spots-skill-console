@@ -134,7 +134,6 @@
     .card-shell{
       position:absolute;inset:0;overflow:hidden;border:3px solid var(--ink);border-radius:var(--radius);
       background:
-        radial-gradient(circle at 88% 12%,color-mix(in srgb,var(--accent) 16%,transparent) 0 46px,transparent 47px),
         radial-gradient(circle at 8% 92%,color-mix(in srgb,var(--accent-2) 13%,transparent) 0 52px,transparent 53px),
         linear-gradient(150deg,#fffdf7 0%,#fff2da 100%);
       box-shadow:7px 7px 0 rgba(23,22,20,.18),11px 11px 0 color-mix(in srgb,var(--accent) 10%,transparent);
@@ -162,12 +161,14 @@
       color:white;filter:drop-shadow(3px 4px 0 rgba(23,22,20,.18));transform:rotate(2deg);
     }
     .sigil::before{
+      content:"";position:absolute;inset:-19%;z-index:-2;border-radius:50%;
+      background:color-mix(in srgb,var(--accent) 16%,transparent);
+    }
+    .sigil::after{
       content:"";position:absolute;inset:-10%;z-index:-1;background:color-mix(in srgb,var(--accent) 82%,white);
       clip-path:polygon(50% 0,58% 8%,69% 4%,73% 16%,86% 15%,85% 29%,97% 35%,89% 46%,98% 58%,85% 64%,87% 78%,74% 80%,68% 92%,57% 88%,50% 100%,43% 88%,32% 92%,26% 80%,13% 78%,15% 64%,2% 58%,11% 46%,3% 35%,15% 29%,14% 15%,27% 16%,31% 4%,42% 8%);
     }
-    .sigil::after{
-      content:"";position:absolute;inset:17%;border:3px solid rgba(255,255,255,.58);border-radius:50%;
-    }
+    .sigil-ring{position:absolute;inset:17%;border:3px solid rgba(255,255,255,.58);border-radius:50%;pointer-events:none}
     .sigil-icon{position:relative;z-index:1;font-size:clamp(29px,2.48vw,47px);line-height:1;text-shadow:2px 2px 0 rgba(23,22,20,.18)}
     .energy{
       position:absolute;z-index:0;inset:auto auto -36% -30%;width:82%;aspect-ratio:1;border-radius:50%;
@@ -175,11 +176,7 @@
       filter:blur(1px);opacity:.55;
     }
     .column-plate{
-      position:absolute;z-index:1;left:50%;top:clamp(52px,4.45vw,80px);transform:translateX(-50%);
-      width:clamp(132px,12vw,210px);height:clamp(34px,2.9vw,52px);border:2px solid var(--ink);border-radius:999px;
-      background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 45%,white));
-      box-shadow:3px 3px 0 rgba(23,22,20,.16);
-      opacity:.07;pointer-events:none;
+      display:none;
     }
     .corner{position:absolute;z-index:2;left:clamp(12px,1vw,18px);top:clamp(11px,.9vw,16px);display:flex;gap:6px}
     .pip{width:clamp(9px,.7vw,13px);aspect-ratio:1;border:2px solid var(--ink);border-radius:50%;background:var(--accent);box-shadow:1px 1px 0 rgba(23,22,20,.16)}
@@ -188,11 +185,18 @@
       display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:clamp(8px,.72vh,11px);
     }
     .category{
-      justify-self:center;align-self:start;display:inline-flex;align-items:center;justify-content:center;gap:7px;max-width:calc(100% - clamp(72px,6vw,110px));
-      min-height:1.84em;padding:.13em .7em .18em;border:2px solid var(--ink);border-radius:999px;
-      background:linear-gradient(180deg,#fffef8,color-mix(in srgb,var(--accent) 23%,#fffef8));
+      position:relative;
+      justify-self:start;align-self:start;display:inline-flex;align-items:center;justify-content:flex-start;gap:7px;
+      width:calc(100% - clamp(104px,8.8vw,154px));max-width:none;
+      min-height:1.72em;padding:.1em .7em .15em;border:2px solid var(--ink);border-radius:999px;
+      background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 18%,#fffef8),#fffef8 62%);
       box-shadow:2px 2px 0 rgba(23,22,20,.15);
-      font-size:clamp(15px,1.1vw,20px);font-weight:950;letter-spacing:.035em;white-space:nowrap;
+      font-size:clamp(13px,.96vw,17px);font-weight:950;letter-spacing:.025em;white-space:nowrap;
+    }
+    .category::before{
+      content:"";position:absolute;z-index:-1;inset:calc(-1 * clamp(5px,.45vw,8px)) calc(-1 * clamp(7px,.62vw,11px));
+      border-radius:999px;background:color-mix(in srgb,var(--accent) 10%,transparent);
+      pointer-events:none;
     }
     .category b{color:var(--accent);text-shadow:.7px .7px 0 rgba(23,22,20,.12)}
     .copy-main{
@@ -232,7 +236,7 @@
     .skill-card.used .used-stamp{opacity:1;transform:rotate(-12deg) scale(1)}
 
     .skill-card.tight .name{letter-spacing:0;font-size:clamp(34px,2.88vw,56px)}
-    .skill-card.tight .category{max-width:calc(100% - clamp(70px,5.8vw,108px))}
+    .skill-card.tight .category{width:calc(100% - clamp(104px,8.8vw,154px));max-width:none}
     .toast{
       position:fixed;z-index:1000;left:50%;bottom:clamp(18px,3vh,38px);max-width:min(90vw,780px);
       transform:translate(-50%,22px);opacity:0;background:var(--ink);color:#fff8e9;border:3px solid #fff8e9;border-radius:16px;
@@ -331,7 +335,7 @@
           <div class="energy" aria-hidden="true"></div>
           <div class="column-plate" aria-hidden="true"></div>
           <div class="corner" aria-hidden="true"><span class="pip"></span><span class="pip"></span><span class="pip"></span></div>
-          <div class="sigil" aria-hidden="true"><span class="sigil-icon">${skill.icon}</span></div>
+          <div class="sigil" aria-hidden="true"><span class="sigil-ring"></span><span class="sigil-icon">${skill.icon}</span></div>
           <div class="card-content">
             <div class="category"><span>${group.name}</span><b>${String(index+1).padStart(2,'0')}</b></div>
             <div class="copy-main"><h2 class="name">${skill.name}</h2><p class="desc">${skill.desc}</p></div>
