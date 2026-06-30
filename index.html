@@ -131,6 +131,7 @@
     .badge-cn{font-family:var(--font-rounded);font-size:clamp(17px,1.12vw,22px);font-weight:950;letter-spacing:.025em;line-height:.95;text-shadow:1px 1px 0 rgba(23,22,20,.16);white-space:nowrap}
     .badge-en{font-size:clamp(9px,.62vw,12px);font-weight:900;letter-spacing:.015em;line-height:1;opacity:.96;white-space:nowrap}
     .dog-glyph{width:clamp(66px,5vw,94px);height:clamp(66px,5vw,94px);display:grid;place-items:center;align-self:end;border:0;border-radius:50%;background:transparent;box-shadow:none;overflow:hidden}
+    .dog-glyph picture{display:contents}
     .dog-glyph img{width:100%;height:100%;object-fit:contain;display:block;filter:contrast(1.08);opacity:1}
     .dog-body{fill:#fff8e9;stroke:#171614;stroke-width:4.8;stroke-linecap:round;stroke-linejoin:round}
     .dog-spot,.dog-ear,.dog-nose{fill:#171614}
@@ -313,7 +314,7 @@
       <path d="M20 20c7-7 15-5 19 2M16 51c5 6 13 5 18-2M87 22c7-9 17-8 21 1M88 54c7 7 17 5 20-3" fill="none" stroke="url(#boneShine)" stroke-width="5" stroke-linecap="round"/>
       <path d="M42 34h40" fill="none" stroke="#fff9e8" stroke-width="6" stroke-linecap="round" opacity=".7"/>
     </svg>`;
-    const dogArt=pose=>`<img src="assets/action-${pose}-badge-v2.png" alt="" aria-hidden="true">`;
+    const dogArt=pose=>`<picture><source srcset="assets/action-${pose}-badge-v2.webp" type="image/webp"><img src="assets/action-${pose}-badge-v2.png" width="384" height="384" decoding="async" alt="" aria-hidden="true"></picture>`;
     function save(){localStorage.setItem(KEY,JSON.stringify(state))}
     function cardMarkup(c){
       const used=state.used.includes(c.id),hasBone=state.boneLocation===c.id;
