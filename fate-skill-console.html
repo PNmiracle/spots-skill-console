@@ -228,11 +228,11 @@
     }
     .stage-chip.pre{background:linear-gradient(180deg,#fffaf0,#ffe0ba)}
     .used-stamp{
-      position:absolute;z-index:7;left:50%;top:50%;translate:-50% -50%;padding:.16em .42em .22em;border:5px solid var(--ink);
-      border-radius:18px;background:rgba(255,250,240,.88);color:var(--ink);font-size:clamp(28px,2.7vw,52px);font-weight:950;letter-spacing:.16em;
-      transform:rotate(-12deg) scale(.82);opacity:0;transition:opacity .18s,transform .2s;box-shadow:5px 5px 0 rgba(23,22,20,.2);
+      position:absolute;z-index:7;left:clamp(12px,1vw,18px);bottom:clamp(12px,1vw,18px);padding:.18em .7em .24em;border:3px solid var(--ink);
+      border-radius:999px;background:rgba(255,250,240,.94);color:var(--ink);font-size:clamp(16px,1.28vw,24px);font-weight:950;letter-spacing:.12em;
+      transform:rotate(-3deg) scale(.86);transform-origin:left bottom;opacity:0;transition:opacity .18s,transform .2s;box-shadow:3px 3px 0 rgba(23,22,20,.18);
     }
-    .skill-card.used .used-stamp{opacity:1;transform:rotate(-12deg) scale(1)}
+    .skill-card.used .used-stamp{opacity:1;transform:rotate(-3deg) scale(1)}
 
     .skill-card.tight .name{letter-spacing:0;font-size:clamp(31px,2.6vw,50px)}
     .skill-card.tight .category{width:calc(100% - clamp(112px,9vw,162px));max-width:none}
@@ -298,7 +298,7 @@
       .name,.skill-card.tight .name{font-size:34px;line-height:1.02}
       .desc{font-size:16px;line-height:1.4;-webkit-line-clamp:4}
       .stage-chip{right:15px;bottom:14px;min-height:34px;padding:0 12px;font-size:13px;max-width:122px}
-      .used-stamp{font-size:38px;border-width:4px}
+      .used-stamp{left:15px;bottom:14px;font-size:18px;border-width:3px}
       .toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));width:max-content;max-width:calc(100vw - 32px);padding:12px 16px;font-size:15px;text-align:center}
     }
     @media(max-width:390px){
