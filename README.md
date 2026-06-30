@@ -1,32 +1,32 @@
-# 狗运当骰 · 技能卡控制台
+# 技能卡控制台
 
-一个适合桌面投影与桌游现场使用的技能卡控制台仓库。目前包含两个页面：
+一个适合桌面投影、桌游现场和公司活动使用的技能卡控制台仓库。目前包含两个页面：
 
-- 原技能控制台：六技能卡，支持翻卡、重置、全屏和骨头标记拖放。
-- 逆转技能控制台：10 张逆转技能卡，固定 5×2 布局，每类技能一列，支持点击激活/置灰、类型筛选、全屏和快捷键。
+- 狗运当骰技能卡控制台：狗运当骰游戏内的六张技能卡，支持翻卡、重置、全屏和骨头标记拖放。
+- 公司活动逆转技能控制台：公司活动使用的 10 张逆转技能卡，固定 5×2 布局，每类技能一列，支持点击激活/置灰、类型筛选、全屏和快捷键。
 
 ## 在线使用
 
 ### GitHub Pages
 
-- 原技能控制台：<https://pnmiracle.github.io/spots-skill-console/>
-- 逆转技能控制台：<https://pnmiracle.github.io/spots-skill-console/fate-skill-console.html>
+- 狗运当骰技能卡控制台：<https://pnmiracle.github.io/spots-skill-console/>
+- 公司活动逆转技能控制台：<https://pnmiracle.github.io/spots-skill-console/fate-skill-console.html>
 
 ### Vercel
 
-- 原技能控制台：<https://deploy-spots.vercel.app>
-- 逆转技能控制台：<https://deploy-fate.vercel.app>
+- 狗运当骰技能卡控制台：<https://deploy-spots.vercel.app>
+- 公司活动逆转技能控制台：<https://deploy-fate.vercel.app>
 
 ## 操作
 
-### 原技能控制台
+### 狗运当骰技能卡控制台
 
 - 点击技能卡切换可用/已使用状态。
 - 按 `1`–`6` 快速翻转对应技能卡。
 - 按 `R` 重置技能板，按 `F` 进入或退出全屏。
 - 拖动骨头标记到技能卡或顶部放置区。
 
-### 逆转技能控制台
+### 公司活动逆转技能控制台
 
 - 点击技能卡切换待命/已使用状态。
 - 按 `1`–`0` 快速触发对应技能卡。
