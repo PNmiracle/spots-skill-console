@@ -145,6 +145,7 @@
       filter:drop-shadow(5px 6px 0 rgba(255,100,56,.62)) drop-shadow(7px 8px 0 rgba(23,22,20,.18));
       cursor:grab;pointer-events:auto;touch-action:none;animation:bone-pop .4s cubic-bezier(.17,1.55,.3,1);
     }
+    .bone-tray .bone{width:clamp(62px,4.5vw,84px);height:clamp(36px,2.75vw,50px);filter:drop-shadow(3px 4px 0 rgba(255,100,56,.52)) drop-shadow(4px 5px 0 rgba(23,22,20,.14))}
     .bone svg{width:100%;height:100%;overflow:visible;pointer-events:none}
     .bone.dragging{position:fixed;z-index:999;margin:0;pointer-events:none;transform:rotate(-8deg) scale(1.1);animation:none;opacity:.96}
     .skill-card.drop-target .card-shell{outline:8px solid var(--orange);outline-offset:-9px}
@@ -242,7 +243,7 @@
           <path class="peek-paw" d="M92 230c11-22 39-26 53-7 6 9 2 23-10 26H99c-9-1-12-10-7-19z"/>
           <path class="peek-paw" d="M202 226c17-17 43-12 52 10 4 10-3 18-14 18h-35c-12-3-12-18-3-28z"/>
         </svg>
-      </div><h1>技能卡控制台</h1><button class="rules-trigger" id="rulesBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="rulesModal"><span class="rules-question" aria-hidden="true">?</span><span class="rules-label">规则</span></button></div>
+      </div><h1>技能卡控制台</h1><button class="rules-trigger" id="rulesBtn" type="button" aria-label="查看规则说明" aria-haspopup="dialog" aria-expanded="false" aria-controls="rulesModal"><span class="rules-question" aria-hidden="true">?</span><span class="rules-label">规则</span></button></div>
       <div class="toolbar">
         <div class="status" aria-live="polite"><span aria-hidden="true">🐾</span><strong id="availableCount">6</strong><span class="label">张可用</span></div>
         <div class="bone-tray" id="boneTray" data-drop-zone="tray" aria-label="骨头放置区"></div>
@@ -261,7 +262,7 @@
       <div class="rules-list">
         <article class="rule-item">
           <span class="rule-number" aria-hidden="true">1</span>
-          <div class="rule-copy"><h3>每回合，选择一种行动</h3><p>选择 <span class="rule-chip">1 块</span>仍为正面的技能板，执行技能后将它翻至灰面；或者不使用技能，改为<strong>给狗狗积分</strong>。</p></div>
+          <div class="rule-copy"><h3>每回合，选择一种行动</h3><p>选择 <span class="rule-chip">1 块</span>仍为正面的技能板，执行技能后将它翻至灰面；<br>或者不使用技能，改为<strong>给狗狗积分</strong>。</p></div>
         </article>
         <article class="rule-item">
           <span class="rule-number" aria-hidden="true">2</span>
@@ -355,9 +356,9 @@
       state.used=[];save();render();
     }
     function startBoneDrag(e){
-      e.preventDefault();e.stopPropagation();const source=e.currentTarget,r=source.getBoundingClientRect(),ghost=source.cloneNode(true);
-      ghost.classList.add('dragging');ghost.style.width=`${r.width}px`;ghost.style.height=`${r.height}px`;document.body.appendChild(ghost);source.style.opacity='0';
-      const ox=e.clientX-r.left,oy=e.clientY-r.top;
+      e.preventDefault();e.stopPropagation();const source=e.currentTarget,r=source.getBoundingClientRect(),fromTray=!!source.closest('.bone-tray'),ghost=source.cloneNode(true);
+      ghost.classList.add('dragging');document.body.appendChild(ghost);source.style.opacity='0';
+      const gr=ghost.getBoundingClientRect(),ox=fromTray?gr.width/2:e.clientX-r.left,oy=fromTray?gr.height/2:e.clientY-r.top;
       const clearTargets=()=>document.querySelectorAll('.skill-card,.bone-tray').forEach(x=>x.classList.remove('drop-target'));
       const move=ev=>{ghost.style.left=`${ev.clientX-ox}px`;ghost.style.top=`${ev.clientY-oy}px`;clearTargets();document.elementFromPoint(ev.clientX,ev.clientY)?.closest('.skill-card,.bone-tray')?.classList.add('drop-target')};
       const end=ev=>{window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',end);const target=document.elementFromPoint(ev.clientX,ev.clientY)?.closest('.skill-card,.bone-tray');ghost.remove();clearTargets();if(target){state.boneLocation=target.dataset.dropZone==='tray'?'tray':target.dataset.id;save();render();showToast(state.boneLocation==='tray'?'骨头已收回顶部放置区':`骨头已放到「${cards.find(c=>c.id===state.boneLocation).name}」`)}else source.style.opacity=''};
