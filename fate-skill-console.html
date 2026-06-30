@@ -57,9 +57,9 @@
       padding:clamp(22px,2.5vw,48px);
       display:grid;grid-template-rows:clamp(76px,9vh,108px) minmax(0,1fr);gap:var(--gap);
       isolation:isolate;
-      transform:translate(-50%,-50%) scale(var(--deck-scale));
+      transform:translate(-50%,-50%);
       transform-origin:center center;
-      will-change:transform;
+      zoom:var(--deck-scale);
     }
     .app::before,.app::after{
       content:"";position:fixed;z-index:0;pointer-events:none;opacity:.16;filter:drop-shadow(4px 4px 0 rgba(23,22,20,.12));
@@ -140,7 +140,7 @@
       transition:filter .22s ease,opacity .22s ease,box-shadow .22s ease,transform .22s ease;
       transform-style:preserve-3d;
     }
-    .skill-card:hover .card-shell{transform:translateY(-4px) rotateX(2deg);box-shadow:10px 12px 0 rgba(23,22,20,.16),16px 16px 0 color-mix(in srgb,var(--accent) 22%,transparent)}
+    .skill-card:hover .card-shell{transform:translateY(-2px);box-shadow:8px 9px 0 rgba(23,22,20,.16),12px 12px 0 color-mix(in srgb,var(--accent) 16%,transparent)}
     .skill-card.used .card-shell{filter:grayscale(1) saturate(0);opacity:.64;box-shadow:4px 4px 0 rgba(23,22,20,.2);transform:none}
     .skill-card.flipping .card-shell{animation:turn-card .62s cubic-bezier(.2,.76,.18,1)}
     .skill-card::after{
@@ -202,8 +202,8 @@
     .copy-main{
       position:absolute;left:clamp(24px,1.9vw,36px);right:clamp(24px,1.9vw,36px);
       top:clamp(142px,11.35vw,218px);
-      display:grid;grid-template-rows:auto auto;gap:clamp(8px,.7vh,12px);padding-right:clamp(2px,.25vw,7px);
-      max-height:calc(100% - clamp(222px,17.4vw,330px));overflow:hidden;
+      display:grid;grid-template-rows:auto auto;gap:clamp(12px,1vh,17px);padding-right:clamp(2px,.25vw,7px);
+      max-height:calc(100% - clamp(178px,14.2vw,268px));overflow:hidden;
       transform:none;
     }
     .name{
@@ -212,15 +212,11 @@
       text-shadow:2px 2px 0 color-mix(in srgb,var(--accent) 22%,transparent);
     }
     .desc{
-      margin:0;font-size:clamp(18px,1.27vw,24px);font-weight:850;line-height:1.24;letter-spacing:.001em;
+      margin:0;font-size:clamp(18px,1.27vw,24px);font-weight:850;line-height:1.36;letter-spacing:.001em;
       color:#312820;text-wrap:pretty;word-break:auto-phrase;line-break:strict;
       display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;
     }
-    .tagline{
-      display:flex;align-items:center;gap:7px;min-height:clamp(28px,2.5vh,34px);margin-top:2px;
-      font-size:clamp(12px,.88vw,16px);font-weight:950;letter-spacing:.075em;color:#6d5a48;text-transform:uppercase;
-      width:100%;padding-right:clamp(112px,7vw,136px);white-space:nowrap;min-width:0;
-    }
+    .tagline{display:none}
     .tagline::before{content:"";flex:0 0 24px;width:24px;height:3px;border-radius:999px;background:var(--accent);box-shadow:1px 1px 0 rgba(23,22,20,.2)}
     .tagline-text{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis}
     .stage-chip{
@@ -342,7 +338,6 @@
           <div class="card-content">
             <div class="category"><span>${group.name}</span><b>${String(index+1).padStart(2,'0')}</b></div>
             <div class="copy-main"><h2 class="name">${skill.name}</h2><p class="desc">${skill.desc}</p></div>
-            <div class="tagline"><span class="tagline-text">${skill.tag}</span></div>
           </div>
           <div class="stage-chip ${skill.stage.includes('赛前')?'pre':''}">${skill.stage}</div>
           <div class="used-stamp" aria-hidden="true">已用</div>
