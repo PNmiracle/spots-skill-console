@@ -149,8 +149,36 @@
     @keyframes bone-pop{from{transform:scale(.3) rotate(-18deg);opacity:0}}
     @keyframes ready{50%{box-shadow:0 0 0 8px rgba(131,210,223,.3),4px 4px 0 rgba(23,22,20,.17)}}
 
-    @media(max-width:1350px){.app{padding:30px}.status .label{display:none}.brand-mark{width:64px}.card-content{padding-left:24px}.step{font-size:clamp(18px,1.45vw,20px);line-height:1.31}.rosette{width:clamp(116px,10vw,140px);right:16px}.card-content{padding-right:clamp(128px,11.2vw,150px);gap:7px}.bone-tray{min-width:112px}.control.primary{min-width:150px}}
-    @media(max-width:900px){#fullscreenBtn{display:none}h1{font-size:25px}.control.primary{min-width:145px}.rosette{width:145px}.card-content{padding-right:154px}}
+    @media(min-width:761px) and (min-aspect-ratio:16/9){
+      :root{--gap:clamp(16px,min(1.9vw,3.1vh),36px)}
+      .app{padding:clamp(22px,min(3vw,4.2vh),60px)}
+      .card-content{
+        padding-top:clamp(18px,min(2vw,3.45vh),38px);
+        padding-right:clamp(126px,min(11.5vw,19.8vh),210px);
+        padding-bottom:clamp(20px,min(2.1vw,3.6vh),40px);
+        padding-left:clamp(24px,min(2.6vw,4.48vh),50px);
+        gap:clamp(6px,min(1vh,.58vw),14px)
+      }
+      .step{font-size:clamp(16px,min(1.43vw,2.46vh),27px);line-height:1.28}
+      .divider{font-size:clamp(22px,min(1.95vw,3.36vh),37px)}
+      .paw{font-size:clamp(19px,min(1.65vw,2.85vh),31px)}
+      .rosette{right:clamp(12px,min(1.45vw,2.5vh),28px);width:clamp(108px,min(9.6vw,16.55vh),174px)}
+      .badge-cn{font-size:clamp(15px,min(1.12vw,1.93vh),22px)}
+      .badge-en{font-size:clamp(8px,min(.62vw,1.07vh),12px)}
+      .dog-glyph{width:clamp(58px,min(5vw,8.62vh),94px);height:clamp(58px,min(5vw,8.62vh),94px)}
+    }
+    @media(max-width:1350px){
+      .app{padding:clamp(18px,3vh,30px)}
+      .status .label{display:none}.brand-mark{width:64px}
+      .card-content{padding:clamp(14px,2.5vh,24px) clamp(112px,min(10vw,17vh),142px) clamp(16px,2.7vh,25px) clamp(18px,2vw,24px);gap:clamp(5px,1vh,7px)}
+      .step{font-size:clamp(15.5px,min(1.4vw,2.35vh),20px);line-height:1.25}
+      .divider{font-size:clamp(21px,min(1.9vw,3.1vh),30px)}
+      .rosette{width:clamp(102px,min(9vw,15vh),132px);right:clamp(10px,1.2vw,16px)}
+      .badge-cn{font-size:clamp(14px,min(1.1vw,1.85vh),18px)}
+      .dog-glyph{width:clamp(54px,min(4.7vw,8vh),74px);height:clamp(54px,min(4.7vw,8vh),74px)}
+      .bone-tray{min-width:112px}.control.primary{min-width:150px}
+    }
+    @media(max-width:900px){#fullscreenBtn{display:none}h1{font-size:25px}.control.primary{min-width:145px}.rosette{width:98px}.card-content{padding-right:106px}}
     @media(max-width:760px),(orientation:portrait){
       html,body{overflow:auto}
       .app{height:auto;min-height:100dvh;padding:20px;gap:18px;grid-template-rows:auto auto}
