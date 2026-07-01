@@ -132,24 +132,62 @@
     }
     .skill-card:focus-visible{outline:6px solid #1878ff;outline-offset:4px}
     .card-shell{
-      position:absolute;inset:0;overflow:hidden;border:3px solid var(--ink);border-radius:var(--radius);
-      background:
-        radial-gradient(circle at 8% 92%,color-mix(in srgb,var(--accent-2) 13%,transparent) 0 52px,transparent 53px),
-        linear-gradient(150deg,#fffdf7 0%,#fff2da 100%);
+      position:absolute;inset:0;border-radius:var(--radius);
       box-shadow:7px 7px 0 rgba(23,22,20,.18),11px 11px 0 color-mix(in srgb,var(--accent) 10%,transparent);
-      transition:filter .22s ease,opacity .22s ease,box-shadow .22s ease,transform .22s ease;
+      transition:filter .22s ease,opacity .22s ease,box-shadow .22s ease,transform .62s cubic-bezier(.2,.76,.18,1);
       transform-style:preserve-3d;
     }
     .skill-card:hover .card-shell{transform:translateY(-2px);box-shadow:8px 9px 0 rgba(23,22,20,.16),12px 12px 0 color-mix(in srgb,var(--accent) 16%,transparent)}
-    .skill-card.used .card-shell{filter:grayscale(1) saturate(0);opacity:.64;box-shadow:4px 4px 0 rgba(23,22,20,.2);transform:none}
-    .skill-card.flipping .card-shell{animation:turn-card .62s cubic-bezier(.2,.76,.18,1)}
+    .skill-card.revealed .card-shell{transform:rotateY(180deg)}
+    .skill-card.revealed:hover .card-shell{transform:translateY(-2px) rotateY(180deg)}
+    .skill-card.used .card-shell{filter:grayscale(1) saturate(0);opacity:.64;box-shadow:4px 4px 0 rgba(23,22,20,.2)}
+    .card-face{
+      position:absolute;inset:0;overflow:hidden;border:3px solid var(--ink);border-radius:var(--radius);
+      backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    }
+    .card-front{
+      transform:rotateY(180deg);
+      background:radial-gradient(circle at 8% 92%,color-mix(in srgb,var(--accent-2) 13%,transparent) 0 52px,transparent 53px),linear-gradient(150deg,#fffdf7 0%,#fff2da 100%);
+    }
+    .card-back{
+      display:grid;place-items:center;
+      background:
+        repeating-linear-gradient(45deg,transparent 0 17px,rgba(255,250,240,.075) 17px 19px),
+        repeating-linear-gradient(-45deg,transparent 0 17px,rgba(23,22,20,.055) 17px 19px),
+        linear-gradient(145deg,color-mix(in srgb,var(--accent) 78%,white),var(--accent) 46%,color-mix(in srgb,var(--accent) 74%,#171614));
+    }
+    .card-back::before{
+      content:"";position:absolute;inset:clamp(10px,.8vw,15px);border:3px solid rgba(255,250,240,.9);border-radius:calc(var(--radius) - 9px);
+      box-shadow:inset 0 0 0 5px rgba(23,22,20,.12),inset 0 0 0 8px rgba(255,250,240,.4),0 0 0 1px rgba(23,22,20,.18);
+    }
+    .card-back::after{
+      content:"";position:absolute;inset:clamp(22px,1.65vw,31px);border:2px dashed rgba(255,250,240,.55);border-radius:calc(var(--radius) - 16px);
+    }
+    .back-medallion{
+      position:relative;z-index:2;width:clamp(112px,9vw,168px);aspect-ratio:1;display:grid;place-items:center;border-radius:50%;
+      color:var(--ink);background:#fff5df;border:5px solid var(--ink);
+      box-shadow:0 0 0 8px rgba(255,250,240,.5),0 0 0 12px rgba(23,22,20,.16);
+      filter:drop-shadow(3px 4px 0 rgba(23,22,20,.16));
+      transform:rotate(-3deg);transition:transform .22s ease;
+    }
+    .skill-card:hover .back-medallion{transform:rotate(2deg) scale(1.035)}
+    .back-medallion::before,.back-medallion::after{content:"";position:absolute;border-radius:50%;background:var(--accent);border:3px solid var(--ink)}
+    .back-medallion::before{width:15%;aspect-ratio:1;left:7%;top:14%}
+    .back-medallion::after{width:10%;aspect-ratio:1;right:10%;bottom:17%}
+    .back-emblem{width:72%;height:72%;filter:drop-shadow(2px 3px 0 rgba(23,22,20,.16))}
+    .back-corner{position:absolute;z-index:2;width:clamp(22px,1.7vw,32px);aspect-ratio:1;border:3px solid var(--ink);background:#fff5df;transform:rotate(45deg);box-shadow:3px 3px 0 rgba(23,22,20,.18)}
+    .back-corner::after{content:"";position:absolute;inset:25%;border-radius:50%;background:var(--accent);border:2px solid var(--ink)}
+    .back-corner.tl{left:clamp(23px,1.8vw,34px);top:clamp(23px,1.8vw,34px)}
+    .back-corner.tr{right:clamp(23px,1.8vw,34px);top:clamp(23px,1.8vw,34px)}
+    .back-corner.bl{left:clamp(23px,1.8vw,34px);bottom:clamp(23px,1.8vw,34px)}
+    .back-corner.br{right:clamp(23px,1.8vw,34px);bottom:clamp(23px,1.8vw,34px)}
     .skill-card::after{
       content:"";position:absolute;z-index:8;inset:3px;border-radius:calc(var(--radius) - 2px);
       background:linear-gradient(105deg,transparent 31%,rgba(255,255,255,.88) 46%,color-mix(in srgb,var(--accent) 36%,transparent) 56%,transparent 69%);
       transform:translateX(-145%);opacity:0;pointer-events:none;
     }
     .skill-card::before{content:none}
-    .skill-card.flipping::after{animation:sweep .62s cubic-bezier(.2,.8,.2,1)}
+    .skill-card.revealing::after{animation:sweep .62s cubic-bezier(.2,.8,.2,1)}
     .skill-card.activated .card-shell{animation:activate-pulse .86s cubic-bezier(.16,.95,.22,1)}
     .sigil{
       position:absolute;z-index:1;right:clamp(12px,1vw,20px);top:clamp(12px,1vw,20px);
@@ -201,20 +239,20 @@
     .category b{color:var(--accent);text-shadow:.7px .7px 0 rgba(23,22,20,.12)}
     .copy-main{
       position:absolute;left:clamp(24px,1.9vw,36px);right:clamp(24px,1.9vw,36px);
-      top:clamp(128px,10.1vw,192px);
-      display:grid;grid-template-rows:auto auto;gap:clamp(10px,.8vh,14px);padding-right:clamp(2px,.25vw,7px);
-      max-height:calc(100% - clamp(164px,13vw,246px));overflow:hidden;
+      top:clamp(112px,7.45vw,143px);
+      display:grid;grid-template-rows:auto auto;gap:clamp(9px,.72vh,12px);padding-right:clamp(2px,.25vw,7px);
+      max-height:calc(100% - clamp(156px,10.3vw,198px));overflow:hidden;
       transform:none;
     }
     .name{
-      margin:0;font-size:clamp(28px,2.35vw,44px);font-weight:950;line-height:1.02;letter-spacing:.005em;text-wrap:balance;
+      margin:0;font-size:clamp(34px,2.65vw,51px);font-weight:950;line-height:1.02;letter-spacing:.005em;text-wrap:balance;
       min-height:1em;
       text-shadow:2px 2px 0 color-mix(in srgb,var(--accent) 22%,transparent);
     }
     .desc{
-      margin:0;font-size:clamp(16px,1.1vw,20px);font-weight:850;line-height:1.42;letter-spacing:.001em;
+      margin:0;font-size:clamp(18px,1.22vw,23px);font-weight:850;line-height:1.32;letter-spacing:.001em;
       color:#312820;text-wrap:pretty;word-break:auto-phrase;line-break:strict;
-      display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;
+      display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
     }
     .tagline{display:none}
     .tagline::before{content:"";flex:0 0 24px;width:24px;height:3px;border-radius:999px;background:var(--accent);box-shadow:1px 1px 0 rgba(23,22,20,.2)}
@@ -234,7 +272,7 @@
     }
     .skill-card.used .used-stamp{opacity:1;transform:rotate(-3deg) scale(1)}
 
-    .skill-card.tight .name{letter-spacing:0;font-size:clamp(31px,2.6vw,50px)}
+    .skill-card.tight .name{letter-spacing:0;font-size:clamp(35px,2.7vw,52px)}
     .skill-card.tight .category{width:calc(100% - clamp(112px,9vw,162px));max-width:none}
     .toast{
       position:fixed;z-index:1000;left:50%;bottom:clamp(18px,3vh,38px);max-width:min(90vw,780px);
@@ -293,10 +331,10 @@
       .card-content{padding:22px 20px 18px;gap:8px}
       .category,.skill-card.tight .category{width:calc(100% - 96px);min-height:34px;padding:.08em .72em .15em;font-size:15px}
       .copy-main{
-        left:20px;right:20px;top:103px;max-height:138px;gap:8px;padding-right:0;
+        left:20px;right:20px;top:96px;max-height:154px;gap:8px;padding-right:0;
       }
-      .name,.skill-card.tight .name{font-size:34px;line-height:1.02}
-      .desc{font-size:16px;line-height:1.4;-webkit-line-clamp:4}
+      .name,.skill-card.tight .name{font-size:36px;line-height:1.02}
+      .desc{font-size:17px;line-height:1.34;-webkit-line-clamp:4}
       .stage-chip{right:15px;bottom:14px;min-height:34px;padding:0 12px;font-size:13px;max-width:122px}
       .used-stamp{left:15px;bottom:14px;font-size:18px;border-width:3px}
       .toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));width:max-content;max-width:calc(100vw - 32px);padding:12px 16px;font-size:15px;text-align:center}
@@ -310,8 +348,8 @@
       .status{padding:0 11px}.status .label{display:none}
       .grid{grid-auto-rows:288px}
       .skill-card{height:288px}
-      .name,.skill-card.tight .name{font-size:32px}
-      .desc{font-size:15.5px}
+      .name,.skill-card.tight .name{font-size:34px}
+      .desc{font-size:16.5px}
     }
     @media(prefers-reduced-motion:reduce){
       *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
@@ -332,13 +370,13 @@
         </div>
         <div class="brand-title">
           <h1>逆转技能控制台</h1>
-          <div class="subtitle">10 张技能卡 · 点击激活 / 置灰 · 数字键 1–0 快速触发</div>
+          <div class="subtitle">先看颜色抽卡 · 点击翻开揭晓 · 已揭晓卡片保持展示</div>
         </div>
       </div>
       <div class="toolbar">
-        <div class="status" aria-live="polite"><span aria-hidden="true">⚡</span><strong id="availableCount">10</strong><span class="label">张待命</span></div>
+        <div class="status" aria-live="polite"><span aria-hidden="true">✦</span><strong id="availableCount">10</strong><span class="label">张未揭晓</span></div>
         <button class="control icon" id="fullscreenBtn" type="button" aria-label="全屏投影" title="全屏投影（F）">⛶</button>
-        <button class="control primary" id="resetBtn" type="button">↻ 全部充能</button>
+        <button class="control primary" id="resetBtn" type="button">↻ 重新洗牌</button>
       </div>
     </header>
     <section class="console" aria-label="技能控制台">
@@ -369,11 +407,11 @@
       {id:'harvest',group:'wealth',name:'全场通吃',icon:'✹',stage:'获胜后',tag:'Collect the Cheers',desc:'单局获胜后，额外找所有围观群众 1 次少量纪念筹码。'}
     ];
     const KEY='fate-skill-console-v1';
-    let state={used:[],filter:'all'};
+    let state={used:[],revealed:[],filter:'all'};
     let toastTimer=null;
     try{
       const saved=JSON.parse(localStorage.getItem(KEY));
-      if(saved&&Array.isArray(saved.used)&&typeof saved.filter==='string')state=saved;
+      if(saved&&Array.isArray(saved.used)&&typeof saved.filter==='string')state={...saved,revealed:Array.isArray(saved.revealed)?saved.revealed:[]};
     }catch(_){}
     const groupMap=Object.fromEntries(groups.map(g=>[g.id,g]));
     const accent2=color=>`color-mix(in srgb, ${color} 42%, white)`;
@@ -386,19 +424,31 @@
       }));
     }
     function cardMarkup(skill,index){
-      const group=groupMap[skill.group],used=state.used.includes(skill.id);
-      return `<article class="skill-card ${used?'used':''} ${skill.tight?'tight':''}" data-id="${skill.id}" role="button" tabindex="0" aria-pressed="${used}" aria-label="${index+1===10?'0':index+1}号技能，${skill.name}，${used?'已使用':'待命'}，点击切换" style="--accent:${group.color};--accent-2:${accent2(group.color)}">
+      const group=groupMap[skill.group];
+      const revealed=state.revealed.includes(skill.id);
+      return `<article class="skill-card ${revealed?'revealed':''} ${skill.tight?'tight':''}" data-id="${skill.id}" role="button" tabindex="0" aria-expanded="${revealed}" aria-label="${revealed?`${skill.name}，已揭晓`:'神秘技能卡，点击翻开揭晓'}" style="--accent:${group.color};--accent-2:${accent2(group.color)}">
         <div class="card-shell">
-          <div class="energy" aria-hidden="true"></div>
-          <div class="column-plate" aria-hidden="true"></div>
-          <div class="corner" aria-hidden="true"><span class="pip"></span><span class="pip"></span><span class="pip"></span></div>
-          <div class="sigil" aria-hidden="true"><span class="sigil-ring"></span><span class="sigil-icon">${skill.icon}</span></div>
-          <div class="card-content">
-            <div class="category"><span>${group.name}</span><b>${String(index+1).padStart(2,'0')}</b></div>
-            <div class="copy-main"><h2 class="name">${skill.name}</h2><p class="desc">${skill.desc}</p></div>
+          <div class="card-face card-back" aria-hidden="true">
+            <span class="back-corner tl"></span><span class="back-corner tr"></span><span class="back-corner bl"></span><span class="back-corner br"></span>
+            <div class="back-medallion">
+              <svg class="back-emblem" viewBox="0 0 120 120" aria-hidden="true">
+                <path d="M60 10 72 43l35 2-27 21 9 34-29-20-29 20 9-34-27-21 35-2Z" fill="var(--accent)" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/>
+                <circle cx="60" cy="59" r="13" fill="#fff5df" stroke="currentColor" stroke-width="6"/>
+                <circle cx="60" cy="59" r="4.5" fill="currentColor"/>
+              </svg>
+            </div>
           </div>
-          <div class="stage-chip ${skill.stage.includes('赛前')?'pre':''}">${skill.stage}</div>
-          <div class="used-stamp" aria-hidden="true">已用</div>
+          <div class="card-face card-front">
+            <div class="energy" aria-hidden="true"></div>
+            <div class="column-plate" aria-hidden="true"></div>
+            <div class="corner" aria-hidden="true"><span class="pip"></span><span class="pip"></span><span class="pip"></span></div>
+            <div class="sigil" aria-hidden="true"><span class="sigil-ring"></span><span class="sigil-icon">${skill.icon}</span></div>
+            <div class="card-content">
+              <div class="category"><span>${group.name}</span><b>${String(index+1).padStart(2,'0')}</b></div>
+              <div class="copy-main"><h2 class="name">${skill.name}</h2><p class="desc">${skill.desc}</p></div>
+            </div>
+            <div class="stage-chip ${skill.stage.includes('赛前')?'pre':''}">${skill.stage}</div>
+          </div>
         </div>
       </article>`;
     }
@@ -421,31 +471,24 @@
     }
     function render(){renderFilters();renderCards()}
     function toggleCard(e){
-      const el=e.currentTarget,id=el.dataset.id,isUsed=state.used.includes(id),skill=skills.find(s=>s.id===id);
-      el.classList.add('flipping');
-      window.setTimeout(()=>{
-        if(isUsed){
-          state.used=state.used.filter(x=>x!==id);
-          el.classList.remove('used');
-          showToast(`「${skill.name}」已重新充能`);
-        }else{
-          state.used.push(id);
-          el.classList.add('used','activated');
-          showToast(`已激活「${skill.name}」`);
-        }
-        el.setAttribute('aria-pressed',String(!isUsed));save();updateHeader();
-      },260);
-      window.setTimeout(()=>el.classList.remove('flipping','activated'),760);
+      const el=e.currentTarget,id=el.dataset.id,skill=skills.find(s=>s.id===id);
+      if(state.revealed.includes(id))return;
+      state.revealed.push(id);save();
+      el.classList.add('revealed','revealing');
+      el.setAttribute('aria-expanded','true');
+      el.setAttribute('aria-label',`${skill.name}，已揭晓`);
+      showToast(`揭晓「${skill.name}」`);updateHeader();
+      window.setTimeout(()=>el.classList.remove('revealing'),760);
     }
     function updateHeader(){
-      const n=skills.length-state.used.length;
+      const n=skills.length-state.revealed.length;
       document.getElementById('availableCount').textContent=n;
       const btn=document.getElementById('resetBtn');
-      btn.textContent=n===10?'↻ 全部已充能':'↻ 全部充能';
+      btn.textContent='↻ 重新洗牌';
       btn.classList.toggle('ready',n<3);
     }
     function resetBoard(){
-      state.used=[];save();render();showToast('10 张技能卡已全部重新充能');
+      state.used=[];state.revealed=[];save();render();showToast('10 张技能卡已洗牌并重新盖好');
     }
     function showToast(msg){
       const t=document.getElementById('toast');
