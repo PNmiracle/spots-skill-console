@@ -382,7 +382,10 @@
     document.getElementById('rulesBtn').addEventListener('click',openRules);
     document.getElementById('rulesClose').addEventListener('click',closeRules);
     document.getElementById('rulesModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeRules()});
-    document.getElementById('fullscreenBtn').addEventListener('click',()=>document.fullscreenElement?document.exitFullscreen?.():document.documentElement.requestFullscreen?.());
+    document.getElementById('fullscreenBtn').addEventListener('click',()=>{
+      const fullscreenDocument=window.parent!==window?window.parent.document:document;
+      return fullscreenDocument.fullscreenElement?fullscreenDocument.exitFullscreen?.():fullscreenDocument.documentElement.requestFullscreen?.();
+    });
     window.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('rulesModal').classList.contains('open')){closeRules();return}if(document.body.classList.contains('rules-open'))return;if(e.key.toLowerCase()==='f')document.getElementById('fullscreenBtn').click();if(e.key.toLowerCase()==='r')resetBoard();const n=Number(e.key);if(n>=1&&n<=6)document.querySelectorAll('.skill-card')[n-1]?.click()});
     render();
   </script>

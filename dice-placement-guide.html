@@ -1036,8 +1036,9 @@
 
     async function toggleFullscreen(){
       try{
-        if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
-        else await document.exitFullscreen();
+        const fullscreenDocument = window.parent !== window ? window.parent.document : document;
+        if (!fullscreenDocument.fullscreenElement) await fullscreenDocument.documentElement.requestFullscreen();
+        else await fullscreenDocument.exitFullscreen();
       }catch(error){
         showToast("当前浏览器无法进入全屏。");
       }
