@@ -1,0 +1,1058 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#fff7e8">
+  <meta name="description" content="狗运当骰新手互动教学：把骰子放到狗狗卡或后院">
+  <title>狗运当骰 · 骰子放哪里？</title>
+  <style>
+    :root{
+      --deck-scale:1;
+      --ink:#171614;
+      --paper:#fbf3e6;
+      --card:#fffdf6;
+      --red:#ff5a55;
+      --orange:#ff9d3f;
+      --blue:#469fe3;
+      --green:#63c989;
+      --yellow:#ffd568;
+      --pink:#ffb7c7;
+      --lavender:#c9b8ff;
+      --muted:#6d6258;
+      --font:"Hannotate SC","Yuanti SC","STYuanti-SC-Regular","YouYuan","Microsoft YaHei",system-ui,sans-serif;
+    }
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0;overflow:hidden}
+    body{
+      color:var(--ink);
+      background-color:#f0e0ca;
+      background-image:radial-gradient(rgba(23,22,20,.085) 1.3px,transparent 1.3px);
+      background-size:30px 30px;
+      font-family:var(--font);
+      -webkit-font-smoothing:antialiased;
+      user-select:none;
+    }
+    button{font:inherit;color:inherit}
+    .app{
+      position:fixed;
+      left:50%;
+      top:50%;
+      width:1920px;
+      height:1080px;
+      transform:translate(-50%,-50%) scale(var(--deck-scale));
+      transform-origin:center;
+      overflow:hidden;
+      padding:42px 54px 48px;
+      background:
+        radial-gradient(circle at 94% 9%,rgba(255,183,199,.23) 0 118px,transparent 120px),
+        radial-gradient(circle at 5% 92%,rgba(70,159,227,.14) 0 135px,transparent 137px),
+        var(--paper);
+      box-shadow:inset 0 0 0 12px rgba(255,213,104,.22);
+    }
+    .app::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background-image:radial-gradient(rgba(23,22,20,.042) 1.3px,transparent 1.3px);
+      background-size:32px 32px;
+    }
+    .topbar{
+      position:relative;
+      z-index:20;
+      height:94px;
+      display:flex;
+      align-items:center;
+      gap:20px;
+      border-bottom:4px solid var(--ink);
+    }
+    .brand-mark{
+      width:78px;
+      height:68px;
+      display:grid;
+      place-items:center;
+      border:4px solid var(--ink);
+      border-radius:20px;
+      background:#fff2f5;
+      box-shadow:6px 6px 0 var(--pink),9px 9px 0 rgba(23,22,20,.1);
+      transform:rotate(-3deg);
+      font-size:43px;
+      animation:brand-bob 3.2s ease-in-out infinite;
+    }
+    .title-wrap{min-width:0}
+    .eyebrow{
+      margin:0 0 4px;
+      color:#b8423d;
+      font-size:21px;
+      font-weight:950;
+    }
+    h1{
+      margin:0;
+      font-size:48px;
+      line-height:1;
+      font-weight:950;
+      letter-spacing:0;
+      white-space:nowrap;
+    }
+    .status{
+      margin-left:auto;
+      min-width:330px;
+      height:58px;
+      padding:0 19px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:11px;
+      border:3px solid var(--ink);
+      border-radius:17px;
+      background:#fff;
+      box-shadow:4px 4px 0 rgba(23,22,20,.16);
+      font-size:22px;
+      font-weight:950;
+      white-space:nowrap;
+    }
+    .status-dot{
+      width:16px;
+      aspect-ratio:1;
+      border:3px solid var(--ink);
+      border-radius:50%;
+      background:var(--orange);
+    }
+    .status.complete{background:#e5f8e9}
+    .status.complete .status-dot{background:var(--green)}
+    .controls{display:flex;gap:11px}
+    .icon-button{
+      width:58px;
+      height:58px;
+      display:grid;
+      place-items:center;
+      border:3px solid var(--ink);
+      border-radius:16px;
+      background:var(--card);
+      box-shadow:4px 4px 0 rgba(23,22,20,.18);
+      cursor:pointer;
+      font-size:27px;
+      font-weight:950;
+      transition:transform .15s,box-shadow .15s,background .15s;
+    }
+    .icon-button.wide{width:auto;padding:0 18px;gap:8px;font-size:18px}
+    .icon-button:hover{background:#fff0b9;transform:translateY(-2px)}
+    .icon-button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 rgba(23,22,20,.18)}
+    .content{
+      position:relative;
+      z-index:2;
+      height:calc(100% - 94px);
+      padding-top:26px;
+      display:grid;
+      grid-template-columns:450px minmax(0,1fr);
+      gap:28px;
+    }
+    .guide{
+      min-height:0;
+      display:grid;
+      grid-template-rows:150px 112px 112px minmax(0,1fr);
+      gap:14px;
+    }
+    .guide-intro{
+      position:relative;
+      padding:18px 20px;
+      border:4px solid var(--ink);
+      border-radius:22px;
+      background:#fff2bd;
+      box-shadow:6px 6px 0 rgba(255,157,63,.34);
+    }
+    .guide-intro h2{
+      margin:0 0 8px;
+      font-size:33px;
+      line-height:1.08;
+      font-weight:950;
+    }
+    .guide-intro p{
+      margin:0;
+      color:#544a42;
+      font-size:22px;
+      line-height:1.42;
+      font-weight:850;
+    }
+    .rule{
+      --accent:var(--green);
+      display:grid;
+      grid-template-columns:60px minmax(0,1fr);
+      gap:13px;
+      align-items:center;
+      padding:14px 17px 14px 13px;
+      border:4px solid var(--ink);
+      border-radius:20px;
+      background:#f0fff4;
+      box-shadow:5px 5px 0 color-mix(in srgb,var(--accent) 35%,transparent);
+    }
+    .rule:nth-of-type(3){--accent:var(--red)}
+    .rule:nth-of-type(3){background:#fff0f2}
+    .rule-number{
+      width:52px;
+      aspect-ratio:1;
+      display:grid;
+      place-items:center;
+      border:3px solid var(--ink);
+      border-radius:50%;
+      background:var(--accent);
+      color:#fff;
+      font-size:28px;
+      font-weight:950;
+      transform:rotate(-4deg);
+    }
+    .rule h3{
+      margin:0 0 5px;
+      font-size:28px;
+      line-height:1;
+      font-weight:950;
+    }
+    .rule p{
+      margin:0;
+      color:#554b43;
+      font-size:21px;
+      line-height:1.36;
+      font-weight:820;
+    }
+    .rule strong{color:var(--ink);font-weight:950}
+    .mission{
+      position:relative;
+      min-height:0;
+      padding:18px 18px 16px;
+      border:4px solid var(--ink);
+      border-radius:22px;
+      background:linear-gradient(155deg,#e9f5ff 0 64%,#f5efff 64% 100%);
+      box-shadow:6px 6px 0 rgba(70,159,227,.28),10px 10px 0 rgba(201,184,255,.22);
+      overflow:hidden;
+    }
+    .mission::after{
+      content:"🐾";
+      position:absolute;
+      right:10px;
+      top:12px;
+      color:rgba(70,159,227,.16);
+      font-size:82px;
+      transform:rotate(14deg);
+    }
+    .mission-label{
+      display:inline-flex;
+      padding:6px 10px;
+      border:3px solid var(--ink);
+      border-radius:999px;
+      background:#fff;
+      font-size:16px;
+      font-weight:950;
+    }
+    .mission h3{
+      margin:14px 0 8px;
+      font-size:31px;
+      line-height:1.15;
+      font-weight:950;
+    }
+    .mission p{
+      position:relative;
+      z-index:1;
+      margin:0;
+      color:#514840;
+      font-size:22px;
+      line-height:1.45;
+      font-weight:850;
+    }
+    .mission-map{
+      position:relative;
+      z-index:2;
+      display:grid;
+      gap:8px;
+      margin-top:13px;
+    }
+    .mission-route{
+      min-height:64px;
+      display:grid;
+      grid-template-columns:60px 34px minmax(0,1fr);
+      align-items:center;
+      gap:8px;
+      padding:5px 12px;
+      border:3px solid var(--ink);
+      border-radius:16px;
+      background:#fffdf6;
+      box-shadow:4px 4px 0 rgba(23,22,20,.13);
+    }
+    .route-die{
+      width:56px;
+      aspect-ratio:1;
+      display:grid;
+      place-items:center;
+      border:3px solid var(--ink);
+      border-radius:12px;
+      background:#fff;
+      line-height:1;
+      box-shadow:3px 3px 0 rgba(23,22,20,.14);
+      transform:rotate(-3deg);
+    }
+    .route-die .dice-face{width:42px;height:42px}
+    .route-die .pip{width:10px}
+    .mission-route:nth-child(2) .route-die{transform:rotate(4deg)}
+    .route-arrow{font-size:27px;font-weight:950;text-align:center}
+    .route-target{font-size:23px;line-height:1.15;font-weight:950}
+    .play-area{
+      min-width:0;
+      min-height:0;
+      display:grid;
+      grid-template-rows:112px minmax(0,1fr);
+      border:4px solid var(--ink);
+      border-radius:26px;
+      background:#fff;
+      box-shadow:8px 8px 0 rgba(23,22,20,.16),14px 14px 0 rgba(99,201,137,.25),20px 20px 0 rgba(255,183,199,.17);
+      overflow:hidden;
+    }
+    .dice-tray{
+      position:relative;
+      z-index:12;
+      display:flex;
+      align-items:center;
+      gap:18px;
+      padding:15px 24px;
+      border-bottom:4px solid var(--ink);
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.5) 0 2px,transparent 2px 18px),
+        #e6f7ea;
+      background-size:18px 100%;
+    }
+    .dice-tray.rolling{animation:tray-bump .72s ease-in-out}
+    .tray-copy{min-width:235px}
+    .tray-copy strong{
+      display:block;
+      margin-bottom:4px;
+      font-size:27px;
+      font-weight:950;
+      color:#236c48;
+    }
+    .tray-copy span{
+      color:#5c5148;
+      font-size:20px;
+      font-weight:850;
+    }
+    .dice-row{
+      display:flex;
+      align-items:center;
+      gap:14px;
+    }
+    .die{
+      position:relative;
+      width:74px;
+      aspect-ratio:1;
+      display:grid;
+      place-items:center;
+      border:3px solid var(--ink);
+      border-radius:14px;
+      background:#fff;
+      box-shadow:4px 4px 0 rgba(23,22,20,.15);
+      cursor:grab;
+      touch-action:none;
+      transition:filter .2s,opacity .2s,transform .16s;
+    }
+    .dice-face{
+      width:50px;
+      height:50px;
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      grid-template-rows:repeat(3,1fr);
+      place-items:center;
+      pointer-events:none;
+    }
+    .pip{
+      width:11px;
+      aspect-ratio:1;
+      border-radius:50%;
+      background:var(--ink);
+      box-shadow:inset 1px 1px 0 rgba(255,255,255,.28);
+    }
+    .pip-1{grid-area:1/1}.pip-2{grid-area:1/2}.pip-3{grid-area:1/3}
+    .pip-4{grid-area:2/1}.pip-5{grid-area:2/2}.pip-6{grid-area:2/3}
+    .pip-7{grid-area:3/1}.pip-8{grid-area:3/2}.pip-9{grid-area:3/3}
+    .die:nth-child(1){background:#fff;transform:rotate(4deg)}
+    .die:nth-child(2){background:#fff;transform:rotate(-3deg)}
+    .die:nth-child(3){background:#fff;transform:rotate(3deg)}
+    .die:hover{transform:translateY(-4px) rotate(2deg)}
+    .die.rolling{
+      pointer-events:none;
+      animation:dice-tumble .68s cubic-bezier(.2,.8,.25,1) infinite;
+      filter:drop-shadow(0 10px 7px rgba(23,22,20,.22));
+    }
+    .die.rolling:nth-child(2){animation-delay:-.17s}
+    .die.rolling:nth-child(3){animation-delay:-.34s}
+    .die.drag-source{
+      opacity:.26;
+      filter:grayscale(.35);
+      transform:scale(.92);
+    }
+    .drag-ghost{
+      position:fixed;
+      z-index:9999;
+      left:0;
+      top:0;
+      margin:0;
+      cursor:grabbing;
+      pointer-events:none;
+      will-change:transform;
+      transform-origin:top left;
+      transition:none;
+      filter:drop-shadow(0 15px 10px rgba(23,22,20,.25));
+    }
+    .die.placed{opacity:.28;filter:grayscale(1);cursor:default;transform:none}
+    .tray-actions{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+    .roll-button,.auto-button{
+      min-width:168px;
+      height:54px;
+      border:3px solid var(--ink);
+      border-radius:16px;
+      background:var(--orange);
+      color:#fff;
+      box-shadow:4px 4px 0 rgba(23,22,20,.18);
+      cursor:pointer;
+      font-size:20px;
+      font-weight:950;
+      transition:transform .15s,box-shadow .15s;
+    }
+    .roll-button{background:var(--blue);color:#fff}
+    .auto-button{background:var(--orange);color:#fff}
+    .roll-button:hover,.auto-button:hover{transform:translateY(-2px)}
+    .roll-button:active,.auto-button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 rgba(23,22,20,.18)}
+    .roll-button:disabled,.auto-button:disabled{opacity:.48;cursor:wait;transform:none}
+    .board{
+      position:relative;
+      min-height:0;
+      overflow:hidden;
+      background:#f7f3eb;
+    }
+    .example-image{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      background:#fff;
+      pointer-events:none;
+    }
+    .target{
+      position:absolute;
+      z-index:4;
+      border:5px dashed transparent;
+      border-radius:24px;
+      transition:border-color .18s,background .18s,box-shadow .18s;
+    }
+    .target-yard{left:1.4%;top:26%;width:28.8%;height:71%}
+    .target-torrek{left:32%;top:37%;width:31.7%;height:57%}
+    .target-plemek{left:67.1%;top:37%;width:31.3%;height:57%}
+    .target.ready{
+      border-color:var(--blue);
+      background:rgba(70,159,227,.10);
+      box-shadow:inset 0 0 0 7px rgba(255,255,255,.72);
+    }
+    .target.magnetic{
+      border-color:var(--orange);
+      background:rgba(255,157,63,.16);
+      box-shadow:inset 0 0 0 8px rgba(255,255,255,.78),0 0 0 8px rgba(255,157,63,.2);
+    }
+    .target.correct{
+      border-color:var(--green);
+      background:rgba(99,201,137,.12);
+    }
+    .target.wrong{
+      border-color:var(--red);
+      background:rgba(255,90,85,.15);
+      animation:shake .28s ease;
+    }
+    .target-tag{
+      position:absolute;
+      z-index:5;
+      left:50%;
+      bottom:13px;
+      transform:translateX(-50%) translateY(8px);
+      padding:8px 13px;
+      border:3px solid var(--ink);
+      border-radius:999px;
+      background:#fff8d9;
+      box-shadow:3px 3px 0 rgba(23,22,20,.15);
+      opacity:0;
+      font-size:18px;
+      font-weight:950;
+      white-space:nowrap;
+      transition:opacity .18s,transform .18s;
+    }
+    .target.ready .target-tag,.target.correct .target-tag{opacity:1;transform:translateX(-50%) translateY(0)}
+    .placed-die{
+      position:absolute;
+      z-index:9;
+      width:66px;
+      aspect-ratio:1;
+      display:grid;
+      place-items:center;
+      border:4px solid var(--ink);
+      border-radius:14px;
+      background:#fff;
+      box-shadow:5px 5px 0 rgba(23,22,20,.2);
+      opacity:0;
+      transform:translateY(-90px) scale(.5) rotate(-18deg);
+    }
+    .placed-die .dice-face{width:46px;height:46px}
+    .placed-die .pip{width:10px}
+    .placed-die.show{animation:land .58s cubic-bezier(.16,1.25,.3,1) forwards}
+    .placed-3{left:82%;top:57%;background:#ffe1db}
+    .placed-4{left:46%;top:61%;background:#fff2c9}
+    .placed-6{left:18%;top:62%;background:#e9f4ff}
+    .sticker{
+      position:absolute;
+      z-index:1;
+      display:grid;
+      place-items:center;
+      pointer-events:none;
+      filter:drop-shadow(3px 4px 0 rgba(23,22,20,.14));
+    }
+    .sticker-bone{
+      right:7px;
+      bottom:8px;
+      width:82px;
+      height:48px;
+      border:3px solid var(--ink);
+      border-radius:999px;
+      background:#fff;
+      font-size:35px;
+      transform:rotate(12deg);
+    }
+    .sticker-paw{
+      left:5px;
+      top:150px;
+      width:58px;
+      aspect-ratio:1;
+      border:3px solid var(--ink);
+      border-radius:50%;
+      background:#fff0f4;
+      font-size:30px;
+      transform:rotate(-13deg);
+    }
+    .stamp{
+      position:absolute;
+      z-index:10;
+      opacity:0;
+      padding:8px 13px;
+      border:4px solid currentColor;
+      border-radius:12px;
+      background:rgba(255,255,255,.9);
+      font-size:20px;
+      font-weight:950;
+      transform:scale(1.7) rotate(-10deg);
+    }
+    .stamp.show{animation:stamp-in .42s cubic-bezier(.2,1.5,.28,1) forwards}
+    .stamp-dog{left:54%;top:52%;color:#258154}
+    .stamp-yard{left:9%;top:47%;color:#b8423d}
+    .toast{
+      position:fixed;
+      z-index:10000;
+      left:50%;
+      bottom:34px;
+      max-width:720px;
+      padding:14px 22px;
+      border:3px solid #fff;
+      border-radius:15px;
+      background:var(--ink);
+      color:#fff;
+      box-shadow:6px 6px 0 var(--orange);
+      opacity:0;
+      transform:translate(-50%,20px);
+      pointer-events:none;
+      font-size:21px;
+      font-weight:900;
+      transition:opacity .2s,transform .2s;
+    }
+    .toast.show{opacity:1;transform:translate(-50%,0)}
+    @keyframes land{
+      0%{opacity:0;transform:translateY(-95px) scale(.52) rotate(-22deg)}
+      72%{opacity:1;transform:translateY(8px) scale(1.1) rotate(5deg)}
+      100%{opacity:1;transform:translateY(0) scale(1) rotate(-2deg)}
+    }
+    @keyframes stamp-in{
+      0%{opacity:0;transform:scale(1.7) rotate(-10deg)}
+      70%{opacity:1;transform:scale(.92) rotate(-6deg)}
+      100%{opacity:1;transform:scale(1) rotate(-6deg)}
+    }
+    @keyframes shake{
+      25%{transform:translateX(-8px)}
+      50%{transform:translateX(8px)}
+      75%{transform:translateX(-5px)}
+    }
+    @keyframes tray-bump{
+      0%,100%{transform:translateY(0)}
+      24%{transform:translateY(-5px) rotate(-.3deg)}
+      48%{transform:translateY(3px) rotate(.25deg)}
+      72%{transform:translateY(-2px)}
+    }
+    @keyframes dice-tumble{
+      0%{transform:translate3d(0,0,0) rotate(0) scale(1)}
+      24%{transform:translate3d(-5px,-20px,0) rotate(-22deg) scale(1.06)}
+      52%{transform:translate3d(7px,-8px,0) rotate(18deg) scale(.98)}
+      76%{transform:translate3d(-3px,-15px,0) rotate(34deg) scale(1.04)}
+      100%{transform:translate3d(0,0,0) rotate(0) scale(1)}
+    }
+    @keyframes brand-bob{
+      0%,100%{transform:rotate(-3deg) translateY(0)}
+      50%{transform:rotate(2deg) translateY(-3px)}
+    }
+
+    /* === PAGE 2 VISUAL LANGUAGE === */
+    .app{
+      background:var(--paper);
+      box-shadow:inset 0 0 0 10px rgba(255,100,56,.08);
+    }
+    .brand-mark{background:#fffdf6;box-shadow:6px 6px 0 rgba(255,100,56,.36),9px 9px 0 rgba(23,22,20,.1)}
+    .guide-intro,.rule,.mission{
+      background:var(--card)!important;
+      box-shadow:6px 6px 0 rgba(23,22,20,.14),10px 10px 0 rgba(255,100,56,.12);
+    }
+    .rule{--accent:var(--orange)!important}
+    .mission::after{color:rgba(255,100,56,.11)}
+    .coach-face{background:#fffdf6;box-shadow:4px 4px 0 rgba(255,100,56,.35)}
+    .play-area{background:#fffdf6;box-shadow:8px 8px 0 rgba(23,22,20,.16),14px 14px 0 rgba(255,100,56,.14)}
+    .dice-tray{background:#fff2da;background-image:none}
+    .tray-copy strong{color:var(--ink)}
+    .die,.die:nth-child(2),.die:nth-child(3){background:#fff;box-shadow:4px 4px 0 rgba(23,22,20,.15)}
+    .roll-button{background:var(--orange)}
+    .auto-button{background:#cfeeda;color:var(--ink)}
+    .target-tag{background:#fffdf6}
+    .placed-3,.placed-4,.placed-6{background:#fffdf6}
+    .term-capsule{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:1.45em;
+      padding:.03em .48em .08em;
+      border:3px solid var(--ink);
+      border-radius:999px;
+      background:#fff2da;
+      box-shadow:3px 3px 0 rgba(23,22,20,.14);
+      color:var(--ink);
+      font-weight:950;
+      line-height:1;
+      white-space:nowrap;
+    }
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <span class="sticker sticker-bone" aria-hidden="true">🦴</span>
+    <header class="topbar">
+      <div class="brand-mark" aria-hidden="true">🐾</div>
+      <div class="title-wrap">
+        <p class="eyebrow">掷骰子 · 新手教学</p>
+        <h1>后院牌和狗狗卡</h1>
+      </div>
+      <div class="status" id="status" aria-live="polite">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="statusText">拖动 3 颗骰子</span>
+      </div>
+      <div class="controls">
+        <button class="icon-button" id="resetBtn" type="button" aria-label="重新开始" title="重新开始（R）">↻</button>
+        <button class="icon-button" id="fullscreenBtn" type="button" aria-label="全屏显示" title="全屏显示（F）">⛶</button>
+      </div>
+    </header>
+
+    <section class="content">
+      <aside class="guide">
+        <section class="guide-intro">
+          <h2>骰子放哪？</h2>
+          <p>点数相同就放狗狗卡；没位置或不想放，就埋后院。</p>
+        </section>
+
+        <article class="rule">
+          <div class="rule-number">✓</div>
+          <div>
+            <h3>点数能配对</h3>
+            <p>放进任意狗狗卡的<strong>同点数空格</strong>。</p>
+          </div>
+        </article>
+
+        <article class="rule">
+          <div class="rule-number">↓</div>
+          <div>
+            <h3>不能配对 / 不想放</h3>
+            <p>埋进<strong>自己的后院</strong>。</p>
+          </div>
+        </article>
+
+        <section class="mission">
+          <span class="mission-label">本轮示例</span>
+          <h3>掷出 <span class="term-capsule">3、4、6</span></h3>
+          <p>3、4 有空格；6 没有。</p>
+          <div class="mission-map" aria-label="三颗骰子的正确去向">
+            <div class="mission-route"><span class="route-die" aria-label="三点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-5"></i><i class="pip pip-9"></i></span></span><span class="route-arrow">→</span><span class="route-target">右侧狗狗</span></div>
+            <div class="mission-route"><span class="route-die" aria-label="四点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></span><span class="route-arrow">→</span><span class="route-target">中间狗狗</span></div>
+            <div class="mission-route"><span class="route-die" aria-label="六点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-4"></i><i class="pip pip-6"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></span><span class="route-arrow">→</span><span class="route-target">后院</span></div>
+          </div>
+        </section>
+      </aside>
+
+      <section class="play-area" aria-label="骰子放置互动演示">
+        <div class="dice-tray">
+          <div class="tray-copy">
+            <strong>掷骰结果</strong>
+            <span>拖到下方对应区域</span>
+          </div>
+          <div class="dice-row" id="diceRow">
+            <button class="die" type="button" data-value="3" aria-label="三点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-5"></i><i class="pip pip-9"></i></span></button>
+            <button class="die" type="button" data-value="4" aria-label="四点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></button>
+            <button class="die" type="button" data-value="6" aria-label="六点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-4"></i><i class="pip pip-6"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></button>
+          </div>
+          <div class="tray-actions">
+            <button class="roll-button" id="rollBtn" type="button">🎲 摇骰子</button>
+            <button class="auto-button" id="demoBtn" type="button">▶ 自动演示</button>
+          </div>
+        </div>
+
+        <div class="board" id="board">
+          <img class="example-image" src="assets/dice-placement-example.jpg" alt="后院和两张狗狗卡的骰子放置示例：六点进后院，四点放到 Torrek，三点放到 Plemek">
+
+          <div class="target target-yard" data-target="yard">
+            <span class="target-tag">6 点 → 后院</span>
+          </div>
+          <div class="target target-torrek" data-target="torrek">
+            <span class="target-tag">4 点 → Torrek</span>
+          </div>
+          <div class="target target-plemek" data-target="plemek">
+            <span class="target-tag">3 点 → Plemek</span>
+          </div>
+
+          <span class="placed-die placed-3" data-placed="3" aria-label="三点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-5"></i><i class="pip pip-9"></i></span></span>
+          <span class="placed-die placed-4" data-placed="4" aria-label="四点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></span>
+          <span class="placed-die placed-6" data-placed="6" aria-label="六点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-4"></i><i class="pip pip-6"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></span>
+          <span class="stamp stamp-dog" id="dogStamp">成功配对！</span>
+          <span class="stamp stamp-yard" id="yardStamp">埋进后院</span>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const correctTargets = { "3":"plemek", "4":"torrek", "6":"yard" };
+    const dice = [...document.querySelectorAll(".die")];
+    const targets = [...document.querySelectorAll(".target")];
+    const status = document.getElementById("status");
+    const statusText = document.getElementById("statusText");
+    const toast = document.getElementById("toast");
+    const diceTray = document.querySelector(".dice-tray");
+    const rollBtn = document.getElementById("rollBtn");
+    const demoBtn = document.getElementById("demoBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const fullscreenBtn = document.getElementById("fullscreenBtn");
+    const dogStamp = document.getElementById("dogStamp");
+    const yardStamp = document.getElementById("yardStamp");
+    let placed = new Set();
+    let toastTimer = 0;
+    let demoTimers = [];
+    let activeDrag = null;
+    let rollInterval = 0;
+    let actionVersion = 0;
+
+    const pipPositions = {
+      1:[5],
+      2:[1,9],
+      3:[1,5,9],
+      4:[1,3,7,9],
+      5:[1,3,5,7,9],
+      6:[1,3,4,6,7,9]
+    };
+
+    function renderDie(element,value){
+      const face = document.createElement("span");
+      face.className = "dice-face";
+      pipPositions[value].forEach(position => {
+        const pip = document.createElement("i");
+        pip.className = `pip pip-${position}`;
+        face.appendChild(pip);
+      });
+      element.replaceChildren(face);
+      element.dataset.face = String(value);
+    }
+
+    function fitViewport(){
+      const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080, 1);
+      document.documentElement.style.setProperty("--deck-scale", String(scale));
+    }
+
+    function showToast(message){
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 1900);
+    }
+
+    function updateStatus(){
+      const remaining = 3 - placed.size;
+      if (remaining === 0){
+        status.classList.add("complete");
+        statusText.textContent = "完成：2 颗配对，1 颗进后院";
+        dogStamp.classList.add("show");
+        yardStamp.classList.add("show");
+        showToast("正确：3、4 放狗狗卡，6 进后院。");
+      } else {
+        status.classList.remove("complete");
+        statusText.textContent = `还剩 ${remaining} 颗骰子`;
+      }
+    }
+
+    function placeDie(value, targetName){
+      if (placed.has(value)) return;
+      placed.add(value);
+      document.querySelector(`.die[data-value="${value}"]`).classList.add("placed");
+      document.querySelector(`.placed-die[data-placed="${value}"]`).classList.add("show");
+      const target = document.querySelector(`.target[data-target="${targetName}"]`);
+      target.classList.remove("ready");
+      target.classList.add("correct");
+      updateStatus();
+    }
+
+    function reset(){
+      actionVersion += 1;
+      demoTimers.forEach(clearTimeout);
+      demoTimers = [];
+      clearInterval(rollInterval);
+      rollInterval = 0;
+      if (activeDrag) activeDrag.cancel();
+      placed = new Set();
+      dice.forEach(item => {
+        item.classList.remove("placed","drag-source","rolling");
+        item.removeAttribute("style");
+        renderDie(item,Number(item.dataset.value));
+      });
+      diceTray.classList.remove("rolling");
+      rollBtn.disabled = false;
+      demoBtn.disabled = false;
+      targets.forEach(item => item.classList.remove("ready","magnetic","correct","wrong"));
+      document.querySelectorAll(".placed-die").forEach(item => item.classList.remove("show"));
+      dogStamp.classList.remove("show");
+      yardStamp.classList.remove("show");
+      status.classList.remove("complete");
+      statusText.textContent = "拖动 3 颗骰子";
+      toast.classList.remove("show");
+    }
+
+    function rollDice(showResultMessage = true){
+      reset();
+      const version = actionVersion;
+      statusText.textContent = "摇骰子中……";
+      diceTray.classList.add("rolling");
+      dice.forEach(item => item.classList.add("rolling"));
+      rollBtn.disabled = true;
+      demoBtn.disabled = true;
+
+      rollInterval = setInterval(() => {
+        dice.forEach(item => {
+          renderDie(item,1 + Math.floor(Math.random() * 6));
+        });
+      },72);
+
+      return new Promise(resolve => {
+        setTimeout(() => {
+          if (version !== actionVersion) {
+            resolve(false);
+            return;
+          }
+          clearInterval(rollInterval);
+          rollInterval = 0;
+          dice.forEach((item,index) => {
+            renderDie(item,Number(item.dataset.value));
+            setTimeout(() => item.classList.remove("rolling"),index * 80);
+          });
+          setTimeout(() => diceTray.classList.remove("rolling"),220);
+          rollBtn.disabled = false;
+          demoBtn.disabled = false;
+          statusText.textContent = "结果：3、4、6";
+          if (showResultMessage) showToast("3、4、6：找同点数空格。");
+          resolve(true);
+        },1150);
+      });
+    }
+
+    function flashWrong(target, value){
+      target.classList.add("wrong");
+      setTimeout(() => target.classList.remove("wrong"), 380);
+      const hint = value === "6"
+        ? "6 点无空格，放后院。"
+        : `${value} 点应放同点数空格。`;
+      showToast(hint);
+    }
+
+    async function runDemo(){
+      const rolled = await rollDice(false);
+      if (!rolled) return;
+      showToast("配对优先，剩下进后院。");
+      const sequence = [
+        ["4","torrek",650],
+        ["3","plemek",1450],
+        ["6","yard",2250]
+      ];
+      sequence.forEach(([value,targetName,delay]) => {
+        demoTimers.push(setTimeout(() => {
+          document.querySelector(`.target[data-target="${targetName}"]`).classList.add("ready");
+        }, delay - 280));
+        demoTimers.push(setTimeout(() => placeDie(value,targetName), delay));
+      });
+    }
+
+    function targetAt(x, y, padding = 0){
+      return targets.find(target => {
+        const box = target.getBoundingClientRect();
+        return x >= box.left - padding && x <= box.right + padding &&
+          y >= box.top - padding && y <= box.bottom + padding;
+      });
+    }
+
+    dice.forEach(die => {
+      die.addEventListener("pointerdown", event => {
+        const value = die.dataset.value;
+        if (placed.has(value) || activeDrag) return;
+        event.preventDefault();
+
+        const sourceRect = die.getBoundingClientRect();
+        const offsetX = event.clientX - sourceRect.left;
+        const offsetY = event.clientY - sourceRect.top;
+        const ghost = die.cloneNode(true);
+        const sourceStyle = getComputedStyle(die);
+        const sourceWidth = parseFloat(sourceStyle.width);
+        const sourceHeight = parseFloat(sourceStyle.height);
+        const dragScale = sourceRect.width / sourceWidth;
+        let pointerX = event.clientX;
+        let pointerY = event.clientY;
+        let frame = 0;
+        let finished = false;
+
+        ghost.className = "die drag-ghost";
+        ghost.removeAttribute("aria-label");
+        ghost.style.width = `${sourceWidth}px`;
+        ghost.style.height = `${sourceHeight}px`;
+        ghost.style.background = sourceStyle.background;
+        document.body.appendChild(ghost);
+        die.classList.add("drag-source");
+        targets.forEach(target => target.classList.add("ready"));
+
+        function draw(){
+          frame = 0;
+          const x = pointerX - offsetX;
+          const y = pointerY - offsetY;
+          ghost.style.transform = `translate3d(${x}px,${y}px,0) rotate(-6deg) scale(${dragScale * 1.08})`;
+          const nearby = targetAt(pointerX,pointerY,34);
+          targets.forEach(target => target.classList.toggle("magnetic",target === nearby));
+        }
+
+        function requestDraw(){
+          if (!frame) frame = requestAnimationFrame(draw);
+        }
+
+        function removeListeners(){
+          window.removeEventListener("pointermove",move);
+          window.removeEventListener("pointerup",end);
+          window.removeEventListener("pointercancel",cancel);
+        }
+
+        function cleanup(){
+          if (frame) cancelAnimationFrame(frame);
+          removeListeners();
+          ghost.remove();
+          die.classList.remove("drag-source");
+          targets.forEach(target => target.classList.remove("ready","magnetic"));
+          activeDrag = null;
+        }
+
+        function animateGhostTo(left, top, onDone){
+          if (frame) {
+            cancelAnimationFrame(frame);
+            frame = 0;
+          }
+          ghost.style.transition = "transform 260ms cubic-bezier(.2,.9,.25,1.16),opacity 220ms ease";
+          requestAnimationFrame(() => {
+            ghost.style.transform = `translate3d(${left}px,${top}px,0) rotate(-2deg) scale(${dragScale * .96})`;
+            ghost.style.opacity = ".88";
+          });
+          setTimeout(() => {
+            cleanup();
+            onDone();
+          },260);
+        }
+
+        function move(moveEvent){
+          pointerX = moveEvent.clientX;
+          pointerY = moveEvent.clientY;
+          requestDraw();
+        }
+
+        function cancel(){
+          if (finished) return;
+          finished = true;
+          animateGhostTo(sourceRect.left,sourceRect.top,() => {});
+        }
+
+        function end(endEvent){
+          if (finished) return;
+          finished = true;
+          pointerX = endEvent.clientX;
+          pointerY = endEvent.clientY;
+          removeListeners();
+
+          const hit = targetAt(pointerX,pointerY,34);
+          if (!hit){
+            showToast("把骰子拖进后院或其中一张狗狗卡里。");
+            animateGhostTo(sourceRect.left,sourceRect.top,() => {});
+            return;
+          }
+
+          const targetName = hit.dataset.target;
+          if (correctTargets[value] !== targetName){
+            flashWrong(hit,value);
+            animateGhostTo(sourceRect.left,sourceRect.top,() => {});
+            return;
+          }
+
+          const destination = document.querySelector(`.placed-die[data-placed="${value}"]`).getBoundingClientRect();
+          animateGhostTo(destination.left,destination.top,() => placeDie(value,targetName));
+        }
+
+        activeDrag = { cancel };
+        window.addEventListener("pointermove",move,{ passive:true });
+        window.addEventListener("pointerup",end,{ once:true });
+        window.addEventListener("pointercancel",cancel,{ once:true });
+        draw();
+      });
+    });
+
+    async function toggleFullscreen(){
+      try{
+        if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+        else await document.exitFullscreen();
+      }catch(error){
+        showToast("当前浏览器无法进入全屏。");
+      }
+    }
+
+    rollBtn.addEventListener("click", () => rollDice(true));
+    demoBtn.addEventListener("click", runDemo);
+    resetBtn.addEventListener("click", reset);
+    fullscreenBtn.addEventListener("click", toggleFullscreen);
+    window.addEventListener("resize", fitViewport, { passive:true });
+    document.addEventListener("keydown", event => {
+      if (event.key.toLowerCase() === "r") reset();
+      if (event.key.toLowerCase() === "f") toggleFullscreen();
+    });
+    fitViewport();
+  </script>
+</body>
+</html>
