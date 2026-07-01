@@ -266,6 +266,38 @@
       gap:8px;
       margin-top:13px;
     }
+    .mission.scenario-mode .mission-map{display:none}
+    .scenario-steps{
+      position:relative;
+      z-index:2;
+      display:none;
+      gap:9px;
+      margin-top:15px;
+    }
+    .mission.scenario-mode .scenario-steps{display:grid}
+    .scenario-step{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-height:54px;
+      padding:8px 11px;
+      border:3px solid var(--ink);
+      border-radius:15px;
+      background:#fffdf6;
+      box-shadow:3px 3px 0 rgba(23,22,20,.13);
+      font-size:19px;
+      line-height:1.2;
+      font-weight:900;
+    }
+    .scenario-step b{
+      min-width:34px;
+      height:34px;
+      display:grid;
+      place-items:center;
+      border:2px solid var(--ink);
+      border-radius:50%;
+      background:var(--yellow);
+    }
     .mission-route{
       min-height:64px;
       display:grid;
@@ -291,7 +323,7 @@
       transform:rotate(-3deg);
     }
     .route-die .dice-face{width:42px;height:42px}
-    .route-die .pip{width:10px}
+    .route-die .pip{width:12px}
     .mission-route:nth-child(2) .route-die{transform:rotate(4deg)}
     .route-arrow{font-size:27px;font-weight:950;text-align:center}
     .route-target{font-size:23px;line-height:1.15;font-weight:950}
@@ -337,6 +369,8 @@
       display:flex;
       align-items:center;
       gap:14px;
+      perspective:520px;
+      transform-style:preserve-3d;
     }
     .die{
       position:relative;
@@ -344,13 +378,32 @@
       aspect-ratio:1;
       display:grid;
       place-items:center;
-      border:3px solid var(--ink);
-      border-radius:14px;
-      background:#fff;
-      box-shadow:4px 4px 0 rgba(23,22,20,.15);
+      border:4px solid var(--ink);
+      border-radius:16px;
+      background:
+        radial-gradient(circle at 28% 22%,rgba(255,255,255,.98) 0 14%,transparent 15%),
+        linear-gradient(145deg,#fff 0 50%,#f3eee7 78%,#ded6cb 100%);
+      box-shadow:
+        inset 3px 3px 0 rgba(255,255,255,.9),
+        inset -4px -5px 0 rgba(126,112,96,.12),
+        0 5px 0 #c9c0b5,
+        0 9px 0 var(--ink),
+        0 14px 14px rgba(23,22,20,.23);
       cursor:grab;
       touch-action:none;
       transition:filter .2s,opacity .2s,transform .16s;
+      transform-style:preserve-3d;
+      backface-visibility:visible;
+    }
+    .die::before{
+      content:"";
+      position:absolute;
+      inset:6px 8px auto;
+      height:18px;
+      border-radius:999px;
+      background:linear-gradient(180deg,rgba(255,255,255,.9),transparent);
+      opacity:.72;
+      pointer-events:none;
     }
     .dice-face{
       width:50px;
@@ -362,11 +415,11 @@
       pointer-events:none;
     }
     .pip{
-      width:11px;
+      width:14px;
       aspect-ratio:1;
       border-radius:50%;
       background:var(--ink);
-      box-shadow:inset 1px 1px 0 rgba(255,255,255,.28);
+      box-shadow:inset 1.5px 1.5px 0 rgba(255,255,255,.2),0 1px 0 #000;
     }
     .pip-1{grid-area:1/1}.pip-2{grid-area:1/2}.pip-3{grid-area:1/3}
     .pip-4{grid-area:2/1}.pip-5{grid-area:2/2}.pip-6{grid-area:2/3}
@@ -377,11 +430,12 @@
     .die:hover{transform:translateY(-4px) rotate(2deg)}
     .die.rolling{
       pointer-events:none;
-      animation:dice-tumble .68s cubic-bezier(.2,.8,.25,1) infinite;
-      filter:drop-shadow(0 10px 7px rgba(23,22,20,.22));
+      animation:dice-tumble-3d .86s cubic-bezier(.22,.7,.3,1) infinite;
+      filter:drop-shadow(0 16px 9px rgba(23,22,20,.28));
+      will-change:transform,filter;
     }
-    .die.rolling:nth-child(2){animation-delay:-.17s}
-    .die.rolling:nth-child(3){animation-delay:-.34s}
+    .die.rolling:nth-child(2){animation-delay:-.24s;animation-direction:reverse}
+    .die.rolling:nth-child(3){animation-delay:-.47s}
     .die.drag-source{
       opacity:.26;
       filter:grayscale(.35);
@@ -407,8 +461,8 @@
       align-items:center;
       gap:12px;
     }
-    .roll-button,.auto-button{
-      min-width:168px;
+    .roll-button,.auto-button,.scenario-button{
+      min-width:138px;
       height:54px;
       border:3px solid var(--ink);
       border-radius:16px;
@@ -422,15 +476,49 @@
     }
     .roll-button{background:var(--blue);color:#fff}
     .auto-button{background:var(--orange);color:#fff}
-    .roll-button:hover,.auto-button:hover{transform:translateY(-2px)}
-    .roll-button:active,.auto-button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 rgba(23,22,20,.18)}
-    .roll-button:disabled,.auto-button:disabled{opacity:.48;cursor:wait;transform:none}
+    .scenario-button.bust{background:#ff5a55;color:#fff}
+    .scenario-button.bone{background:#fff0b9;color:var(--ink)}
+    .scenario-button.score{background:linear-gradient(145deg,#405fb3,#29438f);color:#fff}
+    .roll-button:hover,.auto-button:hover,.scenario-button:hover{transform:translateY(-2px)}
+    .roll-button:active,.auto-button:active,.scenario-button:active{transform:translate(3px,3px);box-shadow:1px 1px 0 rgba(23,22,20,.18)}
+    .roll-button:disabled,.auto-button:disabled,.scenario-button:disabled{opacity:.48;cursor:wait;transform:none}
+    .dice-row{position:relative}
+    .dice-row.batch-locked::before{
+      content:"";
+      position:absolute;
+      inset:-13px -16px;
+      border:5px solid var(--orange);
+      border-radius:20px;
+      background:rgba(255,213,104,.18);
+      box-shadow:0 0 0 7px rgba(255,157,63,.12),0 0 24px rgba(255,157,63,.5);
+      animation:batch-pulse .72s ease-in-out infinite alternate;
+      pointer-events:none;
+    }
+    .dice-row.batch-locked::after{
+      content:"整批锁定 · 三颗一起重投";
+      position:absolute;
+      left:50%;
+      top:88px;
+      transform:translateX(-50%);
+      width:max-content;
+      padding:7px 13px;
+      border:3px solid var(--ink);
+      border-radius:999px;
+      background:#fff0b9;
+      box-shadow:3px 3px 0 rgba(23,22,20,.16);
+      font-size:17px;
+      font-weight:950;
+      pointer-events:none;
+    }
+    .die.rejected-pick{animation:rejected-pick .72s cubic-bezier(.2,.8,.2,1)}
+    .die.cleared{animation:dice-clear .58s cubic-bezier(.5,-.2,.8,.3) forwards}
     .board{
       position:relative;
       min-height:0;
       overflow:hidden;
       background:#f7f3eb;
     }
+    .board.bust-shake{animation:board-bust-shake .72s cubic-bezier(.36,.07,.19,.97)}
     .example-image{
       position:absolute;
       inset:0;
@@ -440,6 +528,37 @@
       background:#fff;
       pointer-events:none;
     }
+    .dog-card-live{
+      position:absolute;z-index:3;top:37%;width:31.5%;height:57%;border-radius:24px;pointer-events:none;
+      box-shadow:0 0 0 0 rgba(255,213,104,0);transform-origin:50% 80%;overflow:hidden;
+    }
+    .dog-card-live.torrek{left:32.1%;animation:dog-card-breathe 4.2s .2s ease-in-out infinite}
+    .dog-card-live.plemek{left:67.1%;animation:dog-card-breathe-alt 4.6s 1.05s ease-in-out infinite}
+    .dog-card-live::before{
+      content:"";position:absolute;inset:4px;border-radius:20px;overflow:hidden;
+      background:linear-gradient(112deg,transparent 32%,rgba(255,255,255,.24) 46%,transparent 58%);
+      background-size:240% 100%;opacity:0;mix-blend-mode:screen;
+    }
+    .dog-card-live::after{
+      content:"✦";position:absolute;right:12px;top:9px;color:#fff0a7;-webkit-text-stroke:2px var(--ink);font-size:35px;opacity:0;
+    }
+    .dog-card-live .dog-card-paw{position:absolute;left:15px;top:12px;font-size:30px;opacity:0;filter:drop-shadow(2px 3px 0 rgba(23,22,20,.18))}
+    .dog-card-live .dog-card-talk{position:absolute;right:18px;bottom:17px;padding:6px 12px;border:3px solid var(--ink);border-radius:999px;background:#fff8d9;box-shadow:3px 4px 0 rgba(23,22,20,.16);font-size:17px;font-weight:950;opacity:0;transform:translateY(8px) scale(.7)}
+    .dog-card-live.torrek .dog-card-talk{right:16px;bottom:14px}.dog-card-live.plemek .dog-card-talk{right:14px;bottom:14px}
+    .dog-card-live::before{animation:dog-card-sheen 4.8s .6s ease-in-out infinite}
+    .dog-card-live::after{animation:dog-card-sparkle 3.2s 1.1s ease-in-out infinite}
+    .dog-card-live .dog-card-paw{animation:dog-card-paw 3.8s .35s ease-in-out infinite}
+    .dog-card-live .dog-card-talk{animation:dog-card-talk 5.4s 2s cubic-bezier(.2,.9,.25,1.2) infinite}
+    .dog-card-live.plemek::after,.dog-card-live.plemek .dog-card-paw{animation-delay:1.8s}
+    .dog-card-live.plemek .dog-card-talk{animation-delay:3.15s}
+    .board.dragging .dog-card-live{animation-play-state:paused;transform:none}
+    .board:has(.score-flip-layer.show) .dog-card-live{opacity:0}
+    @keyframes dog-card-breathe{0%,100%{transform:translateY(0) rotate(0);box-shadow:0 0 0 0 rgba(255,213,104,0)}50%{transform:translateY(-4px) rotate(-.35deg);box-shadow:0 10px 22px rgba(255,157,63,.2)}}
+    @keyframes dog-card-breathe-alt{0%,100%{transform:translateY(0) rotate(0);box-shadow:0 0 0 0 rgba(99,201,137,0)}50%{transform:translateY(-5px) rotate(.35deg);box-shadow:0 11px 24px rgba(99,201,137,.22)}}
+    @keyframes dog-card-sheen{0%,55%,100%{opacity:0;background-position:120% 0}65%{opacity:.22}84%{opacity:0;background-position:-120% 0}}
+    @keyframes dog-card-sparkle{0%,100%{opacity:0;transform:scale(.35) rotate(0)}45%,62%{opacity:1;transform:scale(1) rotate(24deg)}}
+    @keyframes dog-card-paw{0%,100%{opacity:0;transform:translateY(6px) rotate(-12deg)}42%,58%{opacity:.72;transform:translateY(0) rotate(6deg)}}
+    @keyframes dog-card-talk{0%,65%,100%{opacity:0;transform:translateY(8px) scale(.7)}73%,86%{opacity:1;transform:translateY(0) scale(1)}}
     .target{
       position:absolute;
       z-index:4;
@@ -495,18 +614,259 @@
       display:grid;
       place-items:center;
       border:4px solid var(--ink);
-      border-radius:14px;
-      background:#fff;
-      box-shadow:5px 5px 0 rgba(23,22,20,.2);
+      border-radius:15px;
+      background:linear-gradient(145deg,#fff 0 58%,#e8e0d6 100%);
+      box-shadow:inset 2px 2px 0 #fff,0 4px 0 #c9c0b5,0 7px 0 var(--ink),0 10px 12px rgba(23,22,20,.22);
       opacity:0;
       transform:translateY(-90px) scale(.5) rotate(-18deg);
     }
     .placed-die .dice-face{width:46px;height:46px}
-    .placed-die .pip{width:10px}
+    .placed-die .pip{width:12px}
     .placed-die.show{animation:land .58s cubic-bezier(.16,1.25,.3,1) forwards}
-    .placed-3{left:82%;top:57%;background:#ffe1db}
-    .placed-4{left:46%;top:61%;background:#fff2c9}
-    .placed-6{left:18%;top:62%;background:#e9f4ff}
+    .placed-3{left:85.2%;top:56.1%;background:#fff}
+    .placed-4{left:45.4%;top:59.4%;background:#fff}
+    .placed-6{left:18.2%;top:61.4%;background:#fff}
+    .scenario-yard-die{width:70px;background:linear-gradient(145deg,#fff 0 58%,#e8e0d6 100%)}
+    .scenario-yard-a{left:10.5%;top:57%}
+    .scenario-yard-b{left:20%;top:66%}
+    .scenario-yard-c{left:12.5%;top:76%}
+    .move-picker{position:absolute;z-index:20;left:12%;right:8%;top:8%;display:flex;align-items:center;justify-content:center;gap:clamp(12px,2vw,24px);opacity:0;visibility:hidden;transform:translateY(-12px);transition:.3s;pointer-events:none}
+    .move-picker.show{opacity:1;visibility:visible;transform:none;pointer-events:auto}
+    .move-choice{min-width:clamp(128px,15vw,190px);min-height:clamp(46px,6vw,62px);padding:6px clamp(18px,2.5vw,34px);border:4px solid var(--ink);border-radius:999px;background:#fffdf6;box-shadow:6px 7px 0 rgba(23,22,20,.17);font-size:clamp(20px,2.15vw,30px);line-height:1;font-weight:950;letter-spacing:.08em;cursor:pointer;transition:.2s}
+    .move-choice strong{display:block;font:inherit}
+    .move-choice.active{background:linear-gradient(145deg,#fff3bb,#ffd568);transform:translateY(-3px);box-shadow:7px 9px 0 rgba(23,22,20,.2)}
+    .move-choice.ready{animation:move-choice-ready .78s ease-in-out infinite alternate;background:linear-gradient(145deg,#dff8eb,#83e1aa)}
+    .move-choice.done{opacity:.48;filter:grayscale(.35)}
+    @keyframes move-choice-ready{to{transform:translateY(-5px) scale(1.035);box-shadow:8px 11px 0 rgba(23,22,20,.22)}}
+    .fx-layer{
+      position:absolute;
+      inset:0;
+      z-index:22;
+      overflow:hidden;
+      pointer-events:none;
+    }
+    .fx-die{
+      position:absolute;
+      z-index:2;
+      margin:0;
+      pointer-events:none;
+      transform-origin:center;
+    }
+    .yard-meter{
+      position:absolute;
+      z-index:18;
+      left:6.2%;
+      top:35%;
+      min-width:180px;
+      padding:12px 16px 13px;
+      border:4px solid var(--ink);
+      border-radius:18px;
+      background:#fff8d9;
+      box-shadow:6px 6px 0 rgba(23,22,20,.2);
+      opacity:0;
+      transform:translateY(18px) rotate(-3deg) scale(.9);
+      transition:opacity .28s,transform .38s cubic-bezier(.2,1.2,.3,1),background .2s;
+      pointer-events:none;
+    }
+    .yard-meter.show{opacity:1;transform:translateY(0) rotate(-3deg) scale(1)}
+    .yard-meter.danger{background:#ffb0aa;animation:meter-danger .35s ease-in-out infinite alternate}
+    .yard-meter span{display:block;font-size:18px;font-weight:950}
+    .yard-meter strong{font-size:58px;line-height:.95;color:#b8423d}
+    .yard-meter small{font-size:22px;font-weight:950}
+    .bust-overlay,.bone-overlay{
+      position:absolute;
+      inset:0;
+      z-index:40;
+      display:grid;
+      place-items:center;
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+    .bust-overlay.show,.bone-overlay.show{opacity:1;visibility:visible}
+    .bust-overlay{
+      background:radial-gradient(circle,rgba(255,248,217,.12) 0 19%,rgba(255,90,85,.78) 55%,rgba(23,22,20,.88) 100%);
+      transition:opacity .15s;
+    }
+    .blast-ring{
+      position:absolute;
+      width:390px;
+      aspect-ratio:1;
+      border:18px solid #fff1a8;
+      border-radius:50%;
+      box-shadow:0 0 0 34px #ff9d3f,0 0 0 66px rgba(255,90,85,.72);
+      transform:scale(.05);
+    }
+    .bust-overlay.show .blast-ring{animation:blast-ring .82s cubic-bezier(.12,.8,.24,1) forwards}
+    .bust-word{
+      position:relative;
+      z-index:3;
+      color:#fff8d9;
+      font-size:132px;
+      line-height:.9;
+      font-weight:950;
+      letter-spacing:.03em;
+      -webkit-text-stroke:7px var(--ink);
+      text-shadow:10px 12px 0 #b8423d;
+      opacity:0;
+      transform:scale(2.4) rotate(-12deg);
+    }
+    .bust-overlay.show .bust-word{animation:bust-word .82s .1s cubic-bezier(.16,1.35,.25,1) forwards}
+    .burst-particle{
+      position:absolute;
+      z-index:2;
+      left:50%;
+      top:50%;
+      width:22px;
+      height:58px;
+      border:4px solid var(--ink);
+      border-radius:12px;
+      background:var(--particle-color,#ffd568);
+      opacity:0;
+      transform:translate(-50%,-50%) rotate(var(--particle-angle)) translateY(0);
+    }
+    .bust-overlay.show .burst-particle{animation:particle-burst 1s .08s cubic-bezier(.12,.75,.22,1) forwards}
+    .bust-result{
+      position:absolute;
+      z-index:4;
+      left:50%;
+      bottom:48px;
+      width:670px;
+      transform:translate(-50%,30px);
+      padding:15px 22px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:20px;
+      border:5px solid var(--ink);
+      border-radius:20px;
+      background:#fffdf6;
+      box-shadow:8px 8px 0 #ff9d3f;
+      opacity:0;
+      font-size:23px;
+      font-weight:900;
+    }
+    .bust-result strong{font-size:30px;color:#b8423d}
+    .bust-overlay.resolved .bust-result{animation:result-rise .46s cubic-bezier(.2,1.2,.3,1) forwards}
+    .bone-overlay{
+      align-items:start;
+      padding-top:34px;
+      background:linear-gradient(180deg,rgba(255,255,255,.94) 0 31%,transparent 31%);
+      transition:opacity .22s;
+    }
+    .bone-rule-card{
+      width:min(760px,76%);
+      min-width:0;
+      padding:14px 22px;
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:18px;
+      border:5px solid var(--ink);
+      border-radius:22px;
+      background:#fffdf6;
+      box-shadow:9px 9px 0 var(--yellow);
+      transform:translateY(-20px) scale(.94);
+      transition:transform .38s cubic-bezier(.2,1.2,.3,1),background .2s;
+    }
+    .bone-overlay.show .bone-rule-card{transform:none}
+    .bone-rule-icon{font-size:62px;line-height:1}
+    .bone-rule-card strong{display:block;font-size:31px;line-height:1.1}
+    .bone-rule-card span{display:block;margin-top:6px;font-size:22px;line-height:1.25;font-weight:850}
+    .bone-overlay.reject .bone-rule-card{background:#ffe1df;box-shadow:9px 9px 0 var(--red)}
+    .bone-overlay.success .bone-rule-card{background:#e6f7ea;box-shadow:9px 9px 0 var(--green)}
+    .score-flip-layer{
+      position:absolute;
+      inset:0;
+      z-index:32;
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+      transition:opacity .3s ease;
+    }
+    .score-flip-layer.show{opacity:1;visibility:visible}
+    .score-dog-card{
+      position:absolute;
+      top:36%;
+      width:31.4%;
+      height:58%;
+      perspective:1200px;
+      opacity:0;
+      transform:translateY(28px) scale(.94);
+      transition:opacity .38s ease,transform .48s cubic-bezier(.18,1.2,.28,1);
+    }
+    .score-dog-card.torrek{left:32.1%}
+    .score-dog-card.plemek{left:67.1%}
+    .score-flip-layer.show .score-dog-card{opacity:1;transform:none}
+    .score-card-inner{
+      position:absolute;
+      inset:0;
+      transform-style:preserve-3d;
+      transition:transform .84s cubic-bezier(.18,.82,.2,1);
+    }
+    .score-dog-card.flipped .score-card-inner{transform:rotateY(180deg)}
+    .score-card-face{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      border:5px solid var(--ink);
+      border-radius:24px;
+      overflow:hidden;
+      backface-visibility:hidden;
+      box-shadow:9px 10px 0 rgba(23,22,20,.24);
+    }
+    .score-card-front{
+      grid-template-rows:auto 1fr auto;
+      padding:22px;
+      background:linear-gradient(145deg,#f0eff6,#c7c6d2);
+    }
+    .score-card-name{justify-self:start;font-size:27px;font-weight:950;letter-spacing:.08em;transform:rotate(-6deg)}
+    .score-card-dog{font-size:112px;line-height:1;filter:grayscale(1) contrast(1.15);transform:translateY(-2px)}
+    .score-card-spots{display:flex;gap:12px}
+    .score-card-spots span{
+      width:58px;aspect-ratio:1;display:grid;place-items:center;border:4px solid #d42e2e;border-radius:14px;background:#fff;
+      color:#d42e2e;font-size:30px;font-weight:950;box-shadow:3px 3px 0 rgba(23,22,20,.14);
+      transform:scale(.7);opacity:.25;transition:transform .34s cubic-bezier(.2,1.3,.3,1),opacity .25s;
+    }
+    .score-dog-card.filled .score-card-spots span{transform:scale(1);opacity:1}
+    .score-dog-card.filled .score-card-spots span:nth-child(2){transition-delay:.12s}
+    .score-card-back{
+      transform:rotateY(180deg);
+      align-content:center;
+      gap:10px;
+      color:#fffdf6;
+      background:
+        radial-gradient(circle at 20% 18%,rgba(255,255,255,.22) 0 5%,transparent 28%),
+        linear-gradient(145deg,#516fca 0%,#29438f 72%,#20336f 100%);
+    }
+    .score-card-back::before{content:"🐾";font-size:78px;filter:drop-shadow(4px 5px 0 rgba(23,22,20,.24))}
+    .score-card-back strong{font-size:34px;letter-spacing:.1em}
+    .score-card-back em{font-style:normal;font-size:24px;font-weight:950;color:#ffe29a}
+    .instant-score-banner{
+      position:absolute;
+      left:50%;
+      top:32px;
+      min-width:900px;
+      padding:16px 26px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:18px;
+      border:5px solid var(--ink);
+      border-radius:22px;
+      background:linear-gradient(145deg,#fffdf6,#ffe29a);
+      box-shadow:9px 10px 0 var(--orange);
+      opacity:0;
+      transform:translate(-50%,-20px) scale(.94);
+      transition:opacity .34s,transform .48s cubic-bezier(.2,1.25,.3,1);
+      font-size:25px;
+      font-weight:900;
+      white-space:nowrap;
+    }
+    .instant-score-banner strong{font-size:32px;color:#b8423d;white-space:nowrap}
+    .instant-score-banner span{white-space:nowrap}
+    .score-flip-layer.scored .instant-score-banner{opacity:1;transform:translate(-50%,0) scale(1)}
     .sticker{
       position:absolute;
       z-index:1;
@@ -575,7 +935,7 @@
     @keyframes land{
       0%{opacity:0;transform:translateY(-95px) scale(.52) rotate(-22deg)}
       72%{opacity:1;transform:translateY(8px) scale(1.1) rotate(5deg)}
-      100%{opacity:1;transform:translateY(0) scale(1) rotate(-2deg)}
+      100%{opacity:1;transform:translateY(0) scale(1) rotate(0)}
     }
     @keyframes stamp-in{
       0%{opacity:0;transform:scale(1.7) rotate(-10deg)}
@@ -593,13 +953,39 @@
       48%{transform:translateY(3px) rotate(.25deg)}
       72%{transform:translateY(-2px)}
     }
-    @keyframes dice-tumble{
-      0%{transform:translate3d(0,0,0) rotate(0) scale(1)}
-      24%{transform:translate3d(-5px,-20px,0) rotate(-22deg) scale(1.06)}
-      52%{transform:translate3d(7px,-8px,0) rotate(18deg) scale(.98)}
-      76%{transform:translate3d(-3px,-15px,0) rotate(34deg) scale(1.04)}
-      100%{transform:translate3d(0,0,0) rotate(0) scale(1)}
+    @keyframes dice-tumble-3d{
+      0%{transform:translate3d(0,0,0) rotateX(0) rotateY(0) rotateZ(0) scale(1)}
+      22%{transform:translate3d(-9px,-27px,18px) rotateX(96deg) rotateY(78deg) rotateZ(-22deg) scale(1.08)}
+      48%{transform:translate3d(8px,-9px,6px) rotateX(188deg) rotateY(174deg) rotateZ(18deg) scale(.96)}
+      74%{transform:translate3d(-5px,-23px,14px) rotateX(286deg) rotateY(272deg) rotateZ(42deg) scale(1.06)}
+      100%{transform:translate3d(0,0,0) rotateX(360deg) rotateY(540deg) rotateZ(0) scale(1)}
     }
+    @keyframes batch-pulse{to{box-shadow:0 0 0 11px rgba(255,157,63,.18),0 0 34px rgba(255,157,63,.72)}}
+    @keyframes rejected-pick{
+      0%,100%{transform:translateX(0) rotate(4deg)}
+      35%{transform:translateY(-34px) rotate(-12deg) scale(1.08);filter:drop-shadow(0 10px 5px rgba(23,22,20,.2))}
+      58%{transform:translateY(-34px) rotate(-12deg) scale(1.08)}
+      75%{transform:translateX(-9px) rotate(6deg)}
+      86%{transform:translateX(9px) rotate(-4deg)}
+    }
+    @keyframes dice-clear{
+      0%{opacity:1;transform:scale(1) rotate(0);filter:none}
+      45%{opacity:1;transform:scale(1.2) rotate(14deg);filter:brightness(1.6)}
+      100%{opacity:0;transform:translateY(90px) scale(.18) rotate(95deg);filter:blur(5px)}
+    }
+    @keyframes board-bust-shake{
+      10%,90%{transform:translateX(-7px)}20%,80%{transform:translateX(12px) rotate(.25deg)}
+      30%,50%,70%{transform:translateX(-18px) rotate(-.35deg)}40%,60%{transform:translateX(18px) rotate(.35deg)}
+    }
+    @keyframes meter-danger{to{transform:translateY(0) rotate(3deg) scale(1.08);box-shadow:0 0 0 10px rgba(255,90,85,.2),7px 7px 0 rgba(23,22,20,.24)}}
+    @keyframes blast-ring{0%{opacity:1;transform:scale(.05)}68%{opacity:1;transform:scale(1.55)}100%{opacity:0;transform:scale(2.2)}}
+    @keyframes bust-word{0%{opacity:0;transform:scale(2.4) rotate(-12deg)}60%{opacity:1;transform:scale(.9) rotate(4deg)}100%{opacity:1;transform:scale(1) rotate(-3deg)}}
+    @keyframes particle-burst{
+      0%{opacity:1;transform:translate(-50%,-50%) rotate(var(--particle-angle)) translateY(0) scale(.5)}
+      75%{opacity:1}
+      100%{opacity:0;transform:translate(-50%,-50%) rotate(var(--particle-angle)) translateY(calc(-1 * var(--particle-distance))) scale(1.1)}
+    }
+    @keyframes result-rise{to{opacity:1;transform:translate(-50%,0)}}
     @keyframes brand-bob{
       0%,100%{transform:rotate(-3deg) translateY(0)}
       50%{transform:rotate(2deg) translateY(-3px)}
@@ -621,11 +1007,10 @@
     .play-area{background:#fffdf6;box-shadow:8px 8px 0 rgba(23,22,20,.16),14px 14px 0 rgba(255,100,56,.14)}
     .dice-tray{background:#fff2da;background-image:none}
     .tray-copy strong{color:var(--ink)}
-    .die,.die:nth-child(2),.die:nth-child(3){background:#fff;box-shadow:4px 4px 0 rgba(23,22,20,.15)}
     .roll-button{background:var(--orange)}
     .auto-button{background:#cfeeda;color:var(--ink)}
     .target-tag{background:#fffdf6}
-    .placed-3,.placed-4,.placed-6{background:#fffdf6}
+    .placed-3,.placed-4,.placed-6{background:linear-gradient(145deg,#fff 0 58%,#e8e0d6 100%)}
     .term-capsule{
       display:inline-flex;
       align-items:center;
@@ -688,15 +1073,16 @@
           </div>
         </article>
 
-        <section class="mission">
-          <span class="mission-label">本轮示例</span>
-          <h3>掷出 <span class="term-capsule">3、4、6</span></h3>
-          <p>3、4 有空格；6 没有。</p>
+        <section class="mission" id="missionCard">
+          <span class="mission-label" id="missionLabel">本轮示例</span>
+          <h3 id="missionTitle">掷出 <span class="term-capsule">3、4、6</span></h3>
+          <p id="missionCopy">3、4 有空格；6 没有。</p>
           <div class="mission-map" aria-label="三颗骰子的正确去向">
             <div class="mission-route"><span class="route-die" aria-label="三点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-5"></i><i class="pip pip-9"></i></span></span><span class="route-arrow">→</span><span class="route-target">右侧狗狗</span></div>
             <div class="mission-route"><span class="route-die" aria-label="四点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></span><span class="route-arrow">→</span><span class="route-target">中间狗狗</span></div>
             <div class="mission-route"><span class="route-die" aria-label="六点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-4"></i><i class="pip pip-6"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></span><span class="route-arrow">→</span><span class="route-target">后院</span></div>
           </div>
+          <div class="scenario-steps" id="scenarioSteps" aria-live="polite"></div>
         </section>
       </aside>
 
@@ -707,21 +1093,26 @@
             <span>拖到下方对应区域</span>
           </div>
           <div class="dice-row" id="diceRow">
-            <button class="die" type="button" data-value="3" aria-label="三点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-5"></i><i class="pip pip-9"></i></span></button>
-            <button class="die" type="button" data-value="4" aria-label="四点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></button>
-            <button class="die" type="button" data-value="6" aria-label="六点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-4"></i><i class="pip pip-6"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></button>
+            <button class="die" type="button" data-die-id="a" data-value="3" aria-label="三点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-5"></i><i class="pip pip-9"></i></span></button>
+            <button class="die" type="button" data-die-id="b" data-value="4" aria-label="四点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></button>
+            <button class="die" type="button" data-die-id="c" data-value="6" aria-label="六点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-4"></i><i class="pip pip-6"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></button>
           </div>
           <div class="tray-actions">
-            <button class="roll-button" id="rollBtn" type="button">🎲 摇骰子</button>
-            <button class="auto-button" id="demoBtn" type="button">▶ 自动演示</button>
+            <button class="roll-button" id="rollBtn" data-testid="roll-dice" type="button">🎲 摇骰子</button>
+            <button class="auto-button" id="demoBtn" data-testid="placement-demo" type="button">▶ 346 演示</button>
+            <button class="scenario-button bust" id="bustBtn" data-testid="bust-demo" type="button">💥 336 爆掉</button>
+            <button class="scenario-button bone" id="boneBtn" data-testid="bone-demo" type="button">🦴 整批重投</button>
+            <button class="scenario-button score" id="scoreBtn" data-testid="instant-score-demo" type="button">⚡ 全满直得分</button>
           </div>
         </div>
 
         <div class="board" id="board">
-          <img class="example-image" src="assets/dice-placement-example.jpg" alt="后院和两张狗狗卡的骰子放置示例：六点进后院，四点放到 Torrek，三点放到 Plemek">
+          <img class="example-image" src="assets/dice-placement-board-clean.png" alt="干净的后院牌、Torrek 狗狗卡和 Plemek 狗狗卡互动棋盘">
+          <div class="dog-card-live torrek" aria-hidden="true"><span class="dog-card-paw">🐾</span><span class="dog-card-talk">汪！</span></div>
+          <div class="dog-card-live plemek" aria-hidden="true"><span class="dog-card-paw">🐾</span><span class="dog-card-talk">好耶！</span></div>
 
           <div class="target target-yard" data-target="yard">
-            <span class="target-tag">6 点 → 后院</span>
+            <span class="target-tag" id="yardTargetTag">6 点 → 后院</span>
           </div>
           <div class="target target-torrek" data-target="torrek">
             <span class="target-tag">4 点 → Torrek</span>
@@ -733,8 +1124,36 @@
           <span class="placed-die placed-3" data-placed="3" aria-label="三点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-5"></i><i class="pip pip-9"></i></span></span>
           <span class="placed-die placed-4" data-placed="4" aria-label="四点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></span>
           <span class="placed-die placed-6" data-placed="6" aria-label="六点骰子"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-4"></i><i class="pip pip-6"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></span>
+          <span class="placed-die scenario-yard-die scenario-yard-a" data-scenario-die="a" aria-label="第一颗三点骰子进入后院"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-5"></i><i class="pip pip-9"></i></span></span>
+          <span class="placed-die scenario-yard-die scenario-yard-b" data-scenario-die="b" aria-label="第二颗三点骰子进入后院"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-5"></i><i class="pip pip-9"></i></span></span>
+          <span class="placed-die scenario-yard-die scenario-yard-c" data-scenario-die="c" aria-label="六点骰子进入后院"><span class="dice-face"><i class="pip pip-1"></i><i class="pip pip-3"></i><i class="pip pip-4"></i><i class="pip pip-6"></i><i class="pip pip-7"></i><i class="pip pip-9"></i></span></span>
+          <div class="move-picker" id="movePicker" aria-label="选择骰子动作">
+            <button class="move-choice" id="placeModeBtn" type="button"><strong>放置</strong></button>
+            <button class="move-choice" id="buryModeBtn" type="button" disabled><strong>埋藏</strong></button>
+          </div>
           <span class="stamp stamp-dog" id="dogStamp">成功配对！</span>
           <span class="stamp stamp-yard" id="yardStamp">埋进后院</span>
+          <div class="yard-meter" id="yardMeter"><span>后院点数</span><strong id="yardTotal">2</strong><small> / 7</small></div>
+          <div class="fx-layer" id="fxLayer" aria-hidden="true"></div>
+          <div class="bust-overlay" id="bustOverlay" aria-live="assertive">
+            <div class="blast-ring" aria-hidden="true"></div>
+            <div class="bust-word">爆掉!!</div>
+            <div class="bust-result"><strong>所有骰子清空</strong><span>立即结束当前回合</span></div>
+          </div>
+          <div class="bone-overlay" id="boneOverlay" aria-live="polite">
+            <div class="bone-rule-card"><span class="bone-rule-icon" id="boneRuleIcon">✕</span><div><strong id="boneRuleTitle">不能只挑一颗重投</strong><span id="boneRuleCopy">花 1 根骨头后，这一批骰子必须全部重投。</span></div></div>
+          </div>
+          <div class="score-flip-layer" id="scoreFlipLayer" aria-live="polite">
+            <div class="score-dog-card torrek" data-score-card="torrek"><div class="score-card-inner">
+              <div class="score-card-face score-card-front"><strong class="score-card-name">TORREK</strong><div class="score-card-dog">🐶</div><div class="score-card-spots"><span>6</span><span>2</span></div></div>
+              <div class="score-card-face score-card-back"><strong>TORREK</strong><em>已得分 +1</em></div>
+            </div></div>
+            <div class="score-dog-card plemek" data-score-card="plemek"><div class="score-card-inner">
+              <div class="score-card-face score-card-front"><strong class="score-card-name">PLEMEK</strong><div class="score-card-dog">🐕</div><div class="score-card-spots"><span>1</span><span>3</span><span>5</span></div></div>
+              <div class="score-card-face score-card-back"><strong>PLEMEK</strong><em>已得分 +1</em></div>
+            </div></div>
+            <div class="instant-score-banner"><strong>全部填满 → 立即计分！</strong><span>不占用下一回合的行动选择</span></div>
+          </div>
         </div>
       </section>
     </section>
@@ -752,16 +1171,43 @@
     const diceTray = document.querySelector(".dice-tray");
     const rollBtn = document.getElementById("rollBtn");
     const demoBtn = document.getElementById("demoBtn");
+    const bustBtn = document.getElementById("bustBtn");
+    const boneBtn = document.getElementById("boneBtn");
+    const scoreBtn = document.getElementById("scoreBtn");
     const resetBtn = document.getElementById("resetBtn");
     const fullscreenBtn = document.getElementById("fullscreenBtn");
     const dogStamp = document.getElementById("dogStamp");
     const yardStamp = document.getElementById("yardStamp");
+    const board = document.getElementById("board");
+    const diceRow = document.getElementById("diceRow");
+    const missionCard = document.getElementById("missionCard");
+    const missionLabel = document.getElementById("missionLabel");
+    const missionTitle = document.getElementById("missionTitle");
+    const missionCopy = document.getElementById("missionCopy");
+    const scenarioSteps = document.getElementById("scenarioSteps");
+    const yardMeter = document.getElementById("yardMeter");
+    const yardTotal = document.getElementById("yardTotal");
+    const yardTargetTag = document.getElementById("yardTargetTag");
+    const fxLayer = document.getElementById("fxLayer");
+    const bustOverlay = document.getElementById("bustOverlay");
+    const boneOverlay = document.getElementById("boneOverlay");
+    const scoreFlipLayer = document.getElementById("scoreFlipLayer");
+    const movePicker = document.getElementById("movePicker");
+    const placeModeBtn = document.getElementById("placeModeBtn");
+    const buryModeBtn = document.getElementById("buryModeBtn");
+    const boneRuleIcon = document.getElementById("boneRuleIcon");
+    const boneRuleTitle = document.getElementById("boneRuleTitle");
+    const boneRuleCopy = document.getElementById("boneRuleCopy");
+    const actionButtons = [rollBtn,demoBtn,bustBtn,boneBtn,scoreBtn];
     let placed = new Set();
     let toastTimer = 0;
     let demoTimers = [];
     let activeDrag = null;
     let rollInterval = 0;
     let actionVersion = 0;
+    let interactionMode = "standard";
+    let boneStage = "idle";
+    let bustStage = "idle";
 
     const pipPositions = {
       1:[5],
@@ -796,9 +1242,97 @@
       toastTimer = setTimeout(() => toast.classList.remove("show"), 1900);
     }
 
+    function setActionButtons(disabled){
+      actionButtons.forEach(button => { button.disabled = disabled; });
+    }
+
+    function pause(duration, version){
+      return new Promise(resolve => {
+        const timer = setTimeout(() => resolve(version === actionVersion),duration);
+        demoTimers.push(timer);
+      });
+    }
+
+    function setMission(label,title,copy,steps = []){
+      missionLabel.textContent = label;
+      missionTitle.innerHTML = title;
+      missionCopy.textContent = copy;
+      missionCard.classList.toggle("scenario-mode",steps.length > 0);
+      scenarioSteps.replaceChildren(...steps.map((text,index) => {
+        const step = document.createElement("div");
+        step.className = "scenario-step";
+        const number = document.createElement("b");
+        number.textContent = String(index + 1);
+        const copyNode = document.createElement("span");
+        copyNode.textContent = text;
+        step.append(number,copyNode);
+        return step;
+      }));
+    }
+
+    function renderDice(values){
+      dice.forEach((item,index) => renderDie(item,values[index]));
+    }
+
+    async function animateScenarioRoll(values, resultText, version){
+      statusText.textContent = "摇骰子中……";
+      diceTray.classList.add("rolling");
+      dice.forEach(item => item.classList.add("rolling"));
+      setActionButtons(true);
+      rollInterval = setInterval(() => renderDice(values.map(() => 1 + Math.floor(Math.random() * 6))),72);
+      if (!await pause(1150,version)) return false;
+      clearInterval(rollInterval);
+      rollInterval = 0;
+      renderDice(values);
+      dice.forEach((item,index) => setTimeout(() => item.classList.remove("rolling"),index * 80));
+      setTimeout(() => diceTray.classList.remove("rolling"),220);
+      statusText.textContent = resultText;
+      return true;
+    }
+
+    async function flyDieToYard(sourceIndex,slotIndex,version){
+      const sourceRect = dice[sourceIndex].getBoundingClientRect();
+      const boardRect = board.getBoundingClientRect();
+      const scaleX = board.clientWidth / boardRect.width;
+      const scaleY = board.clientHeight / boardRect.height;
+      const clone = dice[sourceIndex].cloneNode(true);
+      clone.className = "die fx-die";
+      clone.removeAttribute("aria-label");
+      clone.style.left = `${(sourceRect.left - boardRect.left) * scaleX}px`;
+      clone.style.top = `${(sourceRect.top - boardRect.top) * scaleY}px`;
+      fxLayer.appendChild(clone);
+      const destinations = [{x:105,y:350,rotate:-16},{x:190,y:405,rotate:12}];
+      const destination = destinations[slotIndex];
+      const dx = destination.x - parseFloat(clone.style.left);
+      const dy = destination.y - parseFloat(clone.style.top);
+      const animation = clone.animate([
+        {transform:"translate3d(0,0,0) rotate(0) scale(1)",offset:0},
+        {transform:`translate3d(${dx * .48}px,${dy * .35 - 110}px,0) rotate(${destination.rotate * 2}deg) scale(1.18)`,offset:.48},
+        {transform:`translate3d(${dx}px,${dy}px,0) rotate(${destination.rotate}deg) scale(.92)`,offset:1}
+      ],{duration:820,easing:"cubic-bezier(.18,.86,.24,1.1)",fill:"forwards"});
+      try{ await animation.finished; }catch(error){ return false; }
+      if (version !== actionVersion) return false;
+      dice[sourceIndex].classList.add("placed");
+      return true;
+    }
+
+    function createBurstParticles(){
+      bustOverlay.querySelectorAll(".burst-particle").forEach(item => item.remove());
+      const colors = ["#ffd568","#ff9d3f","#ffb7c7","#fffdf6","#63c989"];
+      for (let index = 0; index < 20; index += 1){
+        const particle = document.createElement("i");
+        particle.className = "burst-particle";
+        particle.style.setProperty("--particle-angle",`${index * 18 + (index % 3) * 5}deg`);
+        particle.style.setProperty("--particle-distance",`${260 + (index % 5) * 38}px`);
+        particle.style.setProperty("--particle-color",colors[index % colors.length]);
+        bustOverlay.appendChild(particle);
+      }
+    }
+
     function updateStatus(){
       const remaining = 3 - placed.size;
       if (remaining === 0){
+        board.dataset.demoState = "placement-complete";
         status.classList.add("complete");
         statusText.textContent = "完成：2 颗配对，1 颗进后院";
         dogStamp.classList.add("show");
@@ -829,14 +1363,17 @@
       rollInterval = 0;
       if (activeDrag) activeDrag.cancel();
       placed = new Set();
+      interactionMode = "standard";
+      boneStage = "idle";
+      bustStage = "idle";
       dice.forEach(item => {
-        item.classList.remove("placed","drag-source","rolling");
+        item.classList.remove("placed","drag-source","rolling","rejected-pick","cleared");
         item.removeAttribute("style");
         renderDie(item,Number(item.dataset.value));
       });
       diceTray.classList.remove("rolling");
-      rollBtn.disabled = false;
-      demoBtn.disabled = false;
+      diceRow.classList.remove("batch-locked");
+      setActionButtons(false);
       targets.forEach(item => item.classList.remove("ready","magnetic","correct","wrong"));
       document.querySelectorAll(".placed-die").forEach(item => item.classList.remove("show"));
       dogStamp.classList.remove("show");
@@ -844,16 +1381,33 @@
       status.classList.remove("complete");
       statusText.textContent = "拖动 3 颗骰子";
       toast.classList.remove("show");
+      board.classList.remove("bust-shake");
+      board.dataset.demoState = "idle";
+      fxLayer.replaceChildren();
+      yardMeter.classList.remove("show","danger");
+      yardTotal.textContent = "2";
+      yardTargetTag.textContent = "6 点 → 后院";
+      bustOverlay.classList.remove("show","resolved");
+      boneOverlay.classList.remove("show","reject","success");
+      scoreFlipLayer.classList.remove("show","scored");
+      scoreFlipLayer.querySelectorAll(".score-dog-card").forEach(card => card.classList.remove("filled","flipped"));
+      movePicker.classList.remove("show");
+      placeModeBtn.className = "move-choice";
+      buryModeBtn.className = "move-choice";
+      placeModeBtn.disabled = false;
+      buryModeBtn.disabled = true;
+      boneBtn.textContent = "🦴 整批重投";
+      setMission("本轮示例",'掷出 <span class="term-capsule">3、4、6</span>',"3、4 有空格；6 没有。");
     }
 
     function rollDice(showResultMessage = true){
       reset();
       const version = actionVersion;
+      board.dataset.demoState = "rolling";
       statusText.textContent = "摇骰子中……";
       diceTray.classList.add("rolling");
       dice.forEach(item => item.classList.add("rolling"));
-      rollBtn.disabled = true;
-      demoBtn.disabled = true;
+      setActionButtons(true);
 
       rollInterval = setInterval(() => {
         dice.forEach(item => {
@@ -874,9 +1428,9 @@
             setTimeout(() => item.classList.remove("rolling"),index * 80);
           });
           setTimeout(() => diceTray.classList.remove("rolling"),220);
-          rollBtn.disabled = false;
-          demoBtn.disabled = false;
+          setActionButtons(false);
           statusText.textContent = "结果：3、4、6";
+          board.dataset.demoState = "rolled";
           if (showResultMessage) showToast("3、4、6：找同点数空格。");
           resolve(true);
         },1150);
@@ -895,6 +1449,7 @@
     async function runDemo(){
       const rolled = await rollDice(false);
       if (!rolled) return;
+      board.dataset.demoState = "placement-running";
       showToast("配对优先，剩下进后院。");
       const sequence = [
         ["4","torrek",650],
@@ -909,6 +1464,241 @@
       });
     }
 
+    async function runBustDemo(){
+      reset();
+      const version = actionVersion;
+      board.dataset.demoState = "bust-rolling";
+      setMission(
+        "爆掉演示",
+        '掷出 <span class="term-capsule">3、3、6</span>',
+        "先放置能匹配的骰子，再把剩余整批骰子埋藏。",
+        ["放置：先把一颗 3 放到狗狗牌","埋藏：剩余的 3、6 必须一起进后院","后院超过 7：爆掉并结束回合"]
+      );
+      const rolled = await animateScenarioRoll([3,3,6],"结果：3、3、6",version);
+      if (!rolled) return;
+      interactionMode = "bust336";
+      bustStage = "placing";
+      yardTotal.textContent = "0";
+      yardTargetTag.textContent = "剩余整批 → 后院";
+      yardMeter.classList.add("show");
+      movePicker.classList.add("show");
+      placeModeBtn.classList.add("active");
+      document.querySelector('.target[data-target="plemek"]').classList.add("ready");
+      board.dataset.demoState = "bust-awaiting-placement";
+      statusText.textContent = "① 放置：拖一颗 3 到 Plemek 狗狗牌";
+      showToast("先放置：把一颗 3 拖到狗狗牌。拖对后才会解锁埋藏。");
+      setActionButtons(true);
+    }
+
+    function placeBustDie(die,dieId,value){
+      if (placed.has(dieId)) return;
+      placed.add(dieId);
+      die.classList.add("placed");
+      if (bustStage === "placing"){
+        document.querySelector('.placed-die[data-placed="3"]').classList.add("show");
+        bustStage = "await-bury";
+        placeModeBtn.classList.remove("active");
+        placeModeBtn.classList.add("done");
+        placeModeBtn.disabled = true;
+        buryModeBtn.disabled = false;
+        buryModeBtn.classList.add("ready");
+        document.querySelector('.target[data-target="plemek"]').classList.remove("ready");
+        board.dataset.demoState = "bust-awaiting-bury-choice";
+        statusText.textContent = "放置完成 · 点击②埋藏处理剩余整批";
+        showToast("放置完成！现在点击“埋藏”，剩下的 3、6 必须整批进后院。");
+        return;
+      }
+      document.querySelector(`.scenario-yard-die[data-scenario-die="${dieId}"]`).classList.add("show");
+      const buried = [...placed].slice(1).map(id => Number(document.querySelector(`.die[data-die-id="${id}"]`).dataset.face));
+      yardTotal.textContent = String(buried.reduce((sum,n) => sum + n,0));
+      if (placed.size < 3){
+        statusText.textContent = `已埋藏 ${value} · 剩余骰子也必须进后院`;
+        board.dataset.demoState = "bust-awaiting-final-bury";
+        showToast("埋藏是整批动作：还有一颗，也要一起埋进后院。");
+      } else {
+        yardMeter.classList.add("danger");
+        statusText.textContent = `后院 ${yardTotal.textContent} 点：爆掉！`;
+        board.dataset.demoState = "bust-triggered";
+        finishBust(actionVersion);
+      }
+    }
+
+    function activateBuryMode(){
+      if (bustStage !== "await-bury") return;
+      bustStage = "burying";
+      buryModeBtn.classList.remove("ready");
+      buryModeBtn.classList.add("active");
+      buryModeBtn.disabled = true;
+      document.querySelector('.target[data-target="yard"]').classList.add("ready");
+      board.dataset.demoState = "bust-awaiting-bury";
+      statusText.textContent = "② 埋藏：把剩余 3、6 都拖进后院";
+      showToast("埋藏：剩下的 3 和 6 是一整批，不能只留其中一颗。");
+    }
+
+    async function finishBust(version){
+      if (!await pause(260,version)) return;
+      board.dataset.demoState = "bust-explosion";
+      movePicker.classList.remove("show");
+      createBurstParticles();
+      board.classList.add("bust-shake");
+      bustOverlay.classList.add("show");
+      dice.forEach(item => item.classList.add("cleared"));
+      document.querySelectorAll(".placed-die").forEach(item => item.classList.remove("show"));
+      showToast("爆掉！清空所有骰子，立即结束当前回合。");
+      if (!await pause(1050,version)) return;
+      fxLayer.replaceChildren();
+      yardMeter.classList.remove("show");
+      bustOverlay.classList.add("resolved");
+      statusText.textContent = "回合结束 · 所有骰子已清空";
+      board.dataset.demoState = "bust-complete";
+      interactionMode = "standard";
+      setActionButtons(false);
+    }
+
+    async function runBoneDemo(){
+      if (boneStage === "decision") return runBoneLockStep(actionVersion);
+      if (boneStage === "locked") return runBoneRollStep(actionVersion);
+      if (boneStage === "result") return finishBoneAccept();
+      if (boneStage !== "idle") return;
+      reset();
+      const version = actionVersion;
+      board.dataset.demoState = "bone-rolling";
+      setMission(
+        "骨头重投",
+        '掷出 <span class="term-capsule">3、3、6</span>',
+        "不满意这次结果？可以花 1 根骨头，但不能挑骰子。",
+        ["先决定是否使用 1 根骨头","一旦使用，这一批 3 颗全部锁定","三颗骰子一起重投，接受新结果"]
+      );
+      const rolled = await animateScenarioRoll([3,3,6],"结果：3、3、6",version);
+      if (!rolled) return;
+      interactionMode = "locked";
+      boneStage = "decision";
+      board.dataset.demoState = "bone-decision";
+      boneOverlay.classList.add("show");
+      boneRuleIcon.textContent = "🦴";
+      boneRuleTitle.textContent = "步骤 1 · 花 1 根骨头";
+      boneRuleCopy.textContent = "决定重投后，3、3、6 这一整批全部锁定；不能留下喜欢的骰子。";
+      statusText.textContent = "步骤 1/4 · 点击按钮确认花骨头";
+      setActionButtons(true);
+      boneBtn.disabled = false;
+      boneBtn.textContent = "① 花骨头";
+    }
+
+    async function runInstantScoreDemo(){
+      reset();
+      const version = actionVersion;
+      interactionMode = "locked";
+      setActionButtons(true);
+      board.dataset.demoState = "instant-score-start";
+      setMission(
+        "快速且危险",
+        '技能中 <span class="term-capsule">全部填满</span>',
+        "执行技能卡时，当前所有狗狗牌同时完成。",
+        ["技能仍在执行中","当前狗狗牌全部填满","立刻翻面计分，不占下一回合"]
+      );
+      scoreFlipLayer.classList.add("show");
+      const cards = [...scoreFlipLayer.querySelectorAll(".score-dog-card")];
+      statusText.textContent = "技能执行中 · 补上最后几个斑点";
+      if (!await pause(520,version)) return;
+      cards[0].classList.add("filled");
+      if (!await pause(380,version)) return;
+      cards[1].classList.add("filled");
+      showToast("所有狗狗牌完成：触发立即计分！");
+      if (!await pause(720,version)) return;
+      statusText.textContent = "全部填满 · 正在翻面计分";
+      cards[0].classList.add("flipped");
+      if (!await pause(260,version)) return;
+      cards[1].classList.add("flipped");
+      if (!await pause(780,version)) return;
+      scoreFlipLayer.classList.add("scored");
+      board.dataset.demoState = "instant-score-complete";
+      statusText.textContent = "立即得分 +2 · 不占下一回合";
+      interactionMode = "standard";
+      setActionButtons(false);
+    }
+
+    function rejectBoneSinglePick(die){
+      if (boneStage !== "await-pick") return;
+      boneStage = "ready";
+      board.dataset.demoState = "bone-reject-single";
+      boneRuleIcon.textContent = "✕";
+      boneRuleTitle.textContent = "不能只挑不喜欢的骰子";
+      boneRuleCopy.textContent = "只拿起一颗 3 重投？规则不允许，它会被弹回这一批。";
+      boneOverlay.classList.add("show","reject");
+      die.classList.add("rejected-pick");
+      showToast("不可以只重投一颗骰子！");
+      demoTimers.push(setTimeout(() => die.classList.remove("rejected-pick"),900));
+      boneBtn.textContent = "🦴 花骨头 · 整批重投";
+      boneBtn.disabled = false;
+      statusText.textContent = "单颗不行 · 点击骨头整批重投";
+    }
+
+    function runBoneLockStep(version){
+      if (version !== actionVersion || boneStage !== "decision") return;
+      boneStage = "locked";
+      interactionMode = "locked";
+      board.dataset.demoState = "bone-batch-locked";
+      boneOverlay.classList.remove("reject");
+      boneRuleIcon.textContent = "🦴";
+      boneRuleTitle.textContent = "步骤 2 · 整批全部交回";
+      boneRuleCopy.textContent = "3、3、6 三颗骰子全部锁定，一颗都不能留下。";
+      setMission(
+        "骨头已使用",
+        '整批 <span class="term-capsule">重新投</span>',
+        "不能只重投不喜欢的骰子；这一批必须全部重来。",
+        ["决定：花 1 根骨头","锁定：3、3、6 全部交回","重投：三颗一起滚动","结果：接受整批新点数"]
+      );
+      diceRow.classList.add("batch-locked");
+      statusText.textContent = "步骤 2/4 · 整批已锁定，点击重投";
+      setActionButtons(true);
+      boneBtn.disabled = false;
+      boneBtn.textContent = "② 三颗重投";
+    }
+
+    async function runBoneRollStep(version){
+      if (version !== actionVersion || boneStage !== "locked") return;
+      boneStage = "rerolling";
+      setActionButtons(true);
+      board.dataset.demoState = "bone-rerolling-all";
+      boneRuleTitle.textContent = "步骤 3 · 三颗一起重新滚动";
+      boneRuleCopy.textContent = "没有保留骰子：整批产生一组全新的结果。";
+      statusText.textContent = "步骤 3/4 · 三颗骰子一起滚动";
+      showToast("整批重投：三颗骰子一起滚！");
+      dice.forEach(item => item.classList.add("rolling"));
+      diceTray.classList.add("rolling");
+      rollInterval = setInterval(() => renderDice([1,2,3].map(() => 1 + Math.floor(Math.random() * 6))),72);
+      if (!await pause(1150,version)) return;
+      clearInterval(rollInterval);
+      rollInterval = 0;
+      renderDice([2,4,5]);
+      dice.forEach((item,index) => setTimeout(() => item.classList.remove("rolling"),index * 80));
+      setTimeout(() => diceTray.classList.remove("rolling"),220);
+      diceRow.classList.remove("batch-locked");
+
+      board.dataset.demoState = "bone-awaiting-accept";
+      boneStage = "result";
+      boneRuleIcon.textContent = "🎲";
+      boneRuleTitle.textContent = "新结果：2、4、5";
+      boneRuleCopy.textContent = "最后一步：点击接受这一整批新结果。";
+      statusText.textContent = "步骤 4/4 · 点击接受整批新结果";
+      boneBtn.disabled = false;
+      boneBtn.textContent = "③ 接受结果";
+    }
+
+    function finishBoneAccept(){
+      if (boneStage !== "result") return;
+      board.dataset.demoState = "bone-complete";
+      boneOverlay.classList.add("success");
+      boneRuleIcon.textContent = "✓";
+      boneRuleTitle.textContent = "整批重投完成：2、4、5";
+      boneRuleCopy.textContent = "步骤 4 · 已接受整批新结果，本次演示完成。";
+      statusText.textContent = "整批新结果：2、4、5 · 已接受";
+      interactionMode = "standard";
+      boneStage = "complete";
+      setActionButtons(false);
+      boneBtn.textContent = "✓ 重投完成";
+    }
+
     function targetAt(x, y, padding = 0){
       return targets.find(target => {
         const box = target.getBoundingClientRect();
@@ -919,8 +1709,10 @@
 
     dice.forEach(die => {
       die.addEventListener("pointerdown", event => {
-        const value = die.dataset.value;
-        if (placed.has(value) || activeDrag) return;
+        const value = die.dataset.face || die.dataset.value;
+        const dieId = die.dataset.dieId;
+        const placementKey = interactionMode === "standard" ? value : dieId;
+        if (interactionMode === "locked" || placed.has(placementKey) || activeDrag) return;
         event.preventDefault();
 
         const sourceRect = die.getBoundingClientRect();
@@ -943,7 +1735,11 @@
         ghost.style.background = sourceStyle.background;
         document.body.appendChild(ghost);
         die.classList.add("drag-source");
-        targets.forEach(target => target.classList.add("ready"));
+        board.classList.add("dragging");
+        targets.forEach(target => {
+          const isBustTarget = interactionMode === "bust336" && ((bustStage === "placing" && target.dataset.target === "plemek") || (bustStage === "burying" && target.dataset.target === "yard"));
+          target.classList.toggle("ready",interactionMode === "standard" || isBustTarget);
+        });
 
         function draw(){
           frame = 0;
@@ -970,18 +1766,19 @@
           ghost.remove();
           die.classList.remove("drag-source");
           targets.forEach(target => target.classList.remove("ready","magnetic"));
+          board.classList.remove("dragging");
           activeDrag = null;
         }
 
-        function animateGhostTo(left, top, onDone){
+        function animateGhostTo(left, top, onDone, finalScale = dragScale){
           if (frame) {
             cancelAnimationFrame(frame);
             frame = 0;
           }
           ghost.style.transition = "transform 260ms cubic-bezier(.2,.9,.25,1.16),opacity 220ms ease";
           requestAnimationFrame(() => {
-            ghost.style.transform = `translate3d(${left}px,${top}px,0) rotate(-2deg) scale(${dragScale * .96})`;
-            ghost.style.opacity = ".88";
+            ghost.style.transform = `translate3d(${left}px,${top}px,0) rotate(0) scale(${finalScale})`;
+            ghost.style.opacity = ".96";
           });
           setTimeout(() => {
             cleanup();
@@ -998,7 +1795,7 @@
         function cancel(){
           if (finished) return;
           finished = true;
-          animateGhostTo(sourceRect.left,sourceRect.top,() => {});
+          animateGhostTo(sourceRect.left,sourceRect.top,() => {},dragScale);
         }
 
         function end(endEvent){
@@ -1008,22 +1805,38 @@
           pointerY = endEvent.clientY;
           removeListeners();
 
+          if (interactionMode === "bone336"){
+            animateGhostTo(sourceRect.left,sourceRect.top,() => rejectBoneSinglePick(die),dragScale);
+            return;
+          }
+
           const hit = targetAt(pointerX,pointerY,34);
           if (!hit){
             showToast("把骰子拖进后院或其中一张狗狗卡里。");
-            animateGhostTo(sourceRect.left,sourceRect.top,() => {});
+            animateGhostTo(sourceRect.left,sourceRect.top,() => {},dragScale);
             return;
           }
 
           const targetName = hit.dataset.target;
-          if (correctTargets[value] !== targetName){
-            flashWrong(hit,value);
-            animateGhostTo(sourceRect.left,sourceRect.top,() => {});
+          const expectedTarget = interactionMode === "bust336"
+            ? (bustStage === "placing" ? (value === "3" ? "plemek" : null) : (bustStage === "burying" ? "yard" : null))
+            : correctTargets[value];
+          if (expectedTarget !== targetName){
+            if (interactionMode === "bust336") showToast(bustStage === "placing" ? "现在是“放置”：先把一颗 3 放到狗狗牌。" : bustStage === "burying" ? "现在是“埋藏”：剩余骰子都要进后院。" : "请先点击“埋藏”按钮。");
+            else flashWrong(hit,value);
+            animateGhostTo(sourceRect.left,sourceRect.top,() => {},dragScale);
             return;
           }
 
-          const destination = document.querySelector(`.placed-die[data-placed="${value}"]`).getBoundingClientRect();
-          animateGhostTo(destination.left,destination.top,() => placeDie(value,targetName));
+          const destinationNode = interactionMode === "bust336"
+            ? (bustStage === "placing" ? document.querySelector('.placed-die[data-placed="3"]') : document.querySelector(`.scenario-yard-die[data-scenario-die="${dieId}"]`))
+            : document.querySelector(`.placed-die[data-placed="${value}"]`);
+          const destination = destinationNode.getBoundingClientRect();
+          const destinationScale = destination.width / sourceWidth;
+          animateGhostTo(destination.left,destination.top,() => {
+            if (interactionMode === "bust336") placeBustDie(die,dieId,value);
+            else placeDie(value,targetName);
+          },destinationScale);
         }
 
         activeDrag = { cancel };
@@ -1046,6 +1859,13 @@
 
     rollBtn.addEventListener("click", () => rollDice(true));
     demoBtn.addEventListener("click", runDemo);
+    bustBtn.addEventListener("click", runBustDemo);
+    boneBtn.addEventListener("click", runBoneDemo);
+    placeModeBtn.addEventListener("click", () => {
+      if (bustStage === "placing") showToast("放置：把一颗 3 拖到 Plemek 狗狗牌。完成后解锁埋藏。");
+    });
+    buryModeBtn.addEventListener("click", activateBuryMode);
+    scoreBtn.addEventListener("click", runInstantScoreDemo);
     resetBtn.addEventListener("click", reset);
     fullscreenBtn.addEventListener("click", toggleFullscreen);
     window.addEventListener("resize", fitViewport, { passive:true });

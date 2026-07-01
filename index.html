@@ -62,10 +62,18 @@
     .brand-dog .peek-ear,.brand-dog .peek-dot,.brand-dog .peek-nose{fill:var(--ink)}
     .brand-dog .peek-mouth{fill:none;stroke:var(--ink);stroke-width:5;stroke-linecap:round}
     .brand-dog .peek-paw{fill:#fff8e9;stroke:var(--ink);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+    .brand-dog{transform-origin:50% 78%;animation:brand-dog-peek 3.8s ease-in-out infinite}
+    .brand-dog .peek-ear{transform-box:fill-box;transform-origin:50% 70%;animation:brand-ear-wiggle 3.2s .45s ease-in-out infinite}
+    .brand-dog .peek-ear:nth-of-type(2){animation-delay:1.05s}
+    .brand-dog .peek-paw{transform-box:fill-box;transform-origin:center;animation:brand-paw-tap 3.4s .8s ease-in-out infinite}
+    .brand-dog .peek-paw:last-child{animation-delay:1.5s}
     h1{margin:0;font-family:var(--font-rounded);font-size:clamp(26px,2.6vw,47px);font-weight:900;line-height:1;letter-spacing:.025em;white-space:nowrap}
     .rules-trigger{min-height:clamp(42px,4.8vh,56px);padding:0 clamp(12px,1vw,18px);display:flex;align-items:center;gap:7px;border:3px solid var(--ink);border-radius:999px;background:linear-gradient(180deg,#fffdf6,#ffe29a);font-size:clamp(13px,.95vw,17px);font-weight:950;white-space:nowrap;box-shadow:3px 3px 0 rgba(23,22,20,.18);cursor:pointer;transform:rotate(-1deg);transition:transform .16s,box-shadow .16s}
     .rules-trigger:hover{transform:translateY(-2px) rotate(1deg);box-shadow:5px 6px 0 rgba(23,22,20,.16)}
     .rules-trigger:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(23,22,20,.18)}
+    .rules-demo-trigger{min-height:clamp(42px,4.8vh,56px);padding:0 clamp(12px,1vw,18px);border:3px solid var(--ink);border-radius:999px;background:linear-gradient(145deg,#66dfd6,#b9fff3);font-size:clamp(13px,.95vw,17px);font-weight:950;white-space:nowrap;box-shadow:3px 3px 0 rgba(23,22,20,.18);cursor:pointer;transition:transform .16s,box-shadow .16s}
+    .rules-demo-trigger:hover{transform:translateY(-2px) rotate(-1deg);box-shadow:5px 6px 0 rgba(23,22,20,.16)}
+    .rules-demo-trigger:disabled{opacity:.55;cursor:wait}
     .rules-question{width:1.55em;aspect-ratio:1;display:grid;place-items:center;border:2px solid var(--ink);border-radius:50%;background:var(--orange);color:white;font-size:1.05em;line-height:1}
     .toolbar{margin-left:auto;display:flex;align-items:center;gap:clamp(8px,.85vw,14px)}
     button{font:inherit;color:inherit}
@@ -82,6 +90,14 @@
     .bone-tray.drop-target{outline:6px solid var(--orange);outline-offset:2px;background:#fff4e7}
 
     .grid{min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:var(--gap);perspective:1500px}
+    .skill-card.demo-focus .card-shell{outline:7px solid #ffca38;outline-offset:4px;transform:translateY(-8px) scale(1.025);filter:drop-shadow(0 14px 12px rgba(255,100,56,.24));animation:demo-card-pulse .72s ease-in-out infinite alternate}
+    .grid.demo-refresh .skill-card{animation:demo-refresh-pop .7s cubic-bezier(.2,.9,.25,1.2) both}
+    .grid.demo-refresh .skill-card:nth-child(2){animation-delay:.06s}.grid.demo-refresh .skill-card:nth-child(3){animation-delay:.12s}.grid.demo-refresh .skill-card:nth-child(4){animation-delay:.18s}.grid.demo-refresh .skill-card:nth-child(5){animation-delay:.24s}.grid.demo-refresh .skill-card:nth-child(6){animation-delay:.3s}
+    .demo-banner{position:fixed;z-index:40;left:50%;bottom:clamp(18px,3vh,34px);transform:translate(-50%,18px) scale(.96);opacity:0;pointer-events:none;display:flex;align-items:center;gap:10px;padding:12px 22px;border:3px solid var(--ink);border-radius:999px;background:linear-gradient(135deg,#fffdf6,#ffe2a6);box-shadow:7px 8px 0 rgba(23,22,20,.18);font-size:clamp(15px,1.2vw,21px);font-weight:950;transition:.28s}
+    .demo-banner.show{opacity:1;transform:translate(-50%,0) scale(1)}
+    .demo-banner b{display:grid;place-items:center;width:30px;aspect-ratio:1;border-radius:50%;background:var(--orange);color:#fff}
+    @keyframes demo-card-pulse{to{filter:drop-shadow(0 18px 16px rgba(255,100,56,.42));transform:translateY(-10px) scale(1.035)}}
+    @keyframes demo-refresh-pop{0%{transform:rotateY(80deg) scale(.88)}100%{transform:none}}
     .skill-card{position:relative;min-width:0;min-height:0;cursor:pointer;border-radius:var(--radius);outline:none;touch-action:manipulation}
     .skill-card:focus-visible{outline:6px solid #1878ff;outline-offset:4px}
     .card-shell{
@@ -96,6 +112,14 @@
     }
     .skill-card.used .card-shell{filter:grayscale(1) saturate(0);opacity:1;box-shadow:4px 4px 0 rgba(23,22,20,.2)}
     .skill-card.flipping .card-shell{animation:turn-card .62s cubic-bezier(.2,.76,.18,1)}
+    .skill-card:not(.used):not(.flipping):not(.demo-focus) .card-shell{animation:card-micro-breathe 7.2s ease-in-out infinite}
+    .skill-card:not(.used):not(.flipping):not(.demo-focus):nth-child(2) .card-shell{animation-delay:-1.2s}.skill-card:not(.used):not(.flipping):not(.demo-focus):nth-child(3) .card-shell{animation-delay:-2.4s}.skill-card:not(.used):not(.flipping):not(.demo-focus):nth-child(4) .card-shell{animation-delay:-3.6s}.skill-card:not(.used):not(.flipping):not(.demo-focus):nth-child(5) .card-shell{animation-delay:-4.8s}.skill-card:not(.used):not(.flipping):not(.demo-focus):nth-child(6) .card-shell{animation-delay:-6s}
+    .skill-card:not(.used):not(.flipping):nth-child(1) .dog-base img{animation:action-roll 5.2s .2s ease-in-out infinite}
+    .skill-card:not(.used):not(.flipping):nth-child(2) .dog-base img{animation:action-howl 5.5s 1s ease-in-out infinite}
+    .skill-card:not(.used):not(.flipping):nth-child(3) .dog-base img{animation:action-walk 5.4s 1.8s ease-in-out infinite}
+    .skill-card:not(.used):not(.flipping):nth-child(4) .dog-base img{animation:action-beg 5.7s .7s ease-in-out infinite}
+    .skill-card:not(.used):not(.flipping):nth-child(5) .dog-base img{animation:action-fetch 5.1s 2.1s ease-in-out infinite}
+    .skill-card:not(.used):not(.flipping):nth-child(6) .dog-base img{animation:action-run 5.3s 1.35s ease-in-out infinite}
     .skill-card::after{
       content:"";position:absolute;z-index:6;inset:3px;border-radius:calc(var(--radius) - 2px);
       background:linear-gradient(105deg,transparent 34%,rgba(255,255,255,.8) 49%,rgba(255,100,56,.26) 54%,transparent 67%);
@@ -112,7 +136,7 @@
     .nowrap{white-space:nowrap}
     .count-chip,.dice-count,.term-chip{
       --dice-tint:var(--butter);display:inline-flex;align-items:center;justify-content:center;
-      min-width:clamp(42px,3.2vw,58px);min-height:1.42em;margin:0 .12em;padding:.02em .34em .05em;
+      min-width:clamp(42px,3.2vw,58px);min-height:1.42em;margin:0 .24em;padding:.02em .38em .05em;
       border:2px solid var(--ink);border-radius:999px;background:linear-gradient(180deg,#fffdf6 0%,var(--dice-tint) 100%);
       box-shadow:2px 2px 0 rgba(23,22,20,.18);font-weight:950;line-height:1;white-space:nowrap;
       transform:rotate(-1.5deg);vertical-align:.02em;
@@ -130,9 +154,39 @@
     .badge-copy{position:relative;z-index:1;display:grid;grid-template-rows:min-content min-content minmax(0,1fr);justify-items:center;align-content:center;gap:2px;width:80%;height:82%;transform:translateY(4%)}
     .badge-cn{font-family:var(--font-rounded);font-size:clamp(17px,1.12vw,22px);font-weight:950;letter-spacing:.025em;line-height:.95;text-shadow:1px 1px 0 rgba(23,22,20,.16);white-space:nowrap}
     .badge-en{font-size:clamp(9px,.62vw,12px);font-weight:900;letter-spacing:.015em;line-height:1;opacity:.96;white-space:nowrap}
-    .dog-glyph{width:clamp(66px,5vw,94px);height:clamp(66px,5vw,94px);display:grid;place-items:center;align-self:end;border:0;border-radius:50%;background:transparent;box-shadow:none;overflow:hidden}
+    .dog-glyph{position:relative;width:clamp(66px,5vw,94px);height:clamp(66px,5vw,94px);display:grid;place-items:center;align-self:end;border:0;border-radius:50%;background:transparent;box-shadow:none;overflow:visible}
     .dog-glyph picture{display:contents}
-    .dog-glyph img{width:100%;height:100%;object-fit:contain;display:block;filter:contrast(1.08);opacity:1}
+    .dog-glyph img{width:100%;height:100%;object-fit:contain;display:block;filter:contrast(1.08);opacity:1;border-radius:50%;clip-path:circle(48% at 50% 50%)}
+    .dog-glyph .dog-part{position:absolute;inset:0;z-index:2;border-radius:0;pointer-events:none}
+    .dog-howl .part-a{clip-path:polygon(35% 12%,72% 12%,72% 53%,32% 53%);transform-origin:50% 48%;animation:part-howl-head 5.5s 1s ease-in-out infinite}
+    .dog-howl .part-b{display:none}
+    .dog-walk .part-a{clip-path:polygon(52% 49%,82% 49%,84% 77%,48% 77%);transform-origin:58% 52%;animation:part-walk-front 1.05s ease-in-out infinite alternate}
+    .dog-walk .part-b{clip-path:polygon(15% 48%,53% 48%,55% 78%,12% 78%);transform-origin:43% 51%;animation:part-walk-back 1.05s ease-in-out infinite alternate}
+    .dog-beg .part-a{clip-path:polygon(35% 38%,68% 38%,68% 64%,33% 64%);transform-origin:50% 57%;animation:part-beg-paws 5.7s .7s ease-in-out infinite}
+    .dog-beg .part-b{clip-path:polygon(25% 12%,66% 12%,66% 45%,24% 45%);transform-origin:48% 44%;animation:part-beg-head 5.7s .7s ease-in-out infinite}
+    .dog-fetch .part-a{clip-path:polygon(45% 20%,88% 20%,88% 52%,43% 52%);transform-origin:51% 49%;animation:part-fetch-head 5.1s 2.1s ease-in-out infinite}
+    .dog-fetch .part-b{clip-path:polygon(12% 25%,40% 25%,40% 72%,10% 72%);transform-origin:38% 51%;animation:part-fetch-tail 1.15s ease-in-out infinite alternate}
+    .dog-run .part-a{clip-path:polygon(52% 45%,91% 45%,91% 75%,49% 75%);transform-origin:54% 48%;animation:part-run-front .46s ease-in-out infinite alternate}
+    .dog-run .part-b{clip-path:polygon(10% 43%,55% 43%,56% 74%,8% 74%);transform-origin:52% 47%;animation:part-run-back .46s -.23s ease-in-out infinite alternate}
+    .skill-card .dog-glyph::after{position:absolute;z-index:3;pointer-events:none;font-weight:950;opacity:0;filter:drop-shadow(1px 2px 0 rgba(23,22,20,.2))}
+    .skill-card:nth-child(1) .dog-glyph::after{content:"↻";inset:-7px;color:#fff8e9;font-size:22px;display:grid;place-items:start end;animation:refined-roll-ring 5.2s .2s ease-in-out infinite}
+    .skill-card:nth-child(2) .dog-glyph::after{content:")))";right:-13px;top:7px;color:#fff8e9;font-size:16px;letter-spacing:-2px;animation:refined-howl-wave 5.5s 1s ease-out infinite}
+    .skill-card:nth-child(3) .dog-glyph::after{content:"🐾";left:-9px;bottom:3px;font-size:16px;animation:refined-walk-paw 5.4s 1.8s ease-in-out infinite}
+    .skill-card:nth-child(4) .dog-glyph::after{content:"♥";right:-3px;top:-5px;color:#fff1bd;font-size:22px;animation:refined-beg-heart 5.7s .7s ease-in-out infinite}
+    .skill-card:nth-child(5) .dog-glyph::after{content:"●";left:-7px;bottom:13px;color:#ffd45c;-webkit-text-stroke:2px #171614;font-size:18px;animation:refined-fetch-ball 5.1s 2.1s ease-in-out infinite}
+    .skill-card:nth-child(6) .dog-glyph::after{content:"≋";left:-15px;top:25px;color:#fff8e9;font-size:27px;letter-spacing:-5px;animation:refined-run-lines 1.05s ease-out infinite}
+    .action-dog{width:100%;height:100%;overflow:visible;filter:drop-shadow(1px 2px 0 rgba(23,22,20,.16))}
+    .action-dog *{transform-box:fill-box}
+    .action-dog .dog-fill{fill:#fff8e9;stroke:#171614;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+    .action-dog .dog-dark{fill:#171614}.action-dog .dog-line{fill:none;stroke:#171614;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+    .action-dog .dog-rig,.action-dog .dog-head,.action-dog .dog-leg,.action-dog .dog-tail,.action-dog .fetch-ball{transform-origin:center}
+    .action-dog .sound-wave,.action-dog .speed-line{fill:none;stroke:#fff8e9;stroke-width:4;stroke-linecap:round;opacity:0}
+    .action-dog-roll .dog-rig{animation:dog-real-roll 5.2s .2s ease-in-out infinite}.action-dog-roll .dog-leg{animation:dog-leg-tuck 5.2s .2s ease-in-out infinite}
+    .action-dog-howl .dog-head{transform-origin:45% 70%;animation:dog-head-howl 4.6s .5s ease-in-out infinite}.action-dog-howl .sound-wave{animation:dog-howl-wave 4.6s .5s ease-out infinite}
+    .action-dog-walk .dog-rig{animation:dog-body-walk 3.8s ease-in-out infinite}.action-dog-walk .dog-leg.front-a,.action-dog-walk .dog-leg.back-b{animation:dog-leg-forward .68s ease-in-out infinite alternate}.action-dog-walk .dog-leg.front-b,.action-dog-walk .dog-leg.back-a{animation:dog-leg-back .68s ease-in-out infinite alternate}.action-dog-walk .dog-tail{animation:dog-tail-wag .55s ease-in-out infinite alternate}
+    .action-dog-beg .dog-rig{animation:dog-beg-body 3.9s ease-in-out infinite}.action-dog-beg .dog-leg.front-a{animation:dog-beg-paw 3.9s ease-in-out infinite}.action-dog-beg .dog-leg.front-b{animation:dog-beg-paw 3.9s .12s ease-in-out infinite}.action-dog-beg .dog-tail{animation:dog-tail-wag .5s ease-in-out infinite alternate}
+    .action-dog-fetch .dog-rig{animation:dog-fetch-dash 4.2s ease-in-out infinite}.action-dog-fetch .fetch-ball{animation:dog-fetch-ball 4.2s ease-in-out infinite}.action-dog-fetch .dog-head{animation:dog-fetch-head 4.2s ease-in-out infinite}.action-dog-fetch .dog-leg{animation:dog-run-legs .42s ease-in-out infinite alternate}
+    .action-dog-run .dog-rig{animation:dog-run-body 1.05s ease-in-out infinite}.action-dog-run .dog-leg.front-a,.action-dog-run .dog-leg.back-b{animation:dog-run-legs .34s ease-in-out infinite alternate}.action-dog-run .dog-leg.front-b,.action-dog-run .dog-leg.back-a{animation:dog-run-legs .34s -.17s ease-in-out infinite alternate-reverse}.action-dog-run .dog-tail{animation:dog-tail-wag .32s ease-in-out infinite alternate}.action-dog-run .speed-line{animation:dog-speed-line 1.05s ease-out infinite}
     .dog-body{fill:#fff8e9;stroke:#171614;stroke-width:4.8;stroke-linecap:round;stroke-linejoin:round}
     .dog-spot,.dog-ear,.dog-nose{fill:#171614}
     .dog-line{fill:none;stroke:#171614;stroke-width:4.8;stroke-linecap:round;stroke-linejoin:round}
@@ -175,6 +229,46 @@
     .toast{position:fixed;z-index:1000;left:50%;bottom:clamp(18px,3vh,38px);max-width:min(90vw,680px);transform:translate(-50%,22px);opacity:0;background:var(--ink);color:#fff8e9;border:3px solid #fff8e9;border-radius:16px;padding:14px 22px;font-size:clamp(15px,1.2vw,21px);font-weight:850;box-shadow:6px 6px 0 rgba(255,100,56,.7);pointer-events:none;transition:opacity .2s,transform .2s}
     .toast.show{opacity:1;transform:translate(-50%,0)}
     @keyframes turn-card{0%{transform:translateY(0) rotateZ(0) scale(1)}38%{transform:translateY(-11px) rotateZ(-.7deg) scale(1.018);filter:drop-shadow(0 18px 13px rgba(23,22,20,.26))}62%{transform:translateY(-8px) rotateZ(.45deg) scale(1.012)}100%{transform:translateY(0) rotateZ(0) scale(1)}}
+    @keyframes card-micro-breathe{0%,100%{box-shadow:7px 7px 0 rgba(23,22,20,.18),10px 10px 0 rgba(255,185,177,.18)}50%{box-shadow:7px 8px 0 rgba(23,22,20,.18),10px 12px 0 rgba(255,185,177,.22)}}
+    @keyframes action-roll{0%,60%,100%{transform:rotate(0) scale(1)}70%{transform:rotate(-18deg) scale(.96)}82%{transform:rotate(342deg) scale(.98)}90%{transform:rotate(360deg) scale(1)}}
+    @keyframes action-howl{0%,62%,100%{transform:none;filter:contrast(1.08)}70%,84%{transform:translateY(-7px) rotate(-3deg) scale(1.08);filter:contrast(1.08) drop-shadow(0 0 7px rgba(255,255,255,.65))}77%{transform:translateY(-10px) rotate(2deg) scale(1.12)}}
+    @keyframes action-walk{0%,60%,100%{transform:none}68%{transform:translateX(-8px) rotate(-2deg)}76%{transform:translateX(1px) rotate(2deg)}84%{transform:translateX(8px) rotate(-1deg)}92%{transform:translateX(2px)}}
+    @keyframes action-beg{0%,62%,100%{transform:none}70%{transform:translateY(6px) scaleY(.92)}78%{transform:translateY(-8px) rotate(-3deg) scale(1.06)}86%{transform:translateY(-3px) rotate(3deg)}92%{transform:translateY(1px)}}
+    @keyframes action-fetch{0%,58%,100%{transform:none}67%{transform:translateX(8px) rotate(3deg) scale(1.04)}76%{transform:translateX(-5px) rotate(-4deg) scale(.98)}85%{transform:translateX(6px) rotate(2deg)}93%{transform:translateX(0)}}
+    @keyframes action-run{0%,58%,100%{transform:none;filter:contrast(1.08)}65%{transform:translateX(-9px) skewX(5deg);filter:contrast(1.08) blur(.2px)}72%{transform:translateX(12px) skewX(-6deg)}79%{transform:translateX(-3px) skewX(3deg)}86%{transform:translateX(9px) skewX(-3deg)}93%{transform:none}}
+    @keyframes brand-dog-peek{0%,100%{transform:translateY(9%) rotate(0)}45%{transform:translateY(2%) rotate(-1deg)}60%{transform:translateY(4%) rotate(1deg)}}
+    @keyframes brand-ear-wiggle{0%,55%,100%{transform:rotate(0)}64%{transform:rotate(-9deg)}74%{transform:rotate(7deg)}84%{transform:rotate(-3deg)}}
+    @keyframes brand-paw-tap{0%,62%,100%{transform:translateY(0) rotate(0)}72%{transform:translateY(-7px) rotate(-7deg)}82%{transform:translateY(-2px) rotate(4deg)}}
+    @keyframes dog-real-roll{0%,57%,100%{transform:translate(0,0) rotate(0) scale(1)}67%{transform:translate(-5px,-5px) rotate(-70deg) scale(.91)}82%{transform:translate(5px,-7px) rotate(290deg) scale(.94)}91%{transform:translate(0,0) rotate(360deg) scale(1)}}
+    @keyframes dog-leg-tuck{0%,57%,100%{transform:none}68%,85%{transform:translateY(-8px) scale(.72)}}
+    @keyframes dog-head-howl{0%,58%,100%{transform:none}68%,84%{transform:translate(-3px,-8px) rotate(-18deg) scale(1.05)}}
+    @keyframes dog-howl-wave{0%,60%,100%{opacity:0;transform:scale(.55)}69%{opacity:1;transform:scale(.8)}86%{opacity:0;transform:scale(1.25)}}
+    @keyframes dog-body-walk{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+    @keyframes dog-leg-forward{to{transform:rotate(17deg) translateY(-2px)}}@keyframes dog-leg-back{to{transform:rotate(-17deg) translateY(-2px)}}
+    @keyframes dog-tail-wag{from{transform:rotate(-11deg)}to{transform:rotate(13deg)}}
+    @keyframes dog-beg-body{0%,58%,100%{transform:none}68%,86%{transform:translateY(-4px) rotate(-2deg)}}
+    @keyframes dog-beg-paw{0%,58%,100%{transform:none}68%,86%{transform:translate(-3px,-15px) rotate(-24deg)}}
+    @keyframes dog-fetch-dash{0%,54%,100%{transform:none}65%{transform:translateX(10px) scale(.97)}77%{transform:translateX(-5px) scale(1.02)}90%{transform:translateX(3px)}}
+    @keyframes dog-fetch-ball{0%,57%,100%{transform:translate(0,0) scale(1)}66%{transform:translate(7px,-7px) scale(.9)}79%{transform:translate(-7px,1px) scale(1.04)}}
+    @keyframes dog-fetch-head{0%,57%,100%{transform:none}66%,82%{transform:translate(4px,3px) rotate(5deg)}}
+    @keyframes dog-run-body{0%,100%{transform:translate(0,0) rotate(-1deg)}50%{transform:translate(4px,-4px) rotate(1deg)}}
+    @keyframes dog-run-legs{from{transform:rotate(-25deg) translateY(-2px)}to{transform:rotate(25deg) translateY(1px)}}
+    @keyframes dog-speed-line{0%{opacity:0;transform:translateX(8px)}35%{opacity:.9}100%{opacity:0;transform:translateX(-18px)}}
+    @keyframes refined-roll-ring{0%,58%,100%{opacity:0;transform:rotate(0)}68%,88%{opacity:.95;transform:rotate(320deg)}}
+    @keyframes refined-howl-wave{0%,62%,100%{opacity:0;transform:translateX(-5px) scale(.6)}72%{opacity:1;transform:translateX(0) scale(1)}86%{opacity:0;transform:translateX(8px) scale(1.2)}}
+    @keyframes refined-walk-paw{0%,62%,100%{opacity:0;transform:translateX(10px) rotate(-18deg)}72%{opacity:.9;transform:translateX(0) rotate(-8deg)}88%{opacity:0;transform:translateX(-10px) rotate(8deg)}}
+    @keyframes refined-beg-heart{0%,64%,100%{opacity:0;transform:translateY(8px) scale(.5)}74%,84%{opacity:1;transform:translateY(-4px) scale(1)}}
+    @keyframes refined-fetch-ball{0%,58%,100%{opacity:0;transform:translate(0,0)}66%{opacity:1;transform:translate(16px,-8px)}82%{opacity:1;transform:translate(38px,-1px)}91%{opacity:0;transform:translate(48px,3px)}}
+    @keyframes refined-run-lines{0%{opacity:0;transform:translateX(14px)}35%{opacity:.9}100%{opacity:0;transform:translateX(-16px)}}
+    @keyframes part-howl-head{0%,60%,100%{transform:none}69%,83%{transform:translate(-2px,-3px) rotate(-5deg) scale(1.025)}75%{transform:translate(-3px,-5px) rotate(-7deg) scale(1.04)}}
+    @keyframes part-walk-front{from{transform:rotate(-5deg) translateY(1px)}to{transform:rotate(6deg) translate(2px,-2px)}}
+    @keyframes part-walk-back{from{transform:rotate(6deg) translateY(-1px)}to{transform:rotate(-5deg) translate(-2px,2px)}}
+    @keyframes part-beg-paws{0%,60%,100%{transform:none}69%{transform:translateY(-5px) rotate(-4deg)}78%{transform:translateY(-8px) rotate(4deg)}87%{transform:translateY(-4px)}}
+    @keyframes part-beg-head{0%,60%,100%{transform:none}72%,86%{transform:translateY(-2px) rotate(3deg)}}
+    @keyframes part-fetch-head{0%,58%,100%{transform:none}67%{transform:translate(4px,-2px) rotate(3deg)}78%{transform:translate(-2px,1px) rotate(-2deg)}88%{transform:translate(3px,0)}}
+    @keyframes part-fetch-tail{from{transform:rotate(-4deg)}to{transform:rotate(6deg)}}
+    @keyframes part-run-front{from{transform:translate(-3px,2px) rotate(-5deg)}to{transform:translate(4px,-3px) rotate(6deg)}}
+    @keyframes part-run-back{from{transform:translate(3px,-2px) rotate(5deg)}to{transform:translate(-4px,3px) rotate(-6deg)}}
     @keyframes sweep{0%{transform:translateX(-140%);opacity:0}30%{opacity:.95}100%{transform:translateX(140%);opacity:0}}
     @keyframes bone-pop{from{transform:scale(.3) rotate(-18deg);opacity:0}}
     @keyframes ready{50%{box-shadow:0 0 0 8px rgba(131,210,223,.3),4px 4px 0 rgba(23,22,20,.17)}}
@@ -243,7 +337,7 @@
           <path class="peek-paw" d="M92 230c11-22 39-26 53-7 6 9 2 23-10 26H99c-9-1-12-10-7-19z"/>
           <path class="peek-paw" d="M202 226c17-17 43-12 52 10 4 10-3 18-14 18h-35c-12-3-12-18-3-28z"/>
         </svg>
-      </div><h1>技能卡控制台</h1><button class="rules-trigger" id="rulesBtn" type="button" aria-label="查看规则说明" aria-haspopup="dialog" aria-expanded="false" aria-controls="rulesModal"><span class="rules-question" aria-hidden="true">?</span><span class="rules-label">规则</span></button></div>
+      </div><h1>技能卡控制台</h1><button class="rules-trigger" id="rulesBtn" type="button" aria-label="查看规则说明" aria-haspopup="dialog" aria-expanded="false" aria-controls="rulesModal"><span class="rules-question" aria-hidden="true">?</span><span class="rules-label">规则</span></button><button class="rules-demo-trigger" id="rulesDemoBtn" data-testid="rules-demo" type="button">▶ 一键演示</button></div>
       <div class="toolbar">
         <div class="status" aria-live="polite"><span aria-hidden="true">🐾</span><strong id="availableCount">6</strong><span class="label">张可用</span></div>
         <div class="bone-tray" id="boneTray" data-drop-zone="tray" aria-label="骨头放置区"></div>
@@ -253,6 +347,7 @@
     </header>
     <section class="grid" id="cardGrid" aria-label="六张技能卡"></section>
   </main>
+  <div class="demo-banner" id="demoBanner" role="status" aria-live="polite"><b id="demoStep">1</b><span id="demoText">选择一张正面技能卡</span></div>
   <div class="rules-modal" id="rulesModal" aria-hidden="true">
     <section class="rules-dialog" role="dialog" aria-modal="true" aria-labelledby="rulesTitle" aria-describedby="rulesIntro">
       <button class="rules-close" id="rulesClose" type="button" aria-label="关闭规则说明">×</button>
@@ -315,7 +410,7 @@
       <path d="M20 20c7-7 15-5 19 2M16 51c5 6 13 5 18-2M87 22c7-9 17-8 21 1M88 54c7 7 17 5 20-3" fill="none" stroke="url(#boneShine)" stroke-width="5" stroke-linecap="round"/>
       <path d="M42 34h40" fill="none" stroke="#fff9e8" stroke-width="6" stroke-linecap="round" opacity=".7"/>
     </svg>`;
-    const dogArt=pose=>`<picture><source srcset="assets/action-${pose}-badge-v2.webp" type="image/webp"><img src="assets/action-${pose}-badge-v2.png" width="384" height="384" decoding="async" alt="" aria-hidden="true"></picture>`;
+    const dogArt=pose=>`<picture class="dog-base"><source srcset="assets/action-${pose}-badge-v2.webp" type="image/webp"><img src="assets/action-${pose}-badge-v2.png" width="384" height="384" decoding="async" alt="" aria-hidden="true"></picture>${pose==='roll'?'':`<img class="dog-part part-a" src="assets/action-${pose}-badge-v2.webp" width="384" height="384" decoding="async" alt="" aria-hidden="true"><img class="dog-part part-b" src="assets/action-${pose}-badge-v2.webp" width="384" height="384" decoding="async" alt="" aria-hidden="true">`}`;
     function save(){localStorage.setItem(KEY,JSON.stringify(state))}
     function cardMarkup(c){
       const used=state.used.includes(c.id),hasBone=state.boneLocation===c.id;
@@ -323,7 +418,7 @@
         <div class="card-shell" style="--accent:${c.color}">
           <span class="paw tl">🐾</span><span class="paw bl">🐾</span><span class="paw br">🐾</span>
           <div class="card-content"><div class="step">${c.steps[0]}</div><div class="divider">— 然后 —</div><div class="step">${c.steps[1]}</div></div>
-          <div class="rosette"><div class="ribbon"></div><div class="badge-copy"><div class="badge-cn">${c.name}</div><div class="badge-en">${c.en}</div><div class="dog-glyph">${dogArt(c.pose)}</div></div></div>
+          <div class="rosette"><div class="ribbon"></div><div class="badge-copy"><div class="badge-cn">${c.name}</div><div class="badge-en">${c.en}</div><div class="dog-glyph dog-${c.pose}">${dogArt(c.pose)}</div></div></div>
         </div>
         <div class="bone-zone">${hasBone?`<span class="bone" role="button" tabindex="0" aria-label="唯一的可拖动骨头，拖到其他卡片或顶部放置区">${boneSvg()}</span>`:''}</div>
       </article>`
@@ -355,6 +450,37 @@
       if(available.length===1){state.boneLocation=available[0].id;showToast(`骨头已放到「${available[0].name}」，六张卡已翻回正面`)}else showToast('六张技能卡已全部翻回正面');
       state.used=[];save();render();
     }
+    const demoWait=ms=>new Promise(resolve=>window.setTimeout(resolve,ms));
+    function showDemoStep(step,text){
+      document.getElementById('demoStep').textContent=step;
+      document.getElementById('demoText').textContent=text;
+      document.getElementById('demoBanner').classList.add('show');
+    }
+    async function runRulesDemo(){
+      const button=document.getElementById('rulesDemoBtn');
+      if(button.disabled)return;
+      button.disabled=true;document.getElementById('resetBtn').disabled=true;
+      state.used=[];state.boneLocation='tray';save();render();
+      const grid=document.getElementById('cardGrid');grid.dataset.demoState='selecting';
+      showDemoStep('1','每回合选择一张正面技能卡，执行后翻灰');
+      for(let i=0;i<5;i++){
+        const card=grid.querySelectorAll('.skill-card')[i];card.classList.add('demo-focus');
+        await demoWait(720);state.used.push(cards[i].id);save();render();
+        await demoWait(520);
+      }
+      grid.dataset.demoState='last-card';
+      showDemoStep('2','只剩 1 张正面：把骨头放到最后一张');
+      state.boneLocation=cards[5].id;save();render();
+      grid.querySelectorAll('.skill-card')[5].classList.add('demo-focus');
+      await demoWait(2100);
+      showDemoStep('3','六张技能卡全部翻回正面，开始新一轮');
+      state.used=[];save();render();grid.classList.add('demo-refresh');
+      grid.dataset.demoState='complete';
+      await demoWait(2400);grid.classList.remove('demo-refresh');
+      document.getElementById('demoBanner').classList.remove('show');
+      document.getElementById('resetBtn').disabled=false;button.disabled=false;
+      showToast('规则演示完成：选择 → 最后一张放骨头 → 全部刷新');
+    }
     function startBoneDrag(e){
       e.preventDefault();e.stopPropagation();const source=e.currentTarget,r=source.getBoundingClientRect(),fromTray=!!source.closest('.bone-tray'),ghost=source.cloneNode(true);
       ghost.classList.add('dragging');document.body.appendChild(ghost);source.style.opacity='0';
@@ -380,6 +506,7 @@
     }
     document.getElementById('resetBtn').addEventListener('click',resetBoard);
     document.getElementById('rulesBtn').addEventListener('click',openRules);
+    document.getElementById('rulesDemoBtn').addEventListener('click',runRulesDemo);
     document.getElementById('rulesClose').addEventListener('click',closeRules);
     document.getElementById('rulesModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeRules()});
     document.getElementById('fullscreenBtn').addEventListener('click',()=>{
