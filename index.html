@@ -34,7 +34,7 @@
     .app{
       height:100dvh;min-height:560px;padding:clamp(30px,3vw,60px);
       display:grid;grid-template-rows:clamp(58px,7.8vh,88px) minmax(0,1fr);gap:var(--gap);
-      isolation:isolate;position:relative;transition:filter .36s ease,transform .45s cubic-bezier(.2,.8,.2,1);
+      isolation:isolate;position:relative;z-index:2;transition:filter .36s ease,transform .45s cubic-bezier(.2,.8,.2,1);
     }
     body.rules-open{overflow:hidden}
     body.rules-open .app{filter:blur(7px) grayscale(.46) brightness(.78);transform:scale(.985);pointer-events:none}
@@ -54,7 +54,7 @@
     }
     .topbar,.grid{position:relative;z-index:2}
 
-    .topbar{display:flex;align-items:center;gap:14px;min-width:0;border-bottom:3px solid var(--ink);padding:0 2px clamp(9px,1vh,14px)}
+    .topbar{display:flex;align-items:center;gap:14px;min-width:0;border:3px solid #e7b85d;border-radius:clamp(20px,1.8vw,30px);padding:clamp(8px,1vh,14px) clamp(12px,1.2vw,22px);background:linear-gradient(110deg,rgba(255,250,229,.97),rgba(255,239,193,.95));box-shadow:0 0 0 3px rgba(28,14,64,.68),0 12px 34px rgba(0,0,0,.34),0 0 28px rgba(255,188,73,.22)}
     .brand{display:flex;align-items:center;gap:12px;min-width:0}
     .brand-mark{width:clamp(66px,5.7vw,94px);aspect-ratio:1.12;display:grid;place-items:center;border:3px solid var(--ink);border-radius:22px;background:#fff8e9;box-shadow:4px 4px 0 rgba(255,100,56,.34),7px 7px 0 rgba(23,22,20,.1);overflow:hidden;transform:rotate(-2deg)}
     .brand-dog{width:124%;height:124%;transform:translateY(9%)}
@@ -67,7 +67,8 @@
     .brand-dog .peek-ear:nth-of-type(2){animation-delay:1.05s}
     .brand-dog .peek-paw{transform-box:fill-box;transform-origin:center;animation:brand-paw-tap 3.4s .8s ease-in-out infinite}
     .brand-dog .peek-paw:last-child{animation-delay:1.5s}
-    h1{margin:0;font-family:var(--font-rounded);font-size:clamp(26px,2.6vw,47px);font-weight:900;line-height:1;letter-spacing:.025em;white-space:nowrap}
+    h1{margin:0;font-family:var(--font-rounded);font-size:clamp(26px,2.6vw,47px);font-weight:950;line-height:1;letter-spacing:.025em;white-space:nowrap;background:linear-gradient(100deg,#171614 15%,#703cff 40%,#ff6438 58%,#171614 82%);background-size:240% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:title-shimmer 6s ease-in-out infinite}
+    h1 span{display:inline-block;animation:title-bob 3.2s ease-in-out infinite;animation-delay:calc(var(--i) * .1s);filter:drop-shadow(0 3px 0 rgba(255,255,255,.7))}
     .rules-trigger{min-height:clamp(42px,4.8vh,56px);padding:0 clamp(12px,1vw,18px);display:flex;align-items:center;gap:7px;border:3px solid var(--ink);border-radius:999px;background:linear-gradient(180deg,#fffdf6,#ffe29a);font-size:clamp(13px,.95vw,17px);font-weight:950;white-space:nowrap;box-shadow:3px 3px 0 rgba(23,22,20,.18);cursor:pointer;transform:rotate(-1deg);transition:transform .16s,box-shadow .16s}
     .rules-trigger:hover{transform:translateY(-2px) rotate(1deg);box-shadow:5px 6px 0 rgba(23,22,20,.16)}
     .rules-trigger:active{transform:translate(2px,2px);box-shadow:1px 1px 0 rgba(23,22,20,.18)}
@@ -156,18 +157,8 @@
     .badge-en{font-size:clamp(9px,.62vw,12px);font-weight:900;letter-spacing:.015em;line-height:1;opacity:.96;white-space:nowrap}
     .dog-glyph{position:relative;width:clamp(66px,5vw,94px);height:clamp(66px,5vw,94px);display:grid;place-items:center;align-self:end;border:0;border-radius:50%;background:transparent;box-shadow:none;overflow:visible}
     .dog-glyph picture{display:contents}
-    .dog-glyph img{width:100%;height:100%;object-fit:contain;display:block;filter:contrast(1.08);opacity:1;border-radius:50%;clip-path:circle(48% at 50% 50%)}
-    .dog-glyph .dog-part{position:absolute;inset:0;z-index:2;border-radius:0;pointer-events:none}
-    .dog-howl .part-a{clip-path:polygon(35% 12%,72% 12%,72% 53%,32% 53%);transform-origin:50% 48%;animation:part-howl-head 5.5s 1s ease-in-out infinite}
-    .dog-howl .part-b{display:none}
-    .dog-walk .part-a{clip-path:polygon(52% 49%,82% 49%,84% 77%,48% 77%);transform-origin:58% 52%;animation:part-walk-front 1.05s ease-in-out infinite alternate}
-    .dog-walk .part-b{clip-path:polygon(15% 48%,53% 48%,55% 78%,12% 78%);transform-origin:43% 51%;animation:part-walk-back 1.05s ease-in-out infinite alternate}
-    .dog-beg .part-a{clip-path:polygon(35% 38%,68% 38%,68% 64%,33% 64%);transform-origin:50% 57%;animation:part-beg-paws 5.7s .7s ease-in-out infinite}
-    .dog-beg .part-b{clip-path:polygon(25% 12%,66% 12%,66% 45%,24% 45%);transform-origin:48% 44%;animation:part-beg-head 5.7s .7s ease-in-out infinite}
-    .dog-fetch .part-a{clip-path:polygon(45% 20%,88% 20%,88% 52%,43% 52%);transform-origin:51% 49%;animation:part-fetch-head 5.1s 2.1s ease-in-out infinite}
-    .dog-fetch .part-b{clip-path:polygon(12% 25%,40% 25%,40% 72%,10% 72%);transform-origin:38% 51%;animation:part-fetch-tail 1.15s ease-in-out infinite alternate}
-    .dog-run .part-a{clip-path:polygon(52% 45%,91% 45%,91% 75%,49% 75%);transform-origin:54% 48%;animation:part-run-front .46s ease-in-out infinite alternate}
-    .dog-run .part-b{clip-path:polygon(10% 43%,55% 43%,56% 74%,8% 74%);transform-origin:52% 47%;animation:part-run-back .46s -.23s ease-in-out infinite alternate}
+    .dog-glyph img{width:100%;height:100%;object-fit:contain;display:block;filter:contrast(1.08) drop-shadow(1px 2px 0 rgba(23,22,20,.16));opacity:1;border-radius:50%;clip-path:circle(48% at 50% 50%);will-change:transform}
+    .dog-roll img{transform-origin:50% 54%}.dog-howl img{transform-origin:52% 70%}.dog-walk img{transform-origin:50% 82%}.dog-beg img{transform-origin:50% 88%}.dog-fetch img{transform-origin:58% 78%}.dog-run img{transform-origin:50% 76%}
     .skill-card .dog-glyph::after{position:absolute;z-index:3;pointer-events:none;font-weight:950;opacity:0;filter:drop-shadow(1px 2px 0 rgba(23,22,20,.2))}
     .skill-card:nth-child(1) .dog-glyph::after{content:"↻";inset:-7px;color:#fff8e9;font-size:22px;display:grid;place-items:start end;animation:refined-roll-ring 5.2s .2s ease-in-out infinite}
     .skill-card:nth-child(2) .dog-glyph::after{content:")))";right:-13px;top:7px;color:#fff8e9;font-size:16px;letter-spacing:-2px;animation:refined-howl-wave 5.5s 1s ease-out infinite}
@@ -175,22 +166,6 @@
     .skill-card:nth-child(4) .dog-glyph::after{content:"♥";right:-3px;top:-5px;color:#fff1bd;font-size:22px;animation:refined-beg-heart 5.7s .7s ease-in-out infinite}
     .skill-card:nth-child(5) .dog-glyph::after{content:"●";left:-7px;bottom:13px;color:#ffd45c;-webkit-text-stroke:2px #171614;font-size:18px;animation:refined-fetch-ball 5.1s 2.1s ease-in-out infinite}
     .skill-card:nth-child(6) .dog-glyph::after{content:"≋";left:-15px;top:25px;color:#fff8e9;font-size:27px;letter-spacing:-5px;animation:refined-run-lines 1.05s ease-out infinite}
-    .action-dog{width:100%;height:100%;overflow:visible;filter:drop-shadow(1px 2px 0 rgba(23,22,20,.16))}
-    .action-dog *{transform-box:fill-box}
-    .action-dog .dog-fill{fill:#fff8e9;stroke:#171614;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
-    .action-dog .dog-dark{fill:#171614}.action-dog .dog-line{fill:none;stroke:#171614;stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
-    .action-dog .dog-rig,.action-dog .dog-head,.action-dog .dog-leg,.action-dog .dog-tail,.action-dog .fetch-ball{transform-origin:center}
-    .action-dog .sound-wave,.action-dog .speed-line{fill:none;stroke:#fff8e9;stroke-width:4;stroke-linecap:round;opacity:0}
-    .action-dog-roll .dog-rig{animation:dog-real-roll 5.2s .2s ease-in-out infinite}.action-dog-roll .dog-leg{animation:dog-leg-tuck 5.2s .2s ease-in-out infinite}
-    .action-dog-howl .dog-head{transform-origin:45% 70%;animation:dog-head-howl 4.6s .5s ease-in-out infinite}.action-dog-howl .sound-wave{animation:dog-howl-wave 4.6s .5s ease-out infinite}
-    .action-dog-walk .dog-rig{animation:dog-body-walk 3.8s ease-in-out infinite}.action-dog-walk .dog-leg.front-a,.action-dog-walk .dog-leg.back-b{animation:dog-leg-forward .68s ease-in-out infinite alternate}.action-dog-walk .dog-leg.front-b,.action-dog-walk .dog-leg.back-a{animation:dog-leg-back .68s ease-in-out infinite alternate}.action-dog-walk .dog-tail{animation:dog-tail-wag .55s ease-in-out infinite alternate}
-    .action-dog-beg .dog-rig{animation:dog-beg-body 3.9s ease-in-out infinite}.action-dog-beg .dog-leg.front-a{animation:dog-beg-paw 3.9s ease-in-out infinite}.action-dog-beg .dog-leg.front-b{animation:dog-beg-paw 3.9s .12s ease-in-out infinite}.action-dog-beg .dog-tail{animation:dog-tail-wag .5s ease-in-out infinite alternate}
-    .action-dog-fetch .dog-rig{animation:dog-fetch-dash 4.2s ease-in-out infinite}.action-dog-fetch .fetch-ball{animation:dog-fetch-ball 4.2s ease-in-out infinite}.action-dog-fetch .dog-head{animation:dog-fetch-head 4.2s ease-in-out infinite}.action-dog-fetch .dog-leg{animation:dog-run-legs .42s ease-in-out infinite alternate}
-    .action-dog-run .dog-rig{animation:dog-run-body 1.05s ease-in-out infinite}.action-dog-run .dog-leg.front-a,.action-dog-run .dog-leg.back-b{animation:dog-run-legs .34s ease-in-out infinite alternate}.action-dog-run .dog-leg.front-b,.action-dog-run .dog-leg.back-a{animation:dog-run-legs .34s -.17s ease-in-out infinite alternate-reverse}.action-dog-run .dog-tail{animation:dog-tail-wag .32s ease-in-out infinite alternate}.action-dog-run .speed-line{animation:dog-speed-line 1.05s ease-out infinite}
-    .dog-body{fill:#fff8e9;stroke:#171614;stroke-width:4.8;stroke-linecap:round;stroke-linejoin:round}
-    .dog-spot,.dog-ear,.dog-nose{fill:#171614}
-    .dog-line{fill:none;stroke:#171614;stroke-width:4.8;stroke-linecap:round;stroke-linejoin:round}
-    .motion-line{fill:none;stroke:#fff8e9;stroke-width:4.2;stroke-linecap:round;opacity:.95}
 
     .bone-zone{position:absolute;z-index:12;top:10px;right:10px;pointer-events:none}
     .bone{
@@ -230,30 +205,15 @@
     .toast.show{opacity:1;transform:translate(-50%,0)}
     @keyframes turn-card{0%{transform:translateY(0) rotateZ(0) scale(1)}38%{transform:translateY(-11px) rotateZ(-.7deg) scale(1.018);filter:drop-shadow(0 18px 13px rgba(23,22,20,.26))}62%{transform:translateY(-8px) rotateZ(.45deg) scale(1.012)}100%{transform:translateY(0) rotateZ(0) scale(1)}}
     @keyframes card-micro-breathe{0%,100%{box-shadow:7px 7px 0 rgba(23,22,20,.18),10px 10px 0 rgba(255,185,177,.18)}50%{box-shadow:7px 8px 0 rgba(23,22,20,.18),10px 12px 0 rgba(255,185,177,.22)}}
-    @keyframes action-roll{0%,60%,100%{transform:rotate(0) scale(1)}70%{transform:rotate(-18deg) scale(.96)}82%{transform:rotate(342deg) scale(.98)}90%{transform:rotate(360deg) scale(1)}}
-    @keyframes action-howl{0%,62%,100%{transform:none;filter:contrast(1.08)}70%,84%{transform:translateY(-7px) rotate(-3deg) scale(1.08);filter:contrast(1.08) drop-shadow(0 0 7px rgba(255,255,255,.65))}77%{transform:translateY(-10px) rotate(2deg) scale(1.12)}}
-    @keyframes action-walk{0%,60%,100%{transform:none}68%{transform:translateX(-8px) rotate(-2deg)}76%{transform:translateX(1px) rotate(2deg)}84%{transform:translateX(8px) rotate(-1deg)}92%{transform:translateX(2px)}}
-    @keyframes action-beg{0%,62%,100%{transform:none}70%{transform:translateY(6px) scaleY(.92)}78%{transform:translateY(-8px) rotate(-3deg) scale(1.06)}86%{transform:translateY(-3px) rotate(3deg)}92%{transform:translateY(1px)}}
-    @keyframes action-fetch{0%,58%,100%{transform:none}67%{transform:translateX(8px) rotate(3deg) scale(1.04)}76%{transform:translateX(-5px) rotate(-4deg) scale(.98)}85%{transform:translateX(6px) rotate(2deg)}93%{transform:translateX(0)}}
-    @keyframes action-run{0%,58%,100%{transform:none;filter:contrast(1.08)}65%{transform:translateX(-9px) skewX(5deg);filter:contrast(1.08) blur(.2px)}72%{transform:translateX(12px) skewX(-6deg)}79%{transform:translateX(-3px) skewX(3deg)}86%{transform:translateX(9px) skewX(-3deg)}93%{transform:none}}
+    @keyframes action-roll{0%,58%,100%{transform:translate(0,0) rotate(0) scale(1)}64%{transform:translate(-2px,4px) rotate(-9deg) scale(1.02,.94)}70%{transform:translate(-5px,-3px) rotate(-74deg) scale(.95)}82%{transform:translate(4px,-5px) rotate(286deg) scale(.97)}90%{transform:translate(0,0) rotate(360deg) scale(1)}}
+    @keyframes action-howl{0%,60%,100%{transform:none;filter:contrast(1.08) drop-shadow(1px 2px 0 rgba(23,22,20,.16))}66%{transform:translateY(3px) rotate(1deg) scale(1.03,.94)}73%,84%{transform:translateY(-7px) rotate(-6deg) scale(1.04,1.08);filter:contrast(1.08) drop-shadow(0 0 7px rgba(255,255,255,.62))}89%{transform:translateY(-2px) rotate(2deg) scale(1.01)}}
+    @keyframes action-walk{0%,58%,100%{transform:none}64%{transform:translate(-5px,1px) rotate(-2deg) scale(1.015,.98)}70%{transform:translate(-1px,-4px) rotate(1.5deg) scale(.99,1.02)}77%{transform:translate(5px,1px) rotate(2deg) scale(1.015,.98)}84%{transform:translate(1px,-4px) rotate(-1.5deg) scale(.99,1.02)}92%{transform:translate(0,0)}}
+    @keyframes action-beg{0%,60%,100%{transform:none}67%{transform:translateY(6px) scale(1.04,.9)}73%{transform:translateY(-7px) rotate(-3deg) scale(.98,1.07)}80%{transform:translateY(-5px) rotate(3deg) scale(1.01,1.04)}87%{transform:translateY(-2px) rotate(-2deg)}93%{transform:translateY(0)}}
+    @keyframes action-fetch{0%,56%,100%{transform:none}62%{transform:translate(-3px,4px) rotate(-2deg) scale(1.04,.92)}68%{transform:translate(8px,-3px) rotate(4deg) scale(.96,1.04)}76%{transform:translate(-5px,-1px) rotate(-4deg) scale(1.02,.98)}85%{transform:translate(6px,-2px) rotate(2deg)}93%{transform:none}}
+    @keyframes action-run{0%,56%,100%{transform:none;filter:contrast(1.08) drop-shadow(1px 2px 0 rgba(23,22,20,.16))}62%{transform:translate(-7px,2px) rotate(-3deg) scale(1.05,.94)}69%{transform:translate(10px,-5px) rotate(3deg) scale(.96,1.04)}76%{transform:translate(-4px,1px) rotate(-2deg) scale(1.03,.97)}83%{transform:translate(9px,-4px) rotate(2deg)}91%{transform:none}}
     @keyframes brand-dog-peek{0%,100%{transform:translateY(9%) rotate(0)}45%{transform:translateY(2%) rotate(-1deg)}60%{transform:translateY(4%) rotate(1deg)}}
     @keyframes brand-ear-wiggle{0%,55%,100%{transform:rotate(0)}64%{transform:rotate(-9deg)}74%{transform:rotate(7deg)}84%{transform:rotate(-3deg)}}
     @keyframes brand-paw-tap{0%,62%,100%{transform:translateY(0) rotate(0)}72%{transform:translateY(-7px) rotate(-7deg)}82%{transform:translateY(-2px) rotate(4deg)}}
-    @keyframes dog-real-roll{0%,57%,100%{transform:translate(0,0) rotate(0) scale(1)}67%{transform:translate(-5px,-5px) rotate(-70deg) scale(.91)}82%{transform:translate(5px,-7px) rotate(290deg) scale(.94)}91%{transform:translate(0,0) rotate(360deg) scale(1)}}
-    @keyframes dog-leg-tuck{0%,57%,100%{transform:none}68%,85%{transform:translateY(-8px) scale(.72)}}
-    @keyframes dog-head-howl{0%,58%,100%{transform:none}68%,84%{transform:translate(-3px,-8px) rotate(-18deg) scale(1.05)}}
-    @keyframes dog-howl-wave{0%,60%,100%{opacity:0;transform:scale(.55)}69%{opacity:1;transform:scale(.8)}86%{opacity:0;transform:scale(1.25)}}
-    @keyframes dog-body-walk{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
-    @keyframes dog-leg-forward{to{transform:rotate(17deg) translateY(-2px)}}@keyframes dog-leg-back{to{transform:rotate(-17deg) translateY(-2px)}}
-    @keyframes dog-tail-wag{from{transform:rotate(-11deg)}to{transform:rotate(13deg)}}
-    @keyframes dog-beg-body{0%,58%,100%{transform:none}68%,86%{transform:translateY(-4px) rotate(-2deg)}}
-    @keyframes dog-beg-paw{0%,58%,100%{transform:none}68%,86%{transform:translate(-3px,-15px) rotate(-24deg)}}
-    @keyframes dog-fetch-dash{0%,54%,100%{transform:none}65%{transform:translateX(10px) scale(.97)}77%{transform:translateX(-5px) scale(1.02)}90%{transform:translateX(3px)}}
-    @keyframes dog-fetch-ball{0%,57%,100%{transform:translate(0,0) scale(1)}66%{transform:translate(7px,-7px) scale(.9)}79%{transform:translate(-7px,1px) scale(1.04)}}
-    @keyframes dog-fetch-head{0%,57%,100%{transform:none}66%,82%{transform:translate(4px,3px) rotate(5deg)}}
-    @keyframes dog-run-body{0%,100%{transform:translate(0,0) rotate(-1deg)}50%{transform:translate(4px,-4px) rotate(1deg)}}
-    @keyframes dog-run-legs{from{transform:rotate(-25deg) translateY(-2px)}to{transform:rotate(25deg) translateY(1px)}}
-    @keyframes dog-speed-line{0%{opacity:0;transform:translateX(8px)}35%{opacity:.9}100%{opacity:0;transform:translateX(-18px)}}
     @keyframes refined-roll-ring{0%,58%,100%{opacity:0;transform:rotate(0)}68%,88%{opacity:.95;transform:rotate(320deg)}}
     @keyframes refined-howl-wave{0%,62%,100%{opacity:0;transform:translateX(-5px) scale(.6)}72%{opacity:1;transform:translateX(0) scale(1)}86%{opacity:0;transform:translateX(8px) scale(1.2)}}
     @keyframes refined-walk-paw{0%,62%,100%{opacity:0;transform:translateX(10px) rotate(-18deg)}72%{opacity:.9;transform:translateX(0) rotate(-8deg)}88%{opacity:0;transform:translateX(-10px) rotate(8deg)}}
@@ -410,7 +370,7 @@
       <path d="M20 20c7-7 15-5 19 2M16 51c5 6 13 5 18-2M87 22c7-9 17-8 21 1M88 54c7 7 17 5 20-3" fill="none" stroke="url(#boneShine)" stroke-width="5" stroke-linecap="round"/>
       <path d="M42 34h40" fill="none" stroke="#fff9e8" stroke-width="6" stroke-linecap="round" opacity=".7"/>
     </svg>`;
-    const dogArt=pose=>`<picture class="dog-base"><source srcset="assets/action-${pose}-badge-v2.webp" type="image/webp"><img src="assets/action-${pose}-badge-v2.png" width="384" height="384" decoding="async" alt="" aria-hidden="true"></picture>${pose==='roll'?'':`<img class="dog-part part-a" src="assets/action-${pose}-badge-v2.webp" width="384" height="384" decoding="async" alt="" aria-hidden="true"><img class="dog-part part-b" src="assets/action-${pose}-badge-v2.webp" width="384" height="384" decoding="async" alt="" aria-hidden="true">`}`;
+    const dogArt=pose=>`<picture class="dog-base"><source srcset="assets/action-${pose}-badge-v2.webp" type="image/webp"><img src="assets/action-${pose}-badge-v2.png" width="384" height="384" decoding="async" alt="" aria-hidden="true"></picture>`;
     function save(){localStorage.setItem(KEY,JSON.stringify(state))}
     function cardMarkup(c){
       const used=state.used.includes(c.id),hasBone=state.boneLocation===c.id;
