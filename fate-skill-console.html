@@ -16,7 +16,7 @@
       --orange:#ff6438;
       --gold:#ffd45c;
       --shadow:rgba(23,22,20,.2);
-      --gap:clamp(14px,1.3vw,24px);
+      --gap:clamp(14px,1vw,20px);
       --radius:clamp(18px,1.45vw,28px);
       --font-rounded:"Arial Rounded MT Bold","Yuanti SC","STYuanti-SC-Regular","YouYuan","Microsoft YaHei",system-ui,sans-serif;
       --deck-scale:1;
@@ -54,8 +54,8 @@
     .app{
       position:fixed;left:50%;top:50%;
       width:1920px;height:1080px;
-      padding:clamp(22px,2.5vw,48px);
-      display:grid;grid-template-rows:clamp(118px,13vh,140px) minmax(0,1fr);gap:var(--gap);
+      padding:clamp(22px,1.7vw,32px);
+      display:grid;grid-template-rows:clamp(116px,11.8vh,132px) minmax(0,1fr);gap:var(--gap);
       isolation:isolate;
       transform:translate(-50%,-50%);
       transform-origin:center center;
@@ -112,7 +112,7 @@
       min-height:0;display:grid;grid-template-rows:auto minmax(0,1fr);gap:var(--gap);
     }
     .filters{
-      min-height:clamp(70px,7.8vh,84px);display:flex;align-items:center;gap:clamp(12px,1vw,18px);
+      min-height:clamp(64px,7vh,76px);display:flex;align-items:center;gap:clamp(12px,1vw,18px);
       overflow:hidden;padding:0 2px;
     }
     .filter-chip{
@@ -244,9 +244,9 @@
     .category b{color:var(--accent);text-shadow:.7px .7px 0 rgba(23,22,20,.12)}
     .copy-main{
       position:absolute;left:calc(clamp(24px,1.9vw,36px) + 20px);right:clamp(24px,1.9vw,36px);
-      top:clamp(122px,7.2vw,138px);
-      display:grid;grid-template-rows:auto auto;gap:clamp(24px,1.55vw,30px);padding-right:clamp(2px,.25vw,7px);
-      max-height:calc(100% - clamp(180px,10.4vw,200px));overflow:hidden;
+      top:clamp(116px,6.5vw,125px);
+      display:grid;grid-template-rows:auto auto;gap:clamp(20px,1.15vw,22px);padding-right:clamp(2px,.25vw,7px);
+      max-height:calc(100% - clamp(178px,9.8vw,188px));overflow:hidden;
       transform:none;
     }
     .name{
@@ -255,9 +255,9 @@
       text-shadow:2px 2px 0 color-mix(in srgb,var(--accent) 22%,transparent);
     }
     .desc{
-      margin:0 20px 0 0;font-size:25px;font-weight:850;line-height:1.32;letter-spacing:.001em;
+      margin:0 20px 0 0;font-size:23px;font-weight:850;line-height:1.28;letter-spacing:.001em;
       color:#312820;text-wrap:pretty;word-break:auto-phrase;line-break:strict;
-      display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+      display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;
     }
     .tagline{display:none}
     .tagline::before{content:"";flex:0 0 24px;width:24px;height:3px;border-radius:999px;background:var(--accent);box-shadow:1px 1px 0 rgba(23,22,20,.2)}
@@ -522,7 +522,7 @@
         document.documentElement.style.setProperty('--deck-scale','1');
         return;
       }
-      const scale=Math.min(window.innerWidth/1920,window.innerHeight/1080,1)*0.95;
+      const scale=Math.min(window.innerWidth/1920,window.innerHeight/1080,1);
       document.documentElement.style.setProperty('--deck-scale',String(scale));
     }
     document.getElementById('resetBtn').addEventListener('click',resetBoard);
